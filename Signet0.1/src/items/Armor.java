@@ -1,25 +1,21 @@
 package items;
 
-import health.Damage;
-
 import java.util.HashMap;
-
-import misc.DamageType;
 
 public abstract class Armor extends WornItem {
 	
 	private static final double ARMOR_INDIRECT_DAMAGE_REDUCTION = 2/3/0;
 	// damage recieved by armor while blocking attacks is reduced.
 
-	private HashMap<DamageType, Integer> damageResistance;
-	private HashMap<DamageType, DamageType> typeConversion;
+	private HashMap<Integer, Integer> damageResistance;
+	private HashMap<Integer, Integer> typeConversion;
 	private String slot;
 	
 	public Armor(int size, int wt, int dur, int hard, int dam) {
 		super(size, wt, dur, hard, dam);
 	}
 	
-	public void initializeArmorStats(String armorSlot, HashMap<DamageType, Integer> resistances, HashMap<DamageType, DamageType> typeconversion){
+	public void initializeArmorStats(String armorSlot, HashMap<Integer, Integer> resistances, HashMap<Integer, Integer> typeconversion){
 		damageResistance = resistances;
 		slot = armorSlot;
 		typeConversion = typeconversion;
@@ -33,20 +29,18 @@ public abstract class Armor extends WornItem {
 	 * mutates an array containing the damage might and type to reflect any protection this armor would provide.
 	 * @param dmg
 	 */
-	public void modifyDamage(Damage dmg){
+	public void modifyDamage(int[] dmg){
+		int might = dmg[0];
 		
-		int might = dmg.ammount;
-		DamageType dt = dmg.type;
-		
-		if (damageResistance.containsKey(dmg.type)){
-			dmg.ammount = (might - damageResistance.get(dt));
+		if (damageResistance.containsKey(dmg[1])){
+			dmg[0] = (might - damageResistance.get(dmg[1]));
 		}
-		if (typeConversion.containsKey(dt)){
-			dmg.type = typeConversion.get(dt);
+		if (typeConversion.containsKey(dmg[1])){
+			dmg[1] = typeConversion.get(dmg[1]);
 		}
 		
-		if ((int) dmg.ammount <= 0){
-			dmg.ammount = 0;
+		if ((int) dmg[0] <= 0){
+			dmg[0] = 0;
 			might *= 2;
 		}
 		// when being hit

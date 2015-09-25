@@ -24,7 +24,7 @@ public class SlashingWound extends Wound {
 //	HEALTH_DAMAGE, STUND_DAMAGE, FATIGUE_DAMAGE, DAMAGE_RATE, INST_HEALTH_DAMAGE, INST_STUN_DAMAGE, INST_FATIGUE_DAMAGE,
 //	HEALING_TIME, CHANCE_OF_INFECTION, PAIN, CRIPPLING
 	public SlashingWound(int severity, BodyPart bodypart){
-		super(severity, DamageType.blunt, bodypart,
+		super(severity, DamageType.SLASHING, bodypart,
 				HEALTH_DAMAGE, STUND_DAMAGE, FATIGUE_DAMAGE, DAMAGE_RATE, INST_HEALTH_DAMAGE, INST_STUN_DAMAGE,
 				INST_FATIGUE_DAMAGE,HEALING_TIME, CHANCE_OF_INFECTION, PAIN, CRIPPLING);
 		name = NAMES[severity - 1];

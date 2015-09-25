@@ -40,7 +40,7 @@ public class Wound {
 	private Bandage bandage;
 	private Infection infection;
 	private BodyPart location;
-	private DamageType damageType;
+	private int damageType;
 	private int severity, originalSeverity;	
 	/*
 	 * wound severity by number:
@@ -52,7 +52,7 @@ public class Wound {
 	 * 6 - terminal wound:	unless treated immediately, will lead to death within minutes (ie. evisceration) 
 	 * 7 - instant death:	(ie. broken neck, crushed skull, beheading)
 	 */	
-	public Wound(int severity, DamageType dt, BodyPart woundLocation, int[] health, int[] stun, int[] fatigue, int[] rate,
+	public Wound(int severity, int dt, BodyPart woundLocation, int[] health, int[] stun, int[] fatigue, int[] rate,
 			int[] instHealth, int[] instStun, int[] instFatigue, int[] healTime, int[] infection, double[] pain, int[] cripple){
 		if (severity > 7){
 			throw new IllegalArgumentException("you cannot have a wound severity higher than 7");
@@ -104,17 +104,17 @@ public class Wound {
 	 * @param woundLocation
 	 * @return
 	 */
-	public static int[] addNewWound(int damage, DamageType dt, BodyPart woundLocation){
-		if (dt == DamageType.slashing){
+	public static int[] addNewWound(int damage, int dt, BodyPart woundLocation){
+		if (dt == DamageType.SLASHING){
 			Wound w = new SlashingWound(damage, woundLocation);
 			return w.getInstantDamage();
-		} else if (dt == DamageType.blunt) {
+		} else if (dt == DamageType.BLUNT) {
 			Wound w = new BluntWound(damage, woundLocation);
 			return w.getInstantDamage();
-		} else if (dt == DamageType.piercing) {
+		} else if (dt == DamageType.PIERCING) {
 			Wound w = new PiercingWound(damage, woundLocation);
 			return w.getInstantDamage();
-		} else if (dt == DamageType.fire) {
+		} else if (dt == DamageType.FIRE) {
 			Wound w = new BurnWound(damage, woundLocation);
 			return w.getInstantDamage();
 		} else {

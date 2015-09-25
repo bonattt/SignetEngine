@@ -57,32 +57,33 @@ public abstract class BodyPart {
 		}
 		return healing;
 	}
-	public Damage resistDamage(int damage, DamageType dt){
-		Damage naturalArmorReduction = new Damage(damage, dt);
-		Damage wornArmorReduction = new Damage(damage, dt);
+	public int[] resistDamage(int damage, int damageType){
+		int[] naturalArmorReduction = new int[]{damage, damageType};
+		int[] wornArmorReduction = new int[]{damage, damageType};
 		if (naturalArmor != null){
 			naturalArmor.modifyDamage(naturalArmorReduction);
 		}
 		if (wornArmor != null){
 			wornArmor.modifyDamage(wornArmorReduction);
 		}
-		Damage finalDamage = new Damage(0, null);
+		int[] finalDamage = new int[2];
+		finalDamage[0] = 0;
 		
-		if(wornArmorReduction.ammount > (int) naturalArmorReduction.ammount){
-			finalDamage.ammount = naturalArmorReduction.ammount;
-		} else if (wornArmorReduction.ammount < naturalArmorReduction.ammount){
-			finalDamage.ammount = wornArmorReduction.ammount;
+		if(wornArmorReduction[0] > naturalArmorReduction[0]){
+			finalDamage[0] = naturalArmorReduction[0];
+		} else if (wornArmorReduction[0] < naturalArmorReduction[0]){
+			finalDamage[0] = wornArmorReduction[0];
 		} else {
-			finalDamage.ammount = wornArmorReduction.ammount - 1;
+			finalDamage[0] = wornArmorReduction[0] - 1;
 		}
-		if (finalDamage.ammount < 0){
-			finalDamage.ammount = 0;
+		if (finalDamage[0] < 0){
+			finalDamage[0] = 0;
 		}
 		
-		if ((DamageType) wornArmorReduction.type != dt){
-			finalDamage.type = wornArmorReduction.type;
-		} else if ((DamageType) wornArmorReduction.type != dt){
-			finalDamage.type = naturalArmorReduction.type;
+		if (wornArmorReduction[1] != damageType){
+			finalDamage[1] = wornArmorReduction[1];
+		} else if (wornArmorReduction[1] != damageType){
+			finalDamage[1] = naturalArmorReduction[1];
 		}
 		
 		return finalDamage;

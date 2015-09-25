@@ -103,8 +103,8 @@ public abstract class Creature {
 		return might;
 	}
 	
-	public void recieveWound(int[][] attackData, DamageType dt) throws DeathException{
-		body.recieveWounds(attackData, dt);
+	public void recieveWound(int[][] attackData, int damageType) throws DeathException{
+		body.recieveWounds(attackData, damageType);
 	}
 	
 	private int defendFromAttackFlatfooted(){

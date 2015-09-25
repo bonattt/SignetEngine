@@ -8,7 +8,7 @@ import creatures.Creature;
 public class SimpleAttack extends AttackAction {
 
 	public SimpleAttack(Creature attacker, Weapon weaponUsed, Creature target) {
-		super(attacker, weaponUsed, target, 4, 1, 1, DamageType.blunt);
+		super(attacker, weaponUsed, target, 4, 1, 1, DamageType.BLUNT);
 	}
 
 }

@@ -93,12 +93,12 @@ public class Body {
 		return map;
 	}
 	
-	public void recieveWound(int damage, DamageType dt, BodyPart location) throws DeathException{
+	public void recieveWound(int damage, int dType, BodyPart location) throws DeathException{
 		try{
 			if(damage > 7){
 				damage = 7;
 			}
-			int[] instantDamage = Wound.addNewWound(damage, dt, location);
+			int[] instantDamage = Wound.addNewWound(damage, dType, location);
 			takeDamageDontRecalculate(instantDamage[0]);
 			takeStunDontRecalculate(instantDamage[1]);
 			takeSteminaDamageDontRecalculate(instantDamage[2]);
@@ -107,7 +107,7 @@ public class Body {
 			throw e;
 		}
 	}
-	public void recieveWounds(int[][] attackData, DamageType dt) throws DeathException{
+	public void recieveWounds(int[][] attackData, int dt) throws DeathException{
 		// attack data {hits, might}
 		for (int i = 0; i < attackData.length; i++){
 			if (attackData[i][0] < 0){
