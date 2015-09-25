@@ -90,9 +90,9 @@ public abstract class Creature {
 		}
 		return defense.defenseDice() + defense.adjustmentForAttack(atc);
 	}
-	public DamageType getWeaponType(){
+	public int getWeaponType(){
 		//TODO get from weapon
-		return DamageType.slashing;
+		return DamageType.SLASHING;
 	}
 	
 	public int getWeaponMight(){
