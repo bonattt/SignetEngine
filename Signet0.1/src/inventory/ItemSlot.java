@@ -1,7 +1,6 @@
 package inventory;
 
 import misc.TextTools;
-import combat.CombatAction;
 import items.CombatItem;
 
 /**

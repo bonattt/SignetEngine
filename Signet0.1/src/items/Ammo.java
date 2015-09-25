@@ -1,7 +1,5 @@
 package items;
 
-import combat.AttackAction;
-
 import creatures.Creature;
 
 public class Ammo extends Item{
@@ -21,12 +19,7 @@ public class Ammo extends Item{
 	@Override
 	public void itemBreaks() {
 		// TODO Auto-generated method stub
-	}
-	
-	public void modifyAttackDamage(AttackAction atc){
-		// TODO nothing
-	}
-	
+	}	
 	public void specialEffect(Creature target){
 		// TODO do nothing by default.
 	}

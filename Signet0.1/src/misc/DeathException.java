@@ -1,7 +1,5 @@
 package misc;
 
-import combat.AttackAction;
-
 public class DeathException extends Exception {
 
 	/**
@@ -15,8 +13,6 @@ public class DeathException extends Exception {
 	public boolean diedWhileFighting = false;
 	public boolean diedFromInstantDamage = false;
 	public boolean diedFromBleeding = false;
-	public AttackAction finishingBlow = null;
-	public AttackAction yourAttack = null;
 	
 	public DeathException(boolean playerDeath){
 		super(playerDeath ? "you have been killed!" : "You killed the ");

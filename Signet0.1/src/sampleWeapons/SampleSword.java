@@ -3,7 +3,6 @@ package sampleWeapons;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import combat.CombatAction;
 import items.CombatItem;
 import items.Expendable;
 import items.Weapon;

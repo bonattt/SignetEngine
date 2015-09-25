@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import misc.TextTools;
-import combat.Combat;
-import combat.CombatAction;
 
 public abstract class Weapon extends Item implements CombatItem {
 
@@ -18,7 +16,6 @@ public abstract class Weapon extends Item implements CombatItem {
 	parry,		// stat used as a bonus to active defense test while using this weapon.
 	accuracy,	// bonus applied to 
 	might;		// amount of damage dealt by a hit with this weapon.
-	private CombatAction[] attacks;
 	
 	public Weapon(int might, int accuracy, int parry, int weaponType) {
 		super(getWeaponSize(weaponType), getWeaponWeight(weaponType), getWeaponDurability(weaponType), getWeaponHardness(weaponType), 0);
@@ -26,42 +23,12 @@ public abstract class Weapon extends Item implements CombatItem {
 		this.accuracy = accuracy;
 		this.might = might;
 	}
-	protected void setActions(CombatAction[] attacks){
-		this.attacks = attacks;
-	}
 	/**
 	 * puts all availible combat actions into 
 	 * @param combat
 	 * @return
 	 */
-	public ArrayList<CombatAction> getActions(){
-		
-		ArrayList<CombatAction> actions = new ArrayList<CombatAction>();
-		for (int i = 0; i < attacks.length; i++){
-			if(attacks[i].canBeUsed()) {
-				actions.add(attacks[i]);
-			}
-		}
-		return actions;
-	}
 	
-//	public CombatAction selectAction(){
-//		String question = "what action will you take?";
-//		String[] answers = new String[attacks.length];
-//		for (int i = 0; i < attacks.length; i++){
-//			answers[i] = attacks[i].name;
-//		}
-//		int selection = TextTools.questionAsker(question, answers, TextTools.BACK_DISABLED);
-//		CombatAction selectedAction = attacks[selection-1];
-//		return selectedAction;
-//	}
-	
-//	public Weapon(int size, int weight, int durability, int hardness, int might, int accuracy, int parry, int weaponType){
-//		super(size, weight, durability, hardness, 0);
-//		this.parry = parry;
-//		this.accuracy = accuracy;
-//		this.might = might;
-//	}
 	@Override
 	public String checkDamage(){
 		String s = super.checkDamage();

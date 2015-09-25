@@ -12,10 +12,6 @@ import main.GameRunner;
 import misc.DamageType;
 import misc.DeathException;
 import misc.DiceRoller;
-import combat.AttackAction;
-import combat.Combat;
-import combat.CombatAction;
-import combat.DefenseAction;
 
 public abstract class Creature {
 	/* 
@@ -27,9 +23,6 @@ public abstract class Creature {
 	
 	
 	public String name;
-	
-	private AttackAction attack = null;
-	private DefenseAction defense = null;
 	
 	private Body body;
 	private Inventory inv;
@@ -52,8 +45,6 @@ public abstract class Creature {
 	}
 	
 	// Selects the combat action that will be used in a fight. PC's prompt for user input, NPC's (Monster) use algorithms.
-	public abstract CombatAction selectNormalCombatAction(Scanner inputScanner);
-	public abstract AttackAction selectExtraAttack(Creature opponent, int advantage);
 	public abstract void die() throws DeathException;
 	public abstract boolean isPlayer();
 	public abstract String handleDeath(DeathException e);
@@ -79,16 +70,6 @@ public abstract class Creature {
 	
 	public Inventory getInventory(){
 		return inv;
-	}
-	/**
-	 * this method returns the defense dice rolled by this creature when attacked. The 
-	 * @return
-	 */
-	public int getDefenseDice(AttackAction atc){
-		if (defense == null){
-			return defendFromAttackFlatfooted();
-		}
-		return defense.defenseDice() + defense.adjustmentForAttack(atc);
 	}
 	public int getWeaponType(){
 		//TODO get from weapon
@@ -127,20 +108,7 @@ public abstract class Creature {
 		body = new Body(this);
 		return body;
 	}	
-	
-	public void setAttack(AttackAction atc){
-		attack = atc;
-	}
-	public void setDefense(DefenseAction def){
-		defense = def;
-	}
-	public AttackAction getAttack(){
-		return attack;
-	}
-	public DefenseAction getDefense(){
-		return defense;
-	}
-	
+		
 	public int setUpCombatRound(Creature enemy){
 		// TODO implement
 		return Integer.MIN_VALUE;

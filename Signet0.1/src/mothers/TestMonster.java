@@ -3,13 +3,7 @@ package mothers;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import sampleCombatActions.DefaultDefense;
-import sampleCombatActions.SimpleAttack;
 import misc.DeathException;
-import combat.AttackAction;
-import combat.Combat;
-import combat.CombatAction;
-import combat.DefenseAction;
 import creatures.Creature;
 
 public class TestMonster extends Creature {
@@ -18,22 +12,6 @@ public class TestMonster extends Creature {
 
 	public TestMonster() {
 		super("generic-saurace-rex", getGenericMonsterStats(), new HashMap<String, Integer>());
-	}
-
-	@Override
-	public CombatAction selectNormalCombatAction(Scanner inputScanner) {
-		// TODO Auto-generated method stub
-		
-		Combat combat = Combat.getInstance();
-		AttackAction atc = new SimpleAttack(this, getInventory().getWeapon(), combat.getPlayer());
-		DefenseAction def = new DefaultDefense(this);
-		return new CombatAction(this, atc, def);
-	}
-
-	@Override
-	public AttackAction selectExtraAttack(Creature opponent, int advantage) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
