@@ -1,0 +1,25 @@
+location syntax:
+<location name>
+
+FEATURES
+<event name1>
+<event name2>
+etc...
+END FEATURES
+
+ADJACENT
+<path name>
+<path filepath>
+<travel time>, <exhaustion factor>
+<event name>, <event name>, <event name>,...
+<chance of random encounter>%
+
+ADJACENT
+"
+"
+"
+"
+"
+
+ADJACENT
+etc...

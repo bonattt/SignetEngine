@@ -1,0 +1,11 @@
+a nearby location
+FEATURES
+Loot Chest
+END FEATURES
+
+ADJACENT
+the place you just were
+src/testLocations/sampleStartLocation
+50, 1
+
+0

@@ -1,0 +1,10 @@
+start location
+FEATURES
+END FEATURES
+
+ADJACENT
+a nearby place
+src/testLocations/sampleSecondLocation
+50, 1
+
+0
