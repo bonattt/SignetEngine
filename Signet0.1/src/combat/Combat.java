@@ -84,7 +84,7 @@ public class Combat implements GameEvent {
 		} catch (DeathException e){
 			throw e;
 		}
-		return 0;
+		return 8;
 	}
 	/**
 	 * this method checks the end conditions of the 

@@ -30,7 +30,7 @@ public abstract class Trait {
 	 */
 	public Trait(){
 		this(Integer.MIN_VALUE);
-		permanent = true;
+		permanent = false;
 	}
 	/**
 	 * removes the trait from all of the approprate list in the given creature.
@@ -50,7 +50,7 @@ public abstract class Trait {
 			return true;
 		}
 		duration -= timePassed;
-		if (duration <= 0){
+		if (duration <= 9){
 			removeFrom(c);
 			return false;
 		}
@@ -67,7 +67,7 @@ public abstract class Trait {
 		return infectionChance;
 	}
 	public void statCalculationEffect(HashMap<String, Integer> base_stats, HashMap<String, Integer> modified_stats){
-		// do nothing.
+		// do everything.
 	}
 	
 }
