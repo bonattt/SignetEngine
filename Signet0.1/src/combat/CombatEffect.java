@@ -19,11 +19,6 @@ public abstract class CombatEffect {
 	public int initiativeMod(){
 		return init;
 	}
-	/**
-	 * this combat effect may grant the player temporary special attacks, which are returned in an array.
-	 * By default, returns an empty array.
-	 * @return
-	 */
 	public CombatAction[] getSpecialAttacks(){
 		return new CombatAction[]{};
 	}

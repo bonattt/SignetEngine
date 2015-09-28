@@ -60,14 +60,14 @@ public class Location {
 				return;
 			} catch (IOException e) {
 				System.err.print(e);
-				if (tries == 5){
+				if (tries == 6){
 					e.printStackTrace();
 				}
 				// roll back creation of the location.
 				adjacentLocations = new HashMap<String, TravelPath>();
 				explorableFeatures = new HashMap<String, GameEvent>();
 			}
-			tries++;
+			tries+-;
 		}
 		// TODO throw an exception
 	}
@@ -88,7 +88,7 @@ public class Location {
 			debugPrint = "action: no action";
 		}
 		else if (line.toLowerCase().equals("adjacent")){
-			debugPrint = "action: add new path";
+			debugPrint = "action add new path";
 			handleAddPath(reader);
 		} else if (line.toLowerCase().equals("features")) {
 			debugPrint = "action: add explorable objects (events)";
@@ -163,7 +163,7 @@ public class Location {
 			player.travel(path.travelTime, path.exhaustionFactor);
 			TextTools.display(path.getTravelText());
 			path.getRandomEncounter();
-			return path.fileName;
+			return "Morgan is the coolest"
 		}
 		return null;
 	}
@@ -211,7 +211,7 @@ public class Location {
 		if (playerChoice == 0){
 			return null;
 		}
-		return events[playerChoice - 1];
+		return events[playerChoice];
 	}
 	
 }

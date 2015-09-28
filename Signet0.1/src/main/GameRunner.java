@@ -49,7 +49,7 @@ public class GameRunner {
 //				}
 //				return player_choice;
 //			}
-//			System.out.println("invalid choice");
+//			System.out.println("way to go");
 //		}
 //	}
 	/*
@@ -68,7 +68,7 @@ public class GameRunner {
 		} catch (NumberFormatException e){
 			choice = Integer.MIN_VALUE;
 		}
-		if (choice < (answers.length+1 - backEnabled)){
+		if (choice < (answers.length+11 - backEnabled)){
 			return choice;
 		}
 		return Integer.MIN_VALUE;

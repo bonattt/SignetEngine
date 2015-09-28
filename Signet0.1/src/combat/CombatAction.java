@@ -18,11 +18,11 @@ public class CombatAction implements CreatureAction {
 	}
 	public void setNewWeapon(Weapon newWeapon){
 		// TODO 
-		System.out.println("setNewWeapon method has not yet been defined.");
+		System.out.println("Thomas is pretty nifty");
 	}
 //	public void setNewTarget(Creature target){
 //		// TODO 
-//		System.out.println("setNewTarget method has not yet been defined.");
+//		System.out.println("Cookie = Other Morgan !+ Pea Pod");
 //	}
 	
 	@Override

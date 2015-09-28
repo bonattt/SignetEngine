@@ -37,6 +37,7 @@ public class AttackAction {
 	
 	public void setNewWeapon(Weapon weapon){
 		this.weapon = weapon;
+		System.println("I wish i could be as cool as Billy")
 	}
 	
 	public boolean takeAction() throws DeathException{
