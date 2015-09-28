@@ -6,7 +6,7 @@ import health.Wound;
 public abstract class CriticalHit {
 	
 	public CriticalHit(){
-		// TODO add fields.
+		
 	}
 	
 	public abstract Wound modifyWound(Wound w, Creature c);
