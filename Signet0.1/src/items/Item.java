@@ -1,6 +1,11 @@
 package items;
 
+import creatures.Creature;
+import inventory.Gear;
+import inventory.Inventory;
+import inventory.ItemContainer;
 import misc.DiceRoller;
+import misc.TextTools;
 
 public abstract class Item {
 	
@@ -11,6 +16,7 @@ public abstract class Item {
 	private int damage;		// damage dealt to the item's durability.
 	private int[] args;
 	public String name;
+	public String description;
 	
 	public Item (int size, int wt, int dur, int hard, int dam){
 		this.size = size;
@@ -18,6 +24,71 @@ public abstract class Item {
 		durability = dur;
 		hardness = hard;
 		damage = dam;
+	}
+	public void inspect(Creature player) {
+		TextTools.display(description);
+		// TODO add a pause in text reading here.
+	}
+	public abstract void useFromInventory(Inventory inv, Creature player) throws Exception;
+
+	public void useFromContainer(Inventory inv, Creature player, ItemContainer container) {
+		String question = "What would you like to do with the " + name;
+		String[] answers = new String[]{"pick-up", "discard", "inspect", "cancel"};
+		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
+		if(choice == 0){
+			return;
+		} else if (choice == 1) {
+			if(inv.spaceRemaining() >= this.getSize()){
+				inv.store(this);
+				container.removeItem(this);
+			} else {
+				TextTools.display("You do not have enough room for that");
+			}
+		} else if (choice == 2) {
+			container.removeItem(this);
+		} else if (choice == 3) {
+			this.inspect(player);
+		} else {
+			// TODO throw an Exception
+		}
+		 
+	}
+	
+	public boolean canBeUsedInExplore(){
+		return true;
+	}
+	public boolean isExpendible(){
+		return false;
+	}
+	public boolean canBeUsedInCombat(){
+		return false;
+	}
+	public boolean isWeapon(){
+		return false;
+	}
+	public boolean isRangedWeapon(){
+		return false;
+	}
+	public boolean isMeleeWeapon(){
+		return false;
+	}
+	public boolean isDepletable(){
+		return false;
+	}
+	public boolean isClothing(){
+		return false;
+	}
+	public boolean isArmor(){
+		return false;
+	}
+	public boolean isEquipment(){
+		return false;
+	}
+	public boolean isLightSource(){
+		return false;
+	}
+	public boolean isFirstAid(){
+		return false;
 	}
 	
 	public int getSize(){
@@ -48,5 +119,7 @@ public abstract class Item {
 		}
 		return false;
 	}
+	
+	
 	public abstract void itemBreaks();
 }

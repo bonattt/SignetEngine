@@ -12,6 +12,7 @@ import main.GameRunner;
 import misc.DamageType;
 import misc.DeathException;
 import misc.DiceRoller;
+import sampleCombatSkills.*;
 
 public abstract class Creature {
 	/* 
@@ -52,6 +53,7 @@ public abstract class Creature {
 	
 	public HashMap<String, Skill> startingSkills(){
 		HashMap<String, Skill> skills = new HashMap<String, Skill>();
+		skills.put("knives", new KnifeSkill());
 		return skills;
 	}
 	
@@ -164,7 +166,13 @@ public abstract class Creature {
 			dicePool += this.stats_adjusted.get(attributes[i]);
 		}
 		return DiceRoller.makeRoll(dicePool);
+	}
+	public int[] makeTest(String testName, int threshold){
+		if(testName.equals("")){
+			//TODO add special tests.
+		}
 		
+		return skills.get(testName).makeSkillTest(this, threshold);
 	}
 	
 //	

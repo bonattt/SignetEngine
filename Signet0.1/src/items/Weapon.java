@@ -1,8 +1,12 @@
 package items;
 
+import inventory.Gear;
+import inventory.Inventory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import creatures.Creature;
 import misc.TextTools;
 
 public abstract class Weapon extends Item implements CombatItem {
@@ -13,12 +17,14 @@ public abstract class Weapon extends Item implements CombatItem {
 	
 	private HashMap<String, Integer> utility;
 	private int 
+	weaponType,
 	parry,		// stat used as a bonus to active defense test while using this weapon.
 	accuracy,	// bonus applied to 
 	might;		// amount of damage dealt by a hit with this weapon.
 	
 	public Weapon(int might, int accuracy, int parry, int weaponType) {
 		super(getWeaponSize(weaponType), getWeaponWeight(weaponType), getWeaponDurability(weaponType), getWeaponHardness(weaponType), 0);
+		this.weaponType = weaponType;
 		this.parry = parry;
 		this.accuracy = accuracy;
 		this.might = might;
@@ -28,6 +34,31 @@ public abstract class Weapon extends Item implements CombatItem {
 	 * @param combat
 	 * @return
 	 */
+	
+	public int getWeaponType(){
+		return weaponType;
+	}
+	
+	@Override
+	public boolean isEquipment(){
+		return true;
+	}
+	@Override
+	public boolean isExpendible(){
+		return false;
+	}
+	@Override
+	public boolean canBeUsedInCombat(){
+		return false;
+	}
+	@Override
+	public boolean isWeapon(){
+		return true;
+	}
+	@Override
+	public boolean isMeleeWeapon(){
+		return true;
+	}
 	
 	@Override
 	public String checkDamage(){
@@ -102,5 +133,9 @@ public abstract class Weapon extends Item implements CombatItem {
 	}
 	public int getParry(){
 		return parry;
+	}
+	@Override
+	public void useFromInventory(Inventory inv, Creature character) throws Exception {
+		throw new Exception("useFromInventory is not defined in this class");
 	}
 }

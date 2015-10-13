@@ -1,5 +1,7 @@
 package items;
 
+import inventory.Gear;
+import inventory.Inventory;
 import creatures.Creature;
 
 public class Ammo extends Item{
@@ -15,7 +17,6 @@ public class Ammo extends Item{
 		unitValue = 0;
 	}
 
-
 	@Override
 	public void itemBreaks() {
 		// TODO Auto-generated method stub
@@ -23,5 +24,8 @@ public class Ammo extends Item{
 	public void specialEffect(Creature target){
 		// TODO do nothing by default.
 	}
-
+	@Override
+	public void useFromInventory(Inventory inv, Creature character) throws Exception {
+		throw new Exception("use while exploring unimplemented for this class");
+	}
 }

@@ -1,5 +1,8 @@
 package items;
 
+import inventory.Gear;
+import inventory.Inventory;
+import creatures.Creature;
 import health.Wound;
 
 
@@ -29,5 +32,8 @@ public class Ointment extends Item implements FirstAidItem {
 	public double getInfectionMultiplier(){
 		return infectionMultiplier;
 	}
-
+	@Override
+	public void useFromInventory(Inventory inv, Creature character) throws Exception {
+		throw new Exception("use while exploring unimplemented for this class");
+	}
 }

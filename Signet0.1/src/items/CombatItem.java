@@ -10,9 +10,12 @@ import java.util.ArrayList;
  */
 public interface CombatItem {
 	public String getName();
-	public boolean needsToBeHeld();
 	public boolean isExpendible();
+	public boolean canBeUsedInCombat();
+	public boolean isWeapon();
+	public boolean isRangedWeapon();
+	public boolean isMeleeWeapon();
+	public boolean canBeUsedInExplore();
 	public Weapon asWeapon();
-	public Expendable asExpendable();
 	public int getWeight();
 }

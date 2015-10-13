@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import items.CombatItem;
-import items.Expendable;
 import items.Weapon;
 
 public class SampleSword extends Weapon implements CombatItem {
@@ -26,11 +25,6 @@ public class SampleSword extends Weapon implements CombatItem {
 
 	public Weapon asWeapon() {
 		return this;
-	}
-
-	public Expendable asExpendable() {
-		// TODO define an exception for this method
-		return null;
 	}
 
 	@Override

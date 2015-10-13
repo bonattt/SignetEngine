@@ -2,6 +2,7 @@ package mothers;
 
 import java.util.HashMap;
 
+import sampleWeapons.*;
 import creatures.PlayerCharacter;
 /**
  * Jarred the impaler, object mother character.
@@ -14,7 +15,13 @@ public class CharacterMother {
 		String creatureName = "Jarred";
 		HashMap<String, Integer> baseStats = getJarredStatMap();
 		HashMap<String, Integer> damageMultipliers = getJarredDamageMultipliers();
-		return new PlayerCharacter(creatureName, baseStats, damageMultipliers);
+		PlayerCharacter dickDefenderOfLife = new PlayerCharacter(creatureName, baseStats, damageMultipliers);
+		dickDefenderOfLife.getInventory().initializeScifiEquipmentSlots(dickDefenderOfLife.getInventory().getEquipment());
+		dickDefenderOfLife.getInventory().equipWeapon("holster", new SamplePistol());
+		dickDefenderOfLife.getInventory().equipWeapon("boot", new SampleCombatKnife());
+		dickDefenderOfLife.getInventory().pickUpWeapon(new SampleAssaultRifle());
+		
+		return dickDefenderOfLife;
 	}
 	private static HashMap<String,Integer> getJarredStatMap(){
 		HashMap<String,Integer> map = new HashMap<String,Integer>();

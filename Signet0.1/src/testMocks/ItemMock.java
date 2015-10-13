@@ -1,5 +1,8 @@
 package testMocks;
 
+import creatures.Creature;
+import inventory.Gear;
+import inventory.Inventory;
 import items.Item;
 
 public class ItemMock extends Item {
@@ -15,6 +18,15 @@ public class ItemMock extends Item {
 	@Override
 	public void itemBreaks() {
 
+		
+	}
+	public void useWhileExploring(Gear equipment, Creature character)
+			throws Exception {
+	}
+	@Override
+	public void useFromInventory(Inventory inv, Creature character)
+			throws Exception {
+		// TODO Auto-generated method stub
 		
 	}
 

@@ -12,9 +12,9 @@ public class TextTools {
 	public static final int BACK_DISABLED = 0;
 	public static final int BACK_ENABLED = 1;
 	
-	public static int questionAsker(String question, String[] answers){
-		return questionAsker(question, answers, BACK_DISABLED);
-	}
+//	public static int questionAsker(String question, String[] answers){
+//		return questionAsker(question, answers, BACK_DISABLED);
+//	}
 	public static int questionAsker(String question, String[] answers, int backEnabled){
 		int choice = -1;
 		display(question);

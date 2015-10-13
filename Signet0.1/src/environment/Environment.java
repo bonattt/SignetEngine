@@ -60,7 +60,7 @@ public class Environment {
 		while (true) {
 			String question = "You are in " + location.name + " what will you do?";
 			String[] answers = new String[]{"travel", "explore", "save and quit"};
-			int choice = TextTools.questionAsker(question, answers);
+			int choice = TextTools.questionAsker(question, answers, TextTools.BACK_DISABLED);
 			if (choice == 1){
 				travel();
 				

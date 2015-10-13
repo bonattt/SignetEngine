@@ -1,4 +1,4 @@
-package test;
+package unitTests;
 
 public class UnitTestBodyPart {
 

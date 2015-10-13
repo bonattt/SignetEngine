@@ -1,5 +1,9 @@
 package items;
 
+import inventory.Gear;
+import inventory.Inventory;
+import creatures.Creature;
+
 public class AmmoClip<T extends Ammo> extends Item{
 
 	private static final int DEFAULT_DURABILITY = 50;
@@ -22,5 +26,8 @@ public class AmmoClip<T extends Ammo> extends Item{
 	public void itemBreaks() {
 		// TODO Auto-generated method stub
 	}
-
+	@Override
+	public void useFromInventory(Inventory inv, Creature character) throws Exception {
+		throw new Exception("use while exploring unimplemented for this class");
+	}
 }

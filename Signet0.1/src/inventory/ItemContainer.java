@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import creatures.Creature;
 import misc.DiceRoller;
 import misc.TextTools;
+import items.*;
 import items.Item;
 
 public abstract class ItemContainer {
@@ -22,22 +23,36 @@ public abstract class ItemContainer {
 	baseWeight;			// weight of the container
 	
 	public ItemContainer(int weight, int size, String name){
-		items = new ArrayList<Item>();
+		this(weight, size, name, new ArrayList<Item>());
+	}
+	public ItemContainer(int weight, int size, String name, ArrayList<Item> itms){
+		items = itms;
 		baseSpace = size;
 		baseWeight = weight;
 		this.name = name;
 	}
 	/**
-	 * this method retuns a boolean for whether the concealed container 
+	 * this method retuns a boolean for whether the concealed container was found by a searcher.
 	 * @return
 	 */
 	public boolean avoidDetection(Creature searcher){		
 		if (items.size() == 0){
 			// if there's nothing to find, you can't find it.
 			return false;
+		} else if (concealmentHits == Integer.MIN_VALUE){
+			return true;
 		}
 		int hits = searcher.getSkills().get("perception").makeSkillTest(searcher, concealmentHits, -concealability)[0];
 		return (hits >= 0);
+	}
+	public boolean contains(Item item){
+		return items.contains(item);
+	}
+	public void concealContainer(Creature creature){
+		concealmentHits = creature.makeTest("slightOfHand", 0)[0];
+	}
+	public void unConceal(){
+		concealmentHits = Integer.MIN_VALUE;
 	}
 	
 	/**
@@ -51,12 +66,6 @@ public abstract class ItemContainer {
 			time = 10;
 		}
 		return time;
-	}
-	public ItemContainer(int weight, int size, String name, ArrayList<Item> itms){
-		items = itms;
-		baseSpace = size;
-		baseWeight = weight;
-		this.name = name;
 	}
 	/**
 	 * adds an item to the item container, if it will fit, then updates space used and weight fields.
@@ -74,6 +83,28 @@ public abstract class ItemContainer {
 		spaceUsed = newSpaceUsed;
 		weightContained += itm.getWeight();
 		return true;
+	}
+	
+	
+	protected ArrayList<Item> getMedine(){
+		ArrayList<Item> medicine = new ArrayList<Item>();
+		return medicine;
+	}
+	protected ArrayList<LightSource> getLightSources(){
+		ArrayList<LightSource> lights = new ArrayList<LightSource>();
+		return lights;
+	}
+	protected ArrayList<Weapon> getWeapons(){
+		ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+		return weapons;
+	}
+	protected ArrayList<WornItem> getClothing(){
+		ArrayList<WornItem> clothes = new ArrayList<WornItem>();
+		return clothes;
+	}
+	protected ArrayList<Armor> getArmor(){
+		ArrayList<Armor> armor = new ArrayList<Armor>();
+		return armor;
 	}
 	
 	public boolean removeItem(Item itm){
@@ -97,6 +128,27 @@ public abstract class ItemContainer {
 	}
 	public ArrayList<Item> listITems(){
 		return items;
+	}
+	
+	public String toString(){
+		StringBuilder str = new StringBuilder();
+		str.append("ItemContainer: ");
+		str.append(name);
+		str.append("\n {");
+		str.append("\n    ");
+		str.append(items.toString());
+		str.append("\n    ");
+		str.append("weight: ");
+		str.append(getWeight());
+		str.append("\n    ");
+		str.append("space used:  ");
+		str.append(spaceUsed);
+		str.append(" / ");
+		str.append(baseSpace);
+		str.append("\n    ");
+		str.append("concealment hits: ");
+		str.append(concealmentHits);
+		return str.toString();
 	}
 	
 	private String printNoRoomInContainer(Item itm){

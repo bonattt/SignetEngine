@@ -27,7 +27,7 @@ public class SelectionNode extends DialogueNode {
 	
 	@Override
 	public DialogueNode openNode(PlayerCharacter player, NPC npc) throws DeathException{
-		int reply = TextTools.questionAsker(this.nodeText, answers);
-		return nodes[reply-1];
+		int reply = TextTools.questionAsker(this.nodeText, answers, TextTools.BACK_DISABLED);
+		return nodes[reply - 1];
 	}
 }
