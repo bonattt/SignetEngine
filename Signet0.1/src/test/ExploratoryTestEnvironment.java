@@ -1,7 +1,7 @@
 package test;
 
+import testingMothers.CharacterMother;
 import misc.DeathException;
-import mothers.CharacterMother;
 import environment.Environment;
 
 public class ExploratoryTestEnvironment {

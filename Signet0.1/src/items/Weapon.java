@@ -38,7 +38,32 @@ public abstract class Weapon extends Item implements CombatItem {
 	public int getWeaponType(){
 		return weaponType;
 	}
-	
+
+	@Override
+	public void handleUseWhileEquipped(Inventory inv, Creature player, int choice){
+		String slot = null;
+		ArrayList<String> slots = inv.getEquipment().getWeaponSlots();
+		for (int i = 0; i < slots.size(); i++){
+			String current = slots.get(i);
+			if(inv.getEquipment().getWeapon(current) == this){
+				slot = current;
+				break;
+			}
+		}
+		
+		if(choice == 1) {				// Stow
+			if(inv.spaceRemaining() >= getSize()){
+				inv.getEquipment().removeWeapon(slot);
+				inv.store(this);
+			} else {
+				TextTools.display("There is no room in your " + name + " in you inventory");
+			}
+		} else if (choice == 2) {		// discard
+			inv.getEquipment().removeWeapon(slot);
+		} else {
+			// ERROR
+		}
+	}
 	@Override
 	public boolean isEquipment(){
 		return true;

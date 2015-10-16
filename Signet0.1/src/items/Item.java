@@ -30,7 +30,20 @@ public abstract class Item {
 		// TODO add a pause in text reading here.
 	}
 	public abstract void useFromInventory(Inventory inv, Creature player) throws Exception;
-
+	public abstract void handleUseWhileEquipped(Inventory inv, Creature player, int choice);
+	
+	public String toString(){
+		return name;
+	}
+	
+	public void useWhileEquipped(Inventory inv, Creature player){
+		String question = "What would you like to do withj the " + name + " you have equipped?";
+		String[] answers = new String[]{"stow", "discard", "cancel"};
+		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
+		if(choice != 0){
+			handleUseWhileEquipped(inv, player, choice);
+		}
+	}
 	public void useFromContainer(Inventory inv, Creature player, ItemContainer container) {
 		String question = "What would you like to do with the " + name;
 		String[] answers = new String[]{"pick-up", "discard", "inspect", "cancel"};

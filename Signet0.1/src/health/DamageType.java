@@ -1,4 +1,4 @@
-package misc;
+package health;
 
 public class DamageType {
 	

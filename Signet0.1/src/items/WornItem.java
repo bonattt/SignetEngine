@@ -24,6 +24,21 @@ public abstract class WornItem extends Item {
 	}
 
 	@Override
+	public void handleUseWhileEquipped(Inventory inv, Creature player, int choice){
+		if(choice == 1) {				// Stow
+			if(inv.spaceRemaining() >= getSize()){
+				inv.getEquipment().removeClothing(slot);
+				inv.store(this);
+			} else {
+				TextTools.display("There is no room in your " + name + " in you inventory");
+			}
+		} else if (choice == 2) {		// discard
+			inv.getEquipment().removeClothing(slot);
+		} else {
+			// ERROR
+		}
+	}
+	@Override
 	public void useFromInventory(Inventory inv, Creature character) throws Exception {
 		String question = "What would you like to do with the " + name;
 		String[] answers = new String[]{"equip", "discard", "inspect", "cancel"};

@@ -1,11 +1,11 @@
 package test;
 
+import testingMothers.CharacterMother;
+import testingMothers.DialogueMother;
 import creatures.PlayerCharacter;
 import npc.DialogueNode;
 import npc.NPC;
 import misc.DeathException;
-import mothers.CharacterMother;
-import mothers.DialogueMother;
 
 public class ExploritoryDialogueTest {
 

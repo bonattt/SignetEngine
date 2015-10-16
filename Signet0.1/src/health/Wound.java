@@ -8,7 +8,6 @@ import injuries.PiercingWound;
 import injuries.SlashingWound;
 import items.Bandage;
 import items.Ointment;
-import misc.DamageType;
 
 public class Wound {
 	

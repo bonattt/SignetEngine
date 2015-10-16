@@ -23,4 +23,8 @@ public abstract class LightSource extends Item {
 	public void useFromInventory(Inventory inv, Creature character) throws Exception {
 		throw new Exception("use while exploring unimplemented for this class");
 	}
+	@Override
+	public void handleUseWhileEquipped(Inventory inv, Creature player, int choice){
+		// TODO 
+	}
 }

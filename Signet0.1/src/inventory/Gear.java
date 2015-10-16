@@ -31,6 +31,17 @@ public class Gear {
 		
 	}
 	
+	public String toString(){
+		StringBuilder str = new StringBuilder();
+		str.append("weapons equipped: ");
+		str.append(equippedWeapons.toString());
+		str.append("armor equipped: ");
+		str.append(armorEquipped.toString());
+		str.append("clothing equipped: ");
+		str.append(clothingWorn.toString());
+		return str.toString();
+	}
+	
 	public void refreshWeight(){
 		totalWeight = 0;
 		for (String key : clothingWorn.keySet()){
@@ -63,7 +74,7 @@ public class Gear {
 	
 	///////////
 	
-	public HashMap<String, WornItem> getClothingEquipped(){
+	public HashMap<String, WornItem> getClothingWorn(){
 		return clothingWorn;
 	}
 	

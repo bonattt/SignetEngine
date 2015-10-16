@@ -25,7 +25,12 @@ public class Ointment extends Item implements FirstAidItem {
 		// TODO Auto-generated method stub
 
 	}
-	
+
+	@Override
+	public void handleUseWhileEquipped(Inventory inv, Creature player, int choice){
+		System.out.println("Ammo should not be used while equipped");
+		// does nothing
+	}
 	public double getHealingRateAdjustment(){
 		return healingMultiplier;
 	}

@@ -3,7 +3,7 @@ package indices;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
-import mothers.TestMonster;
+import testingMothers.TestMonster;
 import creatures.Creature;
 
 public class MonsterIndex extends HashMap<String, Constructor<Creature>>{

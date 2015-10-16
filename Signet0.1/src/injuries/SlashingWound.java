@@ -1,7 +1,7 @@
 package injuries;
 
-import misc.DamageType;
 import health.BodyPart;
+import health.DamageType;
 import health.Wound;
 
 public class SlashingWound extends Wound {

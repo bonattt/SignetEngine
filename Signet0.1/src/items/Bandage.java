@@ -24,6 +24,11 @@ public class Bandage extends Item implements FirstAidItem{
 		return false;
 	}
 
+	@Override
+	public void handleUseWhileEquipped(Inventory inv, Creature player, int choice){
+		System.out.println("Ammo should not be used while equipped");
+		// does nothing
+	}
 	public boolean passTime(int timePassed, double healingFactor, Wound injury) {
 		// TODO Auto-generated method stub
 		return false;

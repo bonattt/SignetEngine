@@ -3,6 +3,7 @@ package inventory;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import creatures.Creature;
 import misc.TextTools;
 import items.*;
 
@@ -24,6 +25,28 @@ public class Inventory {
 		equippedWeapon = null;
 //		initializeEquipmentSlots(equippedItems);
 	}
+	public static HashMap<String, Item> convertHashMapWeaponsToItems(HashMap<String, Weapon> oldItems){
+		HashMap<String, Item> newItems = new HashMap<String, Item>();
+		for (String key : oldItems.keySet()){
+			newItems.put(key, oldItems.get(key));
+		}
+		return newItems;
+	}
+	public static HashMap<String, Item> convertHashMapArmorToItems(HashMap<String, Armor> oldItems){
+		HashMap<String, Item> newItems = new HashMap<String, Item>();
+		for (String key : oldItems.keySet()){
+			newItems.put(key, oldItems.get(key));
+		}
+		return newItems;
+	}
+	public static HashMap<String, Item> convertHashMapClothingToItems(HashMap<String, WornItem> oldItems){
+		HashMap<String, Item> newItems = new HashMap<String, Item>();
+		for (String key : oldItems.keySet()){
+			newItems.put(key, oldItems.get(key));
+		}
+		return newItems;
+	}
+	
 	public boolean store(Item item){
 		return backpack.addItem(item);
 	}
@@ -40,7 +63,6 @@ public class Inventory {
 	public Gear getEquipment(){
 		return equipment;
 	}
-	
 	
 	public void initializeScifiEquipmentSlots(Gear gear){
 		gear.createArmorSlot("armor");
@@ -59,24 +81,21 @@ public class Inventory {
 	 * This method starts off by prompting the player to select what part of the inventory they would
 	 *  like to access (armor, weapons, 
 	 */
-	public void accessInventoryDuringExplore(){
+	public void accessInventoryDuringExplore(Creature player){
 		String question = "What part of the inventory would you like to access?";
 		String[] answers = new String[]{"backpack", "equipment", "exit inventory"};
 		while(true) {
 			int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
 			if(choice == 0){
 				break;
-			}
-			if (choice == 1){
-				accessBackpackDuringExplore();
-				continue;
-			}
-			if (choice == 2){
-				accessEquipmentDuringExplore();
+			} else if (choice == 1){
+				accessBackpackDuringExplore(player);
+			} else if (choice == 2){
+				accessEquipmentDuringExplore(player);
 			}
 		}
 	}
-	private void accessBackpackDuringExplore(){
+	private void accessBackpackDuringExplore(Creature player){
 		String question = "What kind of items are you looking for?";
 		String[] answers = new String[]{"anything", "first-aid", "weapons", "armor", "clothing", "exit backpack"};
 		
@@ -85,25 +104,24 @@ public class Inventory {
 			if(choice == 0){
 				break;
 			}
-			if (choice == 1){
-				// tbd ANYTHING
-				continue;
+			else if (choice == 1){
+				accessBackpackSelection(backpack.getAllItems(), player);
 			}
-			if (choice == 2){
-				// tbd MEDICUNE
+			else if (choice == 2){
+				accessBackpackSelection(backpack.getMedicine(), player);
 			}
-			if (choice == 3){
-				// tbd WEAPONS
+			else if (choice == 3){
+				accessBackpackSelection(backpack.getWeapons(), player);
 			}
-			if (choice == 4){
-				// tbd ARMOR
+			else if (choice == 4){
+				accessBackpackSelection(backpack.getArmor(), player);
 			}
-			if (choice == 5){
-				// tbd CLOTHING
+			else if (choice == 5){
+				accessBackpackSelection(backpack.getClothing(), player);
 			}
 		}
 	}
-	private static void accessBackpackSelection(ArrayList<Item> itemsSelected){
+	private void accessBackpackSelection(ArrayList<Item> itemsSelected, Creature player){
 		String question = "which item would you like to use?";
 		String[] answers = new String[itemsSelected.size() + 1];
 		for (int i = 0; i < answers.length - 1; i++){
@@ -114,7 +132,11 @@ public class Inventory {
 		if (choice == 0){
 			return;
 		}
-		itemsSelected.get(choice - 1);
+		try {
+			itemsSelected.get(choice - 1).useFromInventory(this, player);
+		} catch (Exception e) {
+			// do nothing -- this is temporary
+		}
 	}
 	private void accessWeaponsInBackpackDuringExplore(){
 		
@@ -125,7 +147,7 @@ public class Inventory {
 	private void accessClothingInBackpackDuringExplore(){
 		
 	}
-	private void accessEquipmentDuringExplore(){
+	private void accessEquipmentDuringExplore(Creature player){
 		String question = "What kind of equipment would you like you access?";
 		String[] answers = new String[]{"weapons", "armor", "clothing", "exit equipment"};
 		while(true) {
@@ -134,29 +156,62 @@ public class Inventory {
 				break;
 			}
 			if (choice == 1){
-				accessEquippedWeaponsDuringExplore();
+				accessEquippedWeaponsDuringExplore(player);
 				continue;
 			}
 			if (choice == 2){
-				accessEquippedArmorDuringExplore();
+				accessEquippedArmorDuringExplore(player);
 				continue;
 			}
 			if (choice == 3){
-				accessEquippedClothingDuringExplore();
+				accessEquippedClothingDuringExplore(player);
 				continue;
 			}
 		}
 	}
-	private void accessEquippedWeaponsDuringExplore(){
-		
+	private void accessEquippedWeaponsDuringExplore(Creature player){
+		String question = "Which equipped weapon would you like to";
+		HashMap<String, Weapon> weapons = equipment.getEquippedWeapons();
+		accessGenericEquipmentDuringExplore(player, convertHashMapWeaponsToItems(weapons), question);
 	}
-	private void accessEquippedArmorDuringExplore(){
-		
+	private void accessEquippedArmorDuringExplore(Creature player){
+		String question = "Which equipped armor would you like to";
+		HashMap<String, Armor> armor = equipment.getArmorEquipped();
+		accessGenericEquipmentDuringExplore(player, convertHashMapArmorToItems(armor), question);
 	}
-	private void accessEquippedClothingDuringExplore(){
-		
+	private void accessEquippedClothingDuringExplore(Creature player){
+		String question = "Which equipped clothing would you like to use?";
+		HashMap<String, WornItem> clothingWorn = equipment.getClothingWorn();
+		accessGenericEquipmentDuringExplore(player, convertHashMapClothingToItems(clothingWorn), question);
 	}
-	
+		
+	private void accessGenericEquipmentDuringExplore(Creature player, HashMap<String, Item> equippedItems, String question) {
+		String[] clothingSlots = new String[equippedItems.size()];
+		String[] answers = new String [clothingSlots.length + 1];
+		int i = 0;
+		for(String key : equippedItems.keySet()){
+			Item current = equippedItems.get(key);
+			if(current != null){
+				answers[i] = current.name + " [" + key + "]";
+			}
+				else {
+				answers[i] = "empty [" + key + "]";
+			}
+			clothingSlots[i] = key;
+			i += 1;
+		}
+		answers[answers.length - 1] = "cancel";
+		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
+		if(choice == 0){
+			return;
+		}
+		Item targetItem = equippedItems.get(clothingSlots[choice - 1]);
+		if (targetItem == null){
+			TextTools.display("That slot is empty!");
+			return;
+		}
+		targetItem.useWhileEquipped(this, player);
+	}
 	
 	public ArrayList<CombatItem> listEquippedWeapons(){
 		ArrayList<CombatItem> list = new ArrayList<CombatItem>();
@@ -371,6 +426,9 @@ public class Inventory {
 		Armor oldArmor = equipment.getArmor(newArmor.slot);
 		if(oldArmor == null){
 			equipment.equipArmor(newArmor);
+			if(backpack.contains(newArmor)){
+				backpack.removeItem(newArmor);
+			}
 			return;
 		}
 		String question = newArmor.slotIsAlreadyOccupiedString(oldArmor.name);
@@ -440,7 +498,7 @@ public class Inventory {
 	}
 	
 	public HashMap<String, WornItem> getClothingEquipped(){
-		return equipment.getClothingEquipped();
+		return equipment.getClothingWorn();
 	}
 	public HashMap<String, Armor> getArmorEquipped(){
 		return equipment.getArmorEquipped();
@@ -449,5 +507,19 @@ public class Inventory {
 		return equipment.getEquippedWeapons();
 	}
 	
+	public String toString(){
+		StringBuilder str = new StringBuilder();
+		str.append("carried weight: ");
+		str.append(carriedWeight);
+		str.append("\nEquipped Weapon: ");
+		str.append(equippedWeapon);
+		str.append("\nLight Source: ");
+		str.append(lightSource);
+		str.append("\n\nItem Container:\n");
+		str.append(backpack.toString());
+		str.append("\n\nEquipment:\n");
+		str.append(equipment.toString());
+		return str.toString();
+	}
 }
 

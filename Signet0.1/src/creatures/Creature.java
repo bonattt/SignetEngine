@@ -1,6 +1,7 @@
 package creatures;
 
 import health.Body;
+import health.DamageType;
 import inventory.Inventory;
 
 import java.util.ArrayList;
@@ -9,7 +10,6 @@ import java.util.Random;
 import java.util.Scanner;
 
 import main.GameRunner;
-import misc.DamageType;
 import misc.DeathException;
 import misc.DiceRoller;
 import sampleCombatSkills.*;

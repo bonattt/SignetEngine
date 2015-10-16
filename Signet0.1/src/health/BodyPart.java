@@ -5,8 +5,6 @@ import items.Armor;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import misc.DamageType;
-
 
 public abstract class BodyPart {
 	

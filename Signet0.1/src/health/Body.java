@@ -10,7 +10,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import misc.DamageType;
 import misc.DeathException;
 import creatures.Creature;
 import bodyparts.*;
@@ -63,35 +62,35 @@ public class Body {
 		bodyparts.put("left shoulder", new Shoulder("left shoulder"));
 	}
 	
-	public Armor[] addArmor(Armor armor, String armorSlot){
-		HashMap<String, String[]> map = getArmorSlotBodyPartIndex();
-		if (!map.containsKey(armorSlot)){
-			throw new IllegalArgumentException("you used a non existant armor slot or an armor slot that does not exist in your current setting");
-		}
-		
-		String[] bodyPartsToArmor = map.get(armorSlot);
-		Set<Armor> armorToBag = (Set<Armor>) (new CopyOnWriteArrayList<Armor>());
-		for (int i = 0; i < bodyPartsToArmor.length; i++){
-			BodyPart temp = bodyparts.get(bodyPartsToArmor[i]);
-			if (temp.hasWornArmor()){
-				armorToBag.add(temp.getArmor());
-			}
-			temp.setArmor(armor);
-		}
-		// TODO VERIFY THIS!!
-		return armorToBag.toArray(new Armor[0]);
-	}
+//	public Armor[] addArmor(Armor armor, String armorSlot){
+//		HashMap<String, String[]> map = getArmorSlotBodyPartIndex();
+//		if (!map.containsKey(armorSlot)){
+//			throw new IllegalArgumentException("you used a non existant armor slot or an armor slot that does not exist in your current setting");
+//		}
+//		
+//		String[] bodyPartsToArmor = map.get(armorSlot);
+//		Set<Armor> armorToBag = (Set<Armor>) (new CopyOnWriteArrayList<Armor>());
+//		for (int i = 0; i < bodyPartsToArmor.length; i++){
+//			BodyPart temp = bodyparts.get(bodyPartsToArmor[i]);
+//			if (temp.hasWornArmor()){
+//				armorToBag.add(temp.getArmor());
+//			}
+//			temp.setArmor(armor);
+//		}
+//		// TODO VERIFY THIS!!
+//		return armorToBag.toArray(new Armor[0]);
+//	}
 	
-	public HashMap<String, String[]> getArmorSlotBodyPartIndex(){
-		HashMap<String, String[]> map = new HashMap<String, String[]>();
-		map.put("helmet", new String[]{"head"});
-		map.put("gloves", new String[]{"right hand", "left hand"});
-		map.put("jacket", new String[]{"chest", "belly","back","left shoulder","right shoulder","left arm","right arm"});
-		map.put("vest", new String[]{"chest", "belly","back"});
-		map.put("boots", new String[]{"left foot", "right foot"});
-		map.put("greaves", new String[]{"left leg", "right leg"});
-		return map;
-	}
+//	public HashMap<String, String[]> getArmorSlotBodyPartIndex(){
+//		HashMap<String, String[]> map = new HashMap<String, String[]>();
+//		map.put("helmet", new String[]{"head"});
+//		map.put("gloves", new String[]{"right hand", "left hand"});
+//		map.put("jacket", new String[]{"chest", "belly","back","left shoulder","right shoulder","left arm","right arm"});
+//		map.put("vest", new String[]{"chest", "belly","back"});
+//		map.put("boots", new String[]{"left foot", "right foot"});
+//		map.put("greaves", new String[]{"left leg", "right leg"});
+//		return map;
+//	}
 	
 	public void recieveWound(int damage, int dType, BodyPart location) throws DeathException{
 		try{

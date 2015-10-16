@@ -29,5 +29,11 @@ public class ItemMock extends Item {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void handleUseWhileEquipped(Inventory inv, Creature player,
+			int choice) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

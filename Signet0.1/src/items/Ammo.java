@@ -28,4 +28,9 @@ public class Ammo extends Item{
 	public void useFromInventory(Inventory inv, Creature character) throws Exception {
 		throw new Exception("use while exploring unimplemented for this class");
 	}
+	@Override
+	public void handleUseWhileEquipped(Inventory inv, Creature player, int choice){
+		System.out.println("Ammo should not be used while equipped");
+		// does nothing
+	}
 }

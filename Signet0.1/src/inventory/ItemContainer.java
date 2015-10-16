@@ -67,6 +67,10 @@ public abstract class ItemContainer {
 		}
 		return time;
 	}
+	public void open(Creature player){
+		
+	}// TODO implement
+	
 	/**
 	 * adds an item to the item container, if it will fit, then updates space used and weight fields.
 	 * returns true if the add was successful
@@ -84,28 +88,55 @@ public abstract class ItemContainer {
 		weightContained += itm.getWeight();
 		return true;
 	}
-	
-	
-	protected ArrayList<Item> getMedine(){
+	protected ArrayList<Item> getAllItems(){
+		return items;
+	}
+	protected ArrayList<Item> getMedicine(){
 		ArrayList<Item> medicine = new ArrayList<Item>();
+		for (int i = 0; i < items.size(); i++){
+			if(items.get(i).isFirstAid()){
+				medicine.add(items.get(i));
+			}
+		}
 		return medicine;
 	}
-	protected ArrayList<LightSource> getLightSources(){
-		ArrayList<LightSource> lights = new ArrayList<LightSource>();
+	protected ArrayList<Item> getLightSources(){
+		ArrayList<Item> lights = new ArrayList<Item>();
+		for (int i = 0; i < items.size(); i++){
+			if(items.get(i).isLightSource()){
+				lights.add(items.get(i)); //TODO make this better.
+			}
+		}
 		return lights;
 	}
-	protected ArrayList<Weapon> getWeapons(){
-		ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+	protected ArrayList<Item> getWeapons(){
+		ArrayList<Item> weapons = new ArrayList<Item>();
+		for (int i = 0; i < items.size(); i++){
+			if(items.get(i).isWeapon()){
+				weapons.add(items.get(i)); //TODO make this better.
+			}
+		}
 		return weapons;
 	}
-	protected ArrayList<WornItem> getClothing(){
-		ArrayList<WornItem> clothes = new ArrayList<WornItem>();
+	protected ArrayList<Item> getClothing(){
+		ArrayList<Item> clothes = new ArrayList<Item>();for (int i = 0; i < items.size(); i++){
+			if(items.get(i).isClothing()){
+				clothes.add(items.get(i)); //TODO make this better.
+			}
+		}
 		return clothes;
 	}
-	protected ArrayList<Armor> getArmor(){
-		ArrayList<Armor> armor = new ArrayList<Armor>();
+	protected ArrayList<Item> getArmor(){
+		ArrayList<Item> armor = new ArrayList<Item>();
+		for (int i = 0; i < items.size(); i++){
+			if(items.get(i).isArmor()){
+				armor.add(items.get(i)); //TODO make this better.
+			}
+		}
 		return armor;
 	}
+	
+	
 	
 	public boolean removeItem(Item itm){
 		for(int i = 0; i < items.size(); i++){
@@ -125,9 +156,6 @@ public abstract class ItemContainer {
 	}
 	public int getSpaceLeft(){
 		return baseSpace - spaceUsed;
-	}
-	public ArrayList<Item> listITems(){
-		return items;
 	}
 	
 	public String toString(){

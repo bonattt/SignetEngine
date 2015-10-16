@@ -1,7 +1,8 @@
-package mothers;
+package testingMothers;
 
 import java.util.HashMap;
 
+import sampleItems.*;
 import sampleWeapons.*;
 import creatures.PlayerCharacter;
 /**
@@ -18,8 +19,14 @@ public class CharacterMother {
 		PlayerCharacter dickDefenderOfLife = new PlayerCharacter(creatureName, baseStats, damageMultipliers);
 		dickDefenderOfLife.getInventory().initializeScifiEquipmentSlots(dickDefenderOfLife.getInventory().getEquipment());
 		dickDefenderOfLife.getInventory().equipWeapon("holster", new SamplePistol());
-		dickDefenderOfLife.getInventory().equipWeapon("boot", new SampleCombatKnife());
+		dickDefenderOfLife.getInventory().getEquipment().equipClothing(new SampleShirt());
+		dickDefenderOfLife.getInventory().getEquipment().equipArmor(new SampleArmorJacket());
 		dickDefenderOfLife.getInventory().pickUpWeapon(new SampleAssaultRifle());
+		dickDefenderOfLife.getInventory().store(new SampleThingy());
+		dickDefenderOfLife.getInventory().store(new SampleHelmet());
+		dickDefenderOfLife.getInventory().store(new SampleCombatKnife());
+		dickDefenderOfLife.getInventory().store(new SamplePants());
+		
 		
 		return dickDefenderOfLife;
 	}

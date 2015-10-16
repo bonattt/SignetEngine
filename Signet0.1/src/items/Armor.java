@@ -10,7 +10,7 @@ import creatures.Creature;
 
 public abstract class Armor extends Item {
 	
-	private static final double ARMOR_INDIRECT_DAMAGE_REDUCTION = 2/3/0;
+	private static final double ARMOR_INDIRECT_DAMAGE_REDUCTION = 2/3;
 	// damage recieved by armor while blocking attacks is reduced.
 
 	private HashMap<Integer, Integer> damageResistance;
@@ -22,7 +22,7 @@ public abstract class Armor extends Item {
 	}
 	@Override
 	public boolean isArmor(){
-		return false;
+		return true;
 	}
 	@Override
 	public boolean isEquipment(){
@@ -59,6 +59,23 @@ public abstract class Armor extends Item {
 		// when being hit
 		resistDamage((int)(might*ARMOR_INDIRECT_DAMAGE_REDUCTION), 0);
 	}
+
+	@Override
+	public void handleUseWhileEquipped(Inventory inv, Creature player, int choice){
+		if(choice == 1) {				// Stow
+			if(inv.spaceRemaining() >= getSize()){
+				inv.getEquipment().removeArmor(slot);
+				inv.store(this);
+			} else {
+				TextTools.display("There is no room in your " + name + " in you inventory");
+			}
+		} else if (choice == 2) {		// discard
+			inv.getEquipment().removeArmor(slot);
+		} else {
+			// ERROR
+		}
+	}
+	
 	@Override
 	public void useFromInventory(Inventory inv, Creature character) throws Exception {
 		String question = "What would you like to do with the " + name;

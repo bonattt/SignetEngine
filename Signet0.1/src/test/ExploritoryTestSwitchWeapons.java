@@ -3,9 +3,9 @@ package test;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import testingMothers.CharacterMother;
 import items.Weapon;
 import misc.TextTools;
-import mothers.CharacterMother;
 import creatures.PlayerCharacter;
 
 public class ExploritoryTestSwitchWeapons {
