@@ -74,7 +74,6 @@ public class Wound {
 		crippling = cripple;
 		randomizeHealingTimes();
 				
-		woundLocation.addNewWound(this);
 	}
 	private void randomizeHealingTimes(){
 		Random r = new Random();
@@ -104,21 +103,20 @@ public class Wound {
 	 * @return
 	 */
 	public static int[] addNewWound(int damage, int dt, BodyPart woundLocation){
+		Wound wound;
 		if (dt == DamageType.SLASHING){
-			Wound w = new SlashingWound(damage, woundLocation);
-			return w.getInstantDamage();
+			wound = new SlashingWound(damage, woundLocation);
 		} else if (dt == DamageType.BLUNT) {
-			Wound w = new BluntWound(damage, woundLocation);
-			return w.getInstantDamage();
+			wound = new BluntWound(damage, woundLocation);
 		} else if (dt == DamageType.PIERCING) {
-			Wound w = new PiercingWound(damage, woundLocation);
-			return w.getInstantDamage();
+			wound = new PiercingWound(damage, woundLocation);
 		} else if (dt == DamageType.FIRE) {
-			Wound w = new BurnWound(damage, woundLocation);
-			return w.getInstantDamage();
+			wound = new BurnWound(damage, woundLocation);
 		} else {
 			throw new IllegalArgumentException("That damage type has not been implemented yet!!");
 		}
+		woundLocation.addNewWound(wound);
+		return wound.getInstantDamage();
 	}
 	public void setTreatment(Ointment arg){
 		medication = arg;

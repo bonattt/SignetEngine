@@ -8,11 +8,10 @@ import java.util.HashMap;
 
 public abstract class BodyPart {
 	
-	ArrayList<Wound> injuries = new ArrayList<Wound>();
-	double damageMultiplier, painMultiplier, cripplingMultiplier;
-	double[] statMultipliers;
+	protected ArrayList<Wound> injuries = new ArrayList<Wound>();
+	protected double damageMultiplier, painMultiplier, cripplingMultiplier;
+	protected double[] statMultipliers;
 	public String name;
-	private Armor wornArmor;
 	private Armor naturalArmor;
 	
 	public BodyPart(String name, double damage, double pain, double crippling, double[]statMultipliers){
@@ -24,19 +23,15 @@ public abstract class BodyPart {
 		this.statMultipliers = statMultipliers;
 		this.cripplingMultiplier = crippling;
 		this.naturalArmor = naturalArmor;
-		wornArmor = null;
-	}
-	public boolean hasWornArmor(){
-		return (wornArmor != null);
 	}
 	public boolean hasNaturalArmor(){
 		return (naturalArmor != null);
 	}
-	public Armor getArmor(){
-		return wornArmor;
+	public Armor getNaturalArmor(){
+		return naturalArmor;
 	}
-	public void setArmor(Armor arm){
-		wornArmor = arm;
+	protected void setNaturalArmor(Armor arm){
+		naturalArmor = arm;
 	}
 	protected double getDamageMultiplier(){
 		return damageMultiplier;
@@ -60,9 +55,6 @@ public abstract class BodyPart {
 		int[] wornArmorReduction = new int[]{damage, damageType};
 		if (naturalArmor != null){
 			naturalArmor.modifyDamage(naturalArmorReduction);
-		}
-		if (wornArmor != null){
-			wornArmor.modifyDamage(wornArmorReduction);
 		}
 		int[] finalDamage = new int[2];
 		finalDamage[0] = 0;

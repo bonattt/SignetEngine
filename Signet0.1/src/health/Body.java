@@ -27,17 +27,16 @@ public class Body {
 	};
 		
 	private Creature creature;
-	private HashMap<String, Integer> creatureStats;
 	private int healthDamage, stunDamage;
 	private double fatigueActual, fatigueEffective, painActual, painEffective;
 	private int[] statMods;
 	private ArrayList<Affliction> afflictions = new ArrayList<Affliction>();
+	private boolean painUpToDate, statModsUpToDate;
 	
 	public HashMap<String, BodyPart> bodyparts;
 	
 	public Body(Creature c){
 		creature = c;
-		creatureStats = c.stats_adjusted;
 		fatigueActual = 1;
 		fatigueEffective = 1;
 		painActual = 1;
@@ -91,54 +90,49 @@ public class Body {
 //		map.put("greaves", new String[]{"left leg", "right leg"});
 //		return map;
 //	}
+	public int getHealthDamage(){
+		return healthDamage;
+	}
 	
 	public void recieveWound(int damage, int dType, BodyPart location) throws DeathException{
 		try{
 			if(damage > 7){
 				damage = 7;
 			}
+			// instant damage {health damage, stun damage, fatigue damage}
 			int[] instantDamage = Wound.addNewWound(damage, dType, location);
-			takeDamageDontRecalculate(instantDamage[0]);
-			takeStunDontRecalculate(instantDamage[1]);
+			takeHealthDamageDontRecalculate(instantDamage[0]);
+			takeStunDamageDontRecalculate(instantDamage[1]);
 			takeSteminaDamageDontRecalculate(instantDamage[2]);
 		} catch (DeathException e){
 			e.diedFromInstantDamage = true;
 			throw e;
 		}
 	}
-	public void recieveWounds(int[][] attackData, int dt) throws DeathException{
-		// attack data {hits, might}
-		for (int i = 0; i < attackData.length; i++){
-			if (attackData[i][0] < 0){
-				continue;
-			}
-			BodyPart bpart =  determineWoundLocation(attackData[i][0]);
-			recieveWound(attackData[i][1], dt, bpart);
-		}
-	}
 	
-	private BodyPart determineWoundLocation(int netHits){
-		Random r = new Random();
-		if (netHits >= RANDOM_WOUND_TABLE.length){
-			netHits = RANDOM_WOUND_TABLE.length;
-		}
-		String bodStr = RANDOM_WOUND_TABLE[netHits][r.nextInt(RANDOM_WOUND_TABLE[0].length)];
-		return bodyparts.get(bodStr);
-	}
+//	private BodyPart determineWoundLocation(int netHits){
+//		Random r = new Random();
+//		if (netHits >= RANDOM_WOUND_TABLE.length){
+//			netHits = RANDOM_WOUND_TABLE.length;
+//		}
+//		String bodStr = RANDOM_WOUND_TABLE[netHits][r.nextInt(RANDOM_WOUND_TABLE[0].length)];
+//		return bodyparts.get(bodStr);
+//	}
 	
 	public int[] passTime(int timePassed, double healingFactor, boolean resting) throws DeathException {
+		// healing {health damage, stun damage, fatigue damage}
 		int[] healing = new int[3];
-		for (Entry<String, BodyPart> e : bodyparts.entrySet()){
+		for (Entry<String, BodyPart> current : bodyparts.entrySet()){
 			double[] temp;
 			// pass time in 1 hour chunks to allow wounds to heal while damaging player.
 			while (timePassed > 1000){
-				temp = e.getValue().passTime(1000, healingFactor, resting);
+				temp = current.getValue().passTime(1000, healingFactor, resting);
 				healing[0] += temp[0];
 				healing[1] += temp[1];
 				healing[2] += temp[2];
 			}
 			// pass remaining time
-			temp = e.getValue().passTime(timePassed, healingFactor, resting);
+			temp = current.getValue().passTime(timePassed, healingFactor, resting);
 			healing[0] += temp[0];
 			healing[1] += temp[1];
 			healing[2] += temp[2];
@@ -146,29 +140,31 @@ public class Body {
 		checkIfDies();
 		return healing;
 	}
-	public void takeDamage(int damage) throws DeathException{
-		takeDamageDontRecalculate(damage);
-		calculateEffectivePain();
+	public int getStunDamage(){
+		return stunDamage;
+	}
+	public void takeHealthDamage(int damage) throws DeathException{
+		takeHealthDamageDontRecalculate(damage);
+		updatePain();
 	}
 	private void checkIfDies() throws DeathException{
-		if ( healthDamage >= (70 + (creatureStats.get("end")*5)) ){
+		if ( healthDamage >= (70 + (creature.getStats().get("end")*5)) ){
 			creature.die();
 		}
 	}
-	
-	public void takeStun(int damage){
-		takeStunDontRecalculate(damage);
+	public void takeStunDamage(int damage){
+		takeStunDamageDontRecalculate(damage);
 		calculateEffectivePain();
 	}
 	public void takeSteminaDamage(double fatigue){
 		takeSteminaDamageDontRecalculate(fatigue);
 		calculateEffectiveFatigue();
 	}
-	private void takeDamageDontRecalculate(int damage) throws DeathException{
+	private void takeHealthDamageDontRecalculate(int damage) throws DeathException{
 		healthDamage += damage;
 		checkIfDies();
 	}
-	private void takeStunDontRecalculate(int damage){
+	private void takeStunDamageDontRecalculate(int damage){
 		stunDamage += damage;
 	}
 	private void takeSteminaDamageDontRecalculate(double fatigue){
@@ -183,10 +179,10 @@ public class Body {
 	public void healFatigue(int healing){
 		heal(0, 0, healing);
 	}
-	public void healWound(int healing, String key){
-		//TODO
-		calculateEffectivePain();
-	}
+//	public void healWound(int healing, String key){
+//		//TODO
+//		calculateEffectivePain();
+//	}
 	
 	public void heal(int healthHealed, int stunHealed, double fatigueHealed){
 		healthDamage -= healthHealed;
@@ -280,8 +276,8 @@ public class Body {
 	}
 	private void updatePain() {
 		painActual = 1;
-		for (Entry<String, BodyPart> e : bodyparts.entrySet()){
-			painActual += e.getValue().getPain();
+		for (Entry<String, BodyPart> current : bodyparts.entrySet()){
+			painActual += current.getValue().getPain();
 		}
 		if (painActual < 1){
 			painActual = 1;
@@ -289,7 +285,7 @@ public class Body {
 		calculateEffectivePain();
 	}
 	private void calculateEffectivePain(){
-		double painTollerance = (creatureStats.get("wil")*.15 + creatureStats.get("end")*.075);
+		double painTollerance = (creature.getStats().get("wil")*.15 + creature.getStats().get("end")*.075);
 		painEffective = painActual - painTollerance;
 		if (painEffective < 1){
 			painEffective = 1;
@@ -301,10 +297,17 @@ public class Body {
 		calculateEffectiveFatigue();
 	}
 	private void calculateEffectiveFatigue(){
-		double fatigueTollerance = (creatureStats.get("end")*.15 + creatureStats.get("str")*.075);
+		double fatigueTollerance = (creature.getStats().get("end")*.15 + creature.getStats().get("str")*.075);
 		fatigueEffective = fatigueActual - fatigueTollerance;
 		if (fatigueEffective < 1){
 			fatigueEffective = 1;
 		}
-	}	
+	}
+	public int countWounds(){
+		int count = 0;
+		for (String key : bodyparts.keySet()){
+			count += bodyparts.get(key).injuries.size();
+		}
+		return count;
+	}
 }

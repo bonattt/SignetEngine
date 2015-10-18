@@ -1,6 +1,7 @@
 package creatures;
 
 import health.Body;
+import health.BodyPart;
 import health.DamageType;
 import inventory.Inventory;
 
@@ -86,44 +87,8 @@ public abstract class Creature {
 		return might;
 	}
 	
-	public void recieveWound(int[][] attackData, int damageType) throws DeathException{
-		body.recieveWounds(attackData, damageType);
-	}
-	
-	private int defendFromAttackFlatfooted(){
-		return 0;
-	}
-	
-	public Inventory initializeInventory(){
-		inv = new Inventory();
-		return inv;
-	}
-	/**
-	 * gets the base healing factor. Averages to 1 with an average endurance of 6.
-	 * @return
-	 */
-	private double getBaseHealingFactor(){
-		return .4 + ( stats_adjusted.get("end") * 0.1 );
-	}
-	
-	public Body initializeBody(){
-		body = new Body(this);
-		return body;
-	}	
-		
-	public int setUpCombatRound(Creature enemy){
-		// TODO implement
-		return Integer.MIN_VALUE;
-	}
-	public boolean endCombatRound(){
-		// TODO implement
-		return false;
-	}
-	public void endCombat(){
-		// TODO implement
-	}
-	public void refreshStats(){
-		// TODO implement
+	public void recieveWound(int damage, int damageType, BodyPart bodypart) throws DeathException{
+		body.recieveWound(damage, damageType, bodypart);
 	}
 	public HashMap<String, Integer> getStats(){
 		return stats_adjusted;
@@ -174,17 +139,4 @@ public abstract class Creature {
 		
 		return skills.get(testName).makeSkillTest(this, threshold);
 	}
-	
-//	
-//	public int[] makeSkillTest(String skill, int difficulty){
-//		// TODO get skill level
-//		int dicePool = 9;
-//		return DiceRoller.makeSuccessTest(dicePool, difficulty);
-//		
-//	}
-//	public int[] makeSkillTest(int skillID, int difficulty){
-//		// TODO get skill level
-//		int skillLevel = 9;
-//		return null;
-//	}
 }
