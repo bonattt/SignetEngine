@@ -16,7 +16,7 @@ import bodyparts.*;
 
 public class Body {
 
-	private static final double HEALING_CONSTANT = .1;
+	private static final double HEALING_CONSTANT = .005;
 	private static final String[][] RANDOM_WOUND_TABLE = new String[][]{
 		{"right hand", "left hand", "right foot", "left foot", "right arm", "left arm", "right hand", "left hand", "right hand", "left hand"},
 		{"right hand", "left hand", "right hand", "left arm", "right arm", "left arm", "right hand", "left hand", "right arm", "left arm"},
@@ -95,6 +95,8 @@ public class Body {
 	}
 	
 	public void recieveWound(int damage, int dType, BodyPart location) throws DeathException{
+		painUpToDate = false;
+		statModsUpToDate = false;
 		try{
 			if(damage > 7){
 				damage = 7;
@@ -119,26 +121,45 @@ public class Body {
 //		return bodyparts.get(bodStr);
 //	}
 	
-	public int[] passTime(int timePassed, double healingFactor, boolean resting) throws DeathException {
+	public void passTime(int timePassed, double healingFactor, boolean resting) throws DeathException {
 		// healing {health damage, stun damage, fatigue damage}
-		int[] healing = new int[3];
+		painUpToDate = false;
+		statModsUpToDate = false;
+		int[] damage = new int[3];
 		for (Entry<String, BodyPart> current : bodyparts.entrySet()){
+			int time = timePassed;
 			double[] temp;
 			// pass time in 1 hour chunks to allow wounds to heal while damaging player.
-			while (timePassed > 1000){
+			while (time > 1000){
 				temp = current.getValue().passTime(1000, healingFactor, resting);
-				healing[0] += temp[0];
-				healing[1] += temp[1];
-				healing[2] += temp[2];
+				damage[0] += temp[0];
+				damage[1] += temp[1];
+				damage[2] += temp[2];
+				time -= 1000;
 			}
 			// pass remaining time
-			temp = current.getValue().passTime(timePassed, healingFactor, resting);
-			healing[0] += temp[0];
-			healing[1] += temp[1];
-			healing[2] += temp[2];
+			temp = current.getValue().passTime(time, healingFactor, resting);
+			damage[0] += temp[0];
+			damage[1] += temp[1];
+			damage[2] += temp[2];
 		}
+		healOverTime(timePassed, healingFactor, resting);
+		// TODO known-bug: if a player has a serious wound, they will take all damage at once and die, without factoring in healing.
+		updateDamage(damage);
 		checkIfDies();
-		return healing;
+	}
+	private void healOverTime(int timePassed, double healingFactor, boolean resting){
+		if(resting){
+			healingFactor *= 2.5;
+		}
+		int healing = (int) (healingFactor * timePassed * HEALING_CONSTANT);
+		heal(healing, healing, healing);
+	}
+	
+	private void updateDamage(int[] damage){
+		healthDamage += damage[0];
+		stunDamage += damage[1];
+		fatigueActual += damage[2];
 	}
 	public int getStunDamage(){
 		return stunDamage;
@@ -198,9 +219,15 @@ public class Body {
 		}
 	}
 	public int[] getStatMods() {
+		if(!statModsUpToDate){
+			updateStatMods();
+		}
 		return statMods;
 	}	
 	public double getPain() {
+		if(!painUpToDate){
+			updatePain();
+		}
 		return painEffective;
 	}
 	public HashMap<String, BodyPart> getBodyParts() {
@@ -210,9 +237,7 @@ public class Body {
 		return fatigueEffective;
 	}
 	public void bedRest(int time) throws DeathException{
-		// TODO set healing factor for rest
-		double healingFactor = -1;
-		restGeneral(time, healingFactor);
+		double healingFactor = 1.5;
 		try {
 			passTime(time, healingFactor, true);
 		} catch (DeathException e) {
@@ -222,9 +247,7 @@ public class Body {
 		}
 	}
 	public void sleep(int time) throws DeathException{
-		//TODO set healing factor for sleep
-		double healingFactor = -1;
-		restGeneral(time, healingFactor);
+		double healingFactor = 1;
 		try {
 			passTime(time, healingFactor, true);
 		} catch (DeathException e) {
@@ -234,8 +257,7 @@ public class Body {
 		}
 	}
 	public void wait(int time) throws DeathException{
-		//TODO set healing factor for wait
-		double healingFactor = -1;
+		double healingFactor = 1;
 		try {
 			passTime(time, healingFactor, false);
 		} catch (DeathException e) {
@@ -245,8 +267,7 @@ public class Body {
 		}
 	}
 	public void travel(int time, int exhaustionFactor) throws DeathException{
-		// TODO set healing factor for travel
-		double healingFactor = -1;
+		double healingFactor = .9;
 		exhaustion(time, exhaustionFactor);
 		try {
 			passTime(time, healingFactor, false);
@@ -257,15 +278,11 @@ public class Body {
 		}
 	}
 	private void exhaustion(int time, int exhaustionFactor){
-		double fatigueRate = 0.1875;
 		fatigueActual += (double) (time * exhaustionFactor);
 	}
-	
-	private void restGeneral(int timePassed, double healingFactor){
-		//TODO
-	}
-	
+		
 	private void updateStatMods() {
+		statModsUpToDate = true;
 		statMods = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		for (Entry<String, BodyPart> e : bodyparts.entrySet()){
 			int[] temp = e.getValue().getStatMods();
@@ -275,6 +292,7 @@ public class Body {
 		}
 	}
 	private void updatePain() {
+		painUpToDate = true;
 		painActual = 1;
 		for (Entry<String, BodyPart> current : bodyparts.entrySet()){
 			painActual += current.getValue().getPain();

@@ -24,6 +24,10 @@ public abstract class BodyPart {
 		this.cripplingMultiplier = crippling;
 		this.naturalArmor = naturalArmor;
 	}
+	public int getWoundCount(){
+		return injuries.size();
+	}
+	
 	public boolean hasNaturalArmor(){
 		return (naturalArmor != null);
 	}
@@ -48,7 +52,17 @@ public abstract class BodyPart {
 				healing[i] -= (temp[j] * damageMultiplier);
 			}
 		}
+		removeHealedWounds();
+		// {physical damage healed/taken, stun damage healed/taken, fatigue damage healed/taken}
 		return healing;
+	}
+	public void removeHealedWounds(){
+		for (int i = 0; i < injuries.size(); i++){
+			if(injuries.get(i).getSeverity() <= 0){
+				injuries.remove(i);
+				i -= 1;
+			}
+		}
 	}
 	public int[] resistDamage(int damage, int damageType){
 		int[] naturalArmorReduction = new int[]{damage, damageType};
@@ -78,7 +92,7 @@ public abstract class BodyPart {
 		
 		return finalDamage;
 	}
-	protected void addNewWound(Wound w){
+	public void addNewWound(Wound w){
 		injuries.add(w);
 	}
 

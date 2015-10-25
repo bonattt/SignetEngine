@@ -2,6 +2,7 @@ package health;
 
 import java.util.Random;
 
+import misc.DiceRoller;
 import injuries.BluntWound;
 import injuries.BurnWound;
 import injuries.PiercingWound;
@@ -76,14 +77,14 @@ public class Wound {
 				
 	}
 	private void randomizeHealingTimes(){
-		Random r = new Random();
-		for (int i = 0; i < recoveryTime.length; i++){
-			double numb = (r.nextDouble() / 2) + .75; // random number from .75 to 1.25
+		Random r = DiceRoller.rand;
+		for (int i = 0; i < recoveryTime.length-1; i++){
+			double numb = (r.nextDouble() * .30) + .85; // random number from .85 to 1.15
 			recoveryTime [i] *= numb;
 		}
 	}
 
-	public int getCurrentSeverity(){
+	public int getSeverity(){
 		return severity;
 	}
 	public int[] getInstantDamage(){
@@ -113,7 +114,7 @@ public class Wound {
 		} else if (dt == DamageType.FIRE) {
 			wound = new BurnWound(damage, woundLocation);
 		} else {
-			throw new IllegalArgumentException("That damage type has not been implemented yet!!");
+ 			throw new IllegalArgumentException("That damage type has not been implemented yet!!");
 		}
 		woundLocation.addNewWound(wound);
 		return wound.getInstantDamage();
@@ -164,14 +165,13 @@ public class Wound {
 	public double[] passTime(int timePassed, double healingFactor, boolean resting){
 		double[] damage;
 		double infectionRate = chanceOfInfection[severity - 1];
-		
 		if (resting){
 			healingFactor *= 1.1;
 		}
 		
 		damage = dealDamageOverTime(timePassed);
-		healWoundOverTime(timePassed, healingFactor);
 		
+		healWoundOverTime(timePassed, healingFactor);
 		if (infection != null){
 			healingFactor *= infection.getHealingAdjustment();
 			double[] infectionDamage = infection.passTime(timePassed, healingFactor, this);
@@ -186,20 +186,16 @@ public class Wound {
 			// integer division, truncates to 0 checks to avoid infection if clock < 1 day
 			int numbChecks = infectionClock / INFECTION_FREQUENCY; 
 			for (int i = 0; i < infectionClock; i++){
-				// TODO avoid Infection
+				checkIfWoundGetsInfected();
 			}
-		}
-		
-		if (bandage != null){
+		} if (bandage != null){
 			healingFactor *= bandage.getHealingRateAdjustment();
 			infectionRate *= bandage.getInfectionMultiplier();
 			// TODO bandage.passTime(timePassed, healingFactor, this);
 			if (bandage.needsToBeChanged()){
 				System.out.println("your bandage needs to be changed");
 			}
-		}
-		
-		if (medication != null){
+		} if (medication != null){
 			healingFactor *= medication.getHealingRateAdjustment();
 			infectionRate *= medication.getInfectionMultiplier();
 //			if(!medication.passTime(timePassed, healingFactor, this)){
@@ -208,9 +204,15 @@ public class Wound {
 		}
 		return damage;
 	}
+	protected double getInfectionRate(){
+		return severity-1;
+	}
+	
 	private double[] dealDamageOverTime(int timePassed){
+		if (severity != originalSeverity){
+			return new double[]{0, 0, 0};
+		}
 		double[] damage = new double[3];
-		timePassed += bleedingClock;
 		int damageCount = timePassed / damageRate[severity - 1];	// int division, gets completed number of damage increments
 		bleedingClock = timePassed % damageRate[severity - 1];		// gets remainder and stores it in bleedingClock
 		damage[0] = healthDamage[severity-1] * damageCount;
@@ -229,7 +231,7 @@ public class Wound {
 		}
 	}
 	
-	public void avoidGettingInfected(Infection infection){
+	public void checkIfWoundGetsInfected(){
 		// TODO implement this
 	}
 }

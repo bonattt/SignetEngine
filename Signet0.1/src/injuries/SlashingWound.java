@@ -18,7 +18,7 @@ public class SlashingWound extends Wound {
 	private static final int[] INST_FATIGUE_DAMAGE = new int[]{0, 0, 0, 0, 0, 0, 1000};
 	private static final int[] HEALING_TIME = new int[]{24000, 96000, 168000, 168000, 168000, 168000, Integer.MIN_VALUE};
 	private static final int[] CHANCE_OF_INFECTION = new int[]{1, 5, 15, 25, 35, 80, 0};
-	private static final double[] PAIN = new double[]{0, 0.0008, 0.016, 0.063, 0.125, 0.25, 0.5};
+	private static final double[] PAIN = new double[]{0, 0.008, 0.16, 0.63, 1.25, 2.5, 5};
 	private static final int[] CRIPPLING = new int[]{0, 0, 1, 1, 2, 3, Integer.MAX_VALUE};
 	
 //	HEALTH_DAMAGE, STUND_DAMAGE, FATIGUE_DAMAGE, DAMAGE_RATE, INST_HEALTH_DAMAGE, INST_STUN_DAMAGE, INST_FATIGUE_DAMAGE,
@@ -26,7 +26,8 @@ public class SlashingWound extends Wound {
 	public SlashingWound(int severity, BodyPart bodypart){
 		super(severity, DamageType.SLASHING, bodypart,
 				HEALTH_DAMAGE, STUND_DAMAGE, FATIGUE_DAMAGE, DAMAGE_RATE, INST_HEALTH_DAMAGE, INST_STUN_DAMAGE,
-				INST_FATIGUE_DAMAGE,HEALING_TIME, CHANCE_OF_INFECTION, PAIN, CRIPPLING);
+				INST_FATIGUE_DAMAGE,HEALING_TIME.clone(), CHANCE_OF_INFECTION, PAIN, CRIPPLING);
+									// healing time is cloned to allow random varience in the healing time of wounds.
 		name = NAMES[severity - 1];
 	}
 }

@@ -18,7 +18,7 @@ public class PiercingWound extends Wound {
 	private static final int[] INST_FATIGUE_DAMAGE = new int[]{0, 0, 0, 0, 0, 0, 1000};
 	private static final int[] HEALING_TIME = new int[]{24000, 120000, 168000, 192000, 168000, 192000, Integer.MIN_VALUE};
 	private static final int[] CHANCE_OF_INFECTION = new int[]{1, 2, 10, 15, 25, 70, 100};
-	private static final double[] PAIN = new double[]{0, 0.0008, 0.016, 0.063, 0.125, 0.25, 0.5};
+	private static final double[] PAIN = new double[]{0, 0.008, 0.16, 0.63, 1.25, 2.5, 5};
 	private static final int[] CRIPPLING = new int[]{0, 0, 1, 1, 2, 3, Integer.MAX_VALUE};
 	
 //	HEALTH_DAMAGE, STUND_DAMAGE, FATIGUE_DAMAGE, DAMAGE_RATE, INST_HEALTH_DAMAGE, INST_STUN_DAMAGE, INST_FATIGUE_DAMAGE,
