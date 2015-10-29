@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import creatures.Creature;
 import creatures.PlayerCharacter;
+import misc.DeathException;
 import misc.GameEvent;
 import misc.TextTools;
 
@@ -154,8 +155,9 @@ public class Location {
 	 * the file path of that Location.
 	 * @param player
 	 * @return
+	 * @throws DeathException 
 	 */
-	public String travel(Creature player){
+	public String travel(Creature player) throws DeathException{
 		
 		TravelPath path = selectTravelDestination();
 		

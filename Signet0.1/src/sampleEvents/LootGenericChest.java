@@ -1,30 +1,25 @@
 package sampleEvents;
 
+import inventory.ItemContainer;
+
 import java.util.Random;
 
 import creatures.Creature;
 import misc.DeathException;
+import misc.DiceRoller;
 import misc.GameEvent;
 import misc.TextTools;
 
 public class LootGenericChest implements GameEvent {
 	
-	private Random r = new Random();
+	private ItemContainer chest;
 	
 	public LootGenericChest(){
-		// do nothing
-		// this event is an event for testing purposes, and only displays text that an item was found 
+		chest = new SampleGenericChest();
 	}
 	
 	public void triggerEvent(Creature player) throws DeathException {
-		
-		int numb = r.nextInt(10);
-		if (numb <= 2){ 
-			// 30% chance to "find" a rare item.
-			TextTools.display("You found a rare item!!!");
-		} else {
-			TextTools.display("You found an item!");
-		}
+		chest.lootDuringExplore(player);
 	}
 
 	public String getName() {

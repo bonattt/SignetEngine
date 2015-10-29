@@ -12,6 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import misc.DeathException;
 import creatures.Creature;
+import environment.GameClock;
 import bodyparts.*;
 
 public class Body {
@@ -30,7 +31,6 @@ public class Body {
 	private int healthDamage, stunDamage;
 	private double fatigueActual, fatigueEffective, painActual, painEffective;
 	private int[] statMods;
-	private ArrayList<Affliction> afflictions = new ArrayList<Affliction>();
 	private boolean painUpToDate, statModsUpToDate;
 	
 	public HashMap<String, BodyPart> bodyparts;
@@ -61,39 +61,12 @@ public class Body {
 		bodyparts.put("left shoulder", new Shoulder("left shoulder"));
 	}
 	
-//	public Armor[] addArmor(Armor armor, String armorSlot){
-//		HashMap<String, String[]> map = getArmorSlotBodyPartIndex();
-//		if (!map.containsKey(armorSlot)){
-//			throw new IllegalArgumentException("you used a non existant armor slot or an armor slot that does not exist in your current setting");
-//		}
-//		
-//		String[] bodyPartsToArmor = map.get(armorSlot);
-//		Set<Armor> armorToBag = (Set<Armor>) (new CopyOnWriteArrayList<Armor>());
-//		for (int i = 0; i < bodyPartsToArmor.length; i++){
-//			BodyPart temp = bodyparts.get(bodyPartsToArmor[i]);
-//			if (temp.hasWornArmor()){
-//				armorToBag.add(temp.getArmor());
-//			}
-//			temp.setArmor(armor);
-//		}
-//		// TODO VERIFY THIS!!
-//		return armorToBag.toArray(new Armor[0]);
-//	}
-	
-//	public HashMap<String, String[]> getArmorSlotBodyPartIndex(){
-//		HashMap<String, String[]> map = new HashMap<String, String[]>();
-//		map.put("helmet", new String[]{"head"});
-//		map.put("gloves", new String[]{"right hand", "left hand"});
-//		map.put("jacket", new String[]{"chest", "belly","back","left shoulder","right shoulder","left arm","right arm"});
-//		map.put("vest", new String[]{"chest", "belly","back"});
-//		map.put("boots", new String[]{"left foot", "right foot"});
-//		map.put("greaves", new String[]{"left leg", "right leg"});
-//		return map;
-//	}
 	public int getHealthDamage(){
 		return healthDamage;
 	}
-	
+	public void recieveWound(int damage, int dType, String location) throws DeathException{
+		recieveWound(damage, dType, bodyparts.get(location));
+	}
 	public void recieveWound(int damage, int dType, BodyPart location) throws DeathException{
 		painUpToDate = false;
 		statModsUpToDate = false;
@@ -125,6 +98,7 @@ public class Body {
 		// healing {health damage, stun damage, fatigue damage}
 		painUpToDate = false;
 		statModsUpToDate = false;
+		GameClock.getInstance().passTime(timePassed);
 		int[] damage = new int[3];
 		for (Entry<String, BodyPart> current : bodyparts.entrySet()){
 			int time = timePassed;
@@ -236,8 +210,8 @@ public class Body {
 	public double getFatigue(){
 		return fatigueEffective;
 	}
-	public void bedRest(int time) throws DeathException{
-		double healingFactor = 1.5;
+	public void bedRest(int time, double healingFactor) throws DeathException{
+		healingFactor *= 1.5;
 		try {
 			passTime(time, healingFactor, true);
 		} catch (DeathException e) {
@@ -246,8 +220,7 @@ public class Body {
 			throw e;
 		}
 	}
-	public void sleep(int time) throws DeathException{
-		double healingFactor = 1;
+	public void sleep(int time, double healingFactor) throws DeathException{
 		try {
 			passTime(time, healingFactor, true);
 		} catch (DeathException e) {
@@ -256,8 +229,7 @@ public class Body {
 			throw e;
 		}
 	}
-	public void wait(int time) throws DeathException{
-		double healingFactor = 1;
+	public void wait(int time, double healingFactor) throws DeathException{
 		try {
 			passTime(time, healingFactor, false);
 		} catch (DeathException e) {
@@ -266,9 +238,10 @@ public class Body {
 			throw e;
 		}
 	}
-	public void travel(int time, int exhaustionFactor) throws DeathException{
-		double healingFactor = .9;
+	public void travel(int time, double exhaustionFactor, double healingFactor) throws DeathException{
+		healingFactor *= .9;
 		exhaustion(time, exhaustionFactor);
+		calculateEffectiveFatigue();
 		try {
 			passTime(time, healingFactor, false);
 		} catch (DeathException e) {
@@ -277,10 +250,9 @@ public class Body {
 			throw e;
 		}
 	}
-	private void exhaustion(int time, int exhaustionFactor){
+	private void exhaustion(int time, double exhaustionFactor){
 		fatigueActual += (double) (time * exhaustionFactor);
 	}
-		
 	private void updateStatMods() {
 		statModsUpToDate = true;
 		statMods = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -310,10 +282,6 @@ public class Body {
 		}
 	}
 	
-	public void updateFatigue(int timePassed, double exhaustionFactor) {
-		fatigueActual += (double) (timePassed * exhaustionFactor) / 10.0; 
-		calculateEffectiveFatigue();
-	}
 	private void calculateEffectiveFatigue(){
 		double fatigueTollerance = (creature.getStats().get("end")*.15 + creature.getStats().get("str")*.075);
 		fatigueEffective = fatigueActual - fatigueTollerance;

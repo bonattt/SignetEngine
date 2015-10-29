@@ -27,6 +27,9 @@ public abstract class BodyPart {
 	public int getWoundCount(){
 		return injuries.size();
 	}
+	public ArrayList<Wound> getInjuries(){
+		return injuries;
+	}
 	
 	public boolean hasNaturalArmor(){
 		return (naturalArmor != null);

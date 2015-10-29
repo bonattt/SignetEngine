@@ -3,6 +3,7 @@ package creatures;
 import health.Body;
 import health.BodyPart;
 import health.DamageType;
+import health.Wound;
 import inventory.Inventory;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Scanner;
 import main.GameRunner;
 import misc.DeathException;
 import misc.DiceRoller;
+import misc.TextTools;
 import sampleCombatSkills.*;
 
 public abstract class Creature {
@@ -66,6 +68,17 @@ public abstract class Creature {
 		}		
 		return init;
 	}
+	public ArrayList<Wound> listAllWounds(){
+		HashMap<String, BodyPart> bodyparts = body.getBodyParts();
+		ArrayList<Wound> injuries = new ArrayList<Wound>();
+		for (String key : bodyparts.keySet()){
+			BodyPart current = bodyparts.get(key);
+			for (int i = 0; i < current.getInjuries().size(); i++){
+				injuries.add(current.getInjuries().get(i));
+			}
+		}
+		return injuries;
+	}
 	
 	public HashMap<String, Skill> getSkills(){
 		return skills;
@@ -73,20 +86,18 @@ public abstract class Creature {
 	
 	public Inventory getInventory(){
 		return inv;
-	}
-	public int getWeaponType(){
-		//TODO get from weapon
-		return DamageType.SLASHING;
-	}
-	
-	public int getWeaponMight(){
-		int might = 1; // TODO use weapon stats.
+	}	
+	public int getMight(){
+		int might = inv.getWeapon().getMight();
 		int[] strengthTest = DiceRoller.makeRoll(stats_adjusted.get("str"));
 		// TODO account for glitching.
 		might += strengthTest[0];
 		return might;
 	}
 	
+	public void recieveWound(int damage, int damageType, String bodypart) throws DeathException{
+		body.recieveWound(damage, damageType, bodypart);
+	}
 	public void recieveWound(int damage, int damageType, BodyPart bodypart) throws DeathException{
 		body.recieveWound(damage, damageType, bodypart);
 	}
@@ -96,34 +107,33 @@ public abstract class Creature {
 	public void setStat(String key, int value){
 		stats_base.put(key, value);
 	}
-	private void modifySingleStat(String key, int modifier){
-		int starting = stats_base.get(key);
-		stats_adjusted.put(key, starting + modifier);
-	}
 	private void adjustSingleStat(String key, int modifier){
 		int starting = stats_adjusted.get(key);
 		stats_adjusted.put(key, starting + modifier);
 	}
-	private void calculateStatMods(){
-		// TODO implement
-	}
 	public void refreshCombatStats(){
 		// TODO implement
 	}
-	public void passTime(int timePassed, double healingFactor, boolean resting) throws DeathException{
-		body.passTime(timePassed, healingFactor, resting);
-		//TODO implement
+	public void wait(int timePassed, double healingFactor, boolean resting) throws DeathException{
+		body.wait(timePassed, getHealingFactor());
 	}
-	public void bedRest(int timePassed){
-		// TODO implement
+	public void bedRest(int timePassed) throws DeathException{
+		body.bedRest(timePassed, getHealingFactor());
 	}
-	public void wildernessRest(int timePassed){
-		// TODO implement
+	public void sleep(int timePassed) throws DeathException{
+		body.sleep(timePassed, getHealingFactor());
 	}
-	public void travel(int travelTime, double exhaustionFactor){
-		// TODO implement
-		exhaustionFactor *= (inv.getCarriedWeight() / 20);
-		travelTime += travelTime * (inv.getCarriedWeight() / 20);
+	protected double getHealingFactor(){
+		return (.5 + (stats_adjusted.get("end") * .167));
+	}
+	
+	public void travel(int travelTime, double exhaustionFactor) throws DeathException{
+		double weightFactor = ((double) inv.getCarriedWeight());
+		weightFactor *= .05;
+		weightFactor += 1;
+		exhaustionFactor *= weightFactor;
+		travelTime *= weightFactor;
+		body.travel(travelTime, exhaustionFactor, getHealingFactor());
 	}
 	public int[] makeAttributeTest(String[] attributes){
 		int dicePool = 0;
@@ -135,8 +145,9 @@ public abstract class Creature {
 	public int[] makeTest(String testName, int threshold){
 		if(testName.equals("")){
 			//TODO add special tests.
+		} else {
+			TextTools.display("ERROR non-existant special test");
 		}
-		
 		return skills.get(testName).makeSkillTest(this, threshold);
 	}
 }

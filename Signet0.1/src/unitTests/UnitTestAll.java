@@ -20,6 +20,7 @@ public class UnitTestAll {
 	    UnitTestBag.class,
 	    UnitTestBody.class,
 	    UnitTestBodyPart.class,
+	    UnitTestCreature.class,
 	    UnitTestInventory.class,
 	    UnitTestWound.class,
 	    UnitTestWoundMedication.class

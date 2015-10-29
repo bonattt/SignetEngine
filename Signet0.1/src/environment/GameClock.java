@@ -93,7 +93,7 @@ public class GameClock {
 		setSeasonalLighting();
 	}
 	
-	public GameClock getInstance(){
+	public static GameClock getInstance(){
 		if (instance == null){
 			return new GameClock();
 		}

@@ -14,10 +14,6 @@ public class Inventory {
 	private LightSource lightSource;
 	private Weapon equippedWeapon;
 	private int carriedWeight;
-	private boolean weightUpToDate;
-	
-	private int weaponSlots, armorSlots, clothingSlots;
-	
 	
 	public Inventory (){
 		equipment = new Gear();
@@ -32,6 +28,40 @@ public class Inventory {
 		}
 		return newItems;
 	}
+	public boolean tryToCarryWeapon(Inventory inv, Weapon weapon){
+		if(equippedWeapon == null){
+			equippedWeapon = weapon;
+			return true;
+		}
+		String question = "you are already carrying a " + equippedWeapon.name + " what would you like to do?";
+		String[] answers = new String[]{"stow " + equippedWeapon.name,
+										"equip " + equippedWeapon.name,
+										"cancel"};
+		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
+		if(choice == 1){
+			return tryToStowCarriedWeaponToEquipNewWeapon(inv, weapon);
+		} else if (choice == 2){
+			return tryToEquipCarriedWeaponToEquipNewWeapon(inv, weapon);
+		}
+		return false;
+	}
+	private boolean tryToEquipCarriedWeaponToEquipNewWeapon(Inventory inv, Weapon weapon){
+		if(inv.getEquipment().selectLocationToEquip(weapon)){
+			inv.discardItem(weapon);
+			return true;
+		}
+		return false;
+	}
+	private boolean tryToStowCarriedWeaponToEquipNewWeapon(Inventory inv, Weapon weapon){
+		if(inv.spaceRemaining() >= (equippedWeapon.getSize() - weapon.getSize())){
+			inv.discardItem(weapon);
+			inv.store(equippedWeapon);
+			equippedWeapon = weapon;
+			return true;
+		}
+		return false;
+	}
+	
 	public static HashMap<String, Item> convertHashMapArmorToItems(HashMap<String, Armor> oldItems){
 		HashMap<String, Item> newItems = new HashMap<String, Item>();
 		for (String key : oldItems.keySet()){
@@ -46,7 +76,15 @@ public class Inventory {
 		}
 		return newItems;
 	}
-	
+	public ArrayList<Item> store(ArrayList<Item> items){
+		while(items.size() > 0){
+			if (!store(items.get(0))) {
+				return items;
+			}
+			items.remove(0);
+		}
+		return items;
+	}
 	public boolean store(Item item){
 		return backpack.addItem(item);
 	}
@@ -72,9 +110,20 @@ public class Inventory {
 		gear.createClothingSlot("shirt");
 		gear.createClothingSlot("pants");
 		gear.createClothingSlot("hat");
-		weaponSlots = 2;
-		armorSlots = 2;
-		clothingSlots = 3;
+	}
+	
+	public Item selectItemFromBackpack(String question){
+		ArrayList<Item> items = backpack.getAllItems();
+		String[] answers = new String[items.size() + 1];
+		for (int i = 0; i < items.size(); i++){
+			answers[i] = items.get(i).name;
+		}
+		answers[answers.length - 1] = "cancel";
+		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
+		if(choice == 0){
+			return null;
+		}
+		return items.get(choice - 1);
 	}
 	/**
 	 * This method allows the player to access items in their inventory during explore mode.
@@ -105,48 +154,31 @@ public class Inventory {
 				break;
 			}
 			else if (choice == 1){
-				accessBackpackSelection(backpack.getAllItems(), player);
+				backpack.accessSelectedItems(backpack.getAllItems(), this, player);
 			}
 			else if (choice == 2){
-				accessBackpackSelection(backpack.getMedicine(), player);
+				backpack.accessSelectedItems(backpack.getMedicine(), this, player);
 			}
 			else if (choice == 3){
-				accessBackpackSelection(backpack.getWeapons(), player);
+				backpack.accessSelectedItems(backpack.getWeapons(), this, player);
 			}
 			else if (choice == 4){
-				accessBackpackSelection(backpack.getArmor(), player);
+				backpack.accessSelectedItems(backpack.getArmor(), this, player);
 			}
 			else if (choice == 5){
-				accessBackpackSelection(backpack.getClothing(), player);
+				backpack.accessSelectedItems(backpack.getClothing(), this, player);
 			}
 		}
 	}
-	private void accessBackpackSelection(ArrayList<Item> itemsSelected, Creature player){
-		String question = "which item would you like to use?";
-		String[] answers = new String[itemsSelected.size() + 1];
-		for (int i = 0; i < answers.length - 1; i++){
-			answers[i] = itemsSelected.get(i).name;
-		}
-		answers[answers.length - 1] = "cancel";
-		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
-		if (choice == 0){
-			return;
-		}
-		try {
-			itemsSelected.get(choice - 1).useFromInventory(this, player);
-		} catch (Exception e) {
-			// do nothing -- this is temporary
-		}
-	}
-	private void accessWeaponsInBackpackDuringExplore(){
-		
-	}
-	private void accessArmorInBackpackDuringExplore(){
-		
-	}
-	private void accessClothingInBackpackDuringExplore(){
-		
-	}
+//	private void accessWeaponsInBackpackDuringExplore(){
+//		
+//	}
+//	private void accessArmorInBackpackDuringExplore(){
+//		
+//	}
+//	private void accessClothingInBackpackDuringExplore(){
+//		
+//	}
 	private void accessEquipmentDuringExplore(Creature player){
 		String question = "What kind of equipment would you like you access?";
 		String[] answers = new String[]{"weapons", "armor", "clothing", "exit equipment"};
@@ -215,7 +247,9 @@ public class Inventory {
 	
 	public ArrayList<CombatItem> listEquippedWeapons(){
 		ArrayList<CombatItem> list = new ArrayList<CombatItem>();
-		// TODO 
+		for (String key : equipment.getEquippedWeapons().keySet()){
+			list.add(equipment.getEquippedWeapons().get(key));
+		}
 		return list;
 	}
 	
@@ -480,17 +514,18 @@ public class Inventory {
 			backpack.removeItem(newArmor);
 		}
 	}
-	public double getCarriedWeight(){
-		if(!weightUpToDate){
-			updateCarriedWeight();
-		}
+	public int getCarriedWeight(){
+		updateCarriedWeight();
 		return carriedWeight;
 	}
 	private void updateCarriedWeight(){
-		// get backpack weight
-		// get equipment weight
-		// get weapons weight.
-		weightUpToDate = true;
+		carriedWeight = backpack.getWeight();
+		carriedWeight += equipment.getWeight();
+		if(equippedWeapon != null){
+			carriedWeight += equippedWeapon.getWeight();
+		} if (lightSource != null){
+			carriedWeight += lightSource.getWeight();
+		}
 	}
 	
 	public boolean equipWeapon(String slot, Weapon weapon){

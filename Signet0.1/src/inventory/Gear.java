@@ -42,6 +42,26 @@ public class Gear {
 		return str.toString();
 	}
 	
+	public int getWeight(){
+		int weight = 0;
+		for(String key : clothingWorn.keySet()){
+			if (clothingWorn.get(key) != null){
+				weight += clothingWorn.get(key).getWeight();
+			}
+		}
+		for(String key : armorEquipped.keySet()){
+			if (armorEquipped.get(key) != null){
+				weight += armorEquipped.get(key).getWeight();
+			}
+		}
+		for(String key : equippedWeapons.keySet()){
+			if (equippedWeapons.get(key) != null){
+				weight += equippedWeapons.get(key).getWeight();
+			}
+		}
+		return weight;
+	}
+	
 	public void refreshWeight(){
 		totalWeight = 0;
 		for (String key : clothingWorn.keySet()){
@@ -217,7 +237,7 @@ public class Gear {
 		equippedWeapons.put(slot, null);
 		return true;
 	}
-	private void selectLocationToEquip(Weapon newWeapon){
+	protected boolean selectLocationToEquip(Weapon newWeapon){
 		String question = "Where would you like to equip the weapon";
 		String[] weaponSlots = new String[equippedWeapons.size()];
 		String[] answers = new String[equippedWeapons.size() + 1];
@@ -235,8 +255,8 @@ public class Gear {
 		answers[answers.length - 1] = "cancel";
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
 		if (choice == 0){
-			return;
+			return false;
 		} 
-		addWeapon(weaponSlots[choice - 1], newWeapon);
+		return addWeapon(weaponSlots[choice - 1], newWeapon);
 	}
 }

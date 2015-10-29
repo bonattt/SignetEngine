@@ -6,7 +6,6 @@ import creatures.Creature;
 import misc.DiceRoller;
 import misc.TextTools;
 import items.*;
-import items.Item;
 
 public abstract class ItemContainer {
 	
@@ -67,9 +66,55 @@ public abstract class ItemContainer {
 		}
 		return time;
 	}
-	public void open(Creature player){
-		
-	}// TODO implement
+	public void lootDuringExplore(Creature player){
+		TextTools.display("you open the " + name);
+		while (true){
+			String question = "What will you do?";
+			String[] answers = new String[]{"take items", "store items", "exit"};
+			int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
+			if (choice == 1){
+				takeItemsDuringExplore(player.getInventory());
+			} else if (choice == 2){
+				storeItemsDuringExplore(player.getInventory());
+			} else if (choice == 0){
+				break;
+			}
+		}
+	}
+	public void takeItemsDuringExplore(Inventory inv){
+		while(true){
+			String question = "what will you take?";
+			String[] answers = new String[items.size() + 1];
+			for (int i = 0; i < items.size(); i++){
+				answers[i] = items.get(i).name;
+			}
+			answers[answers.length - 1] = "cancel";
+			int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
+			if (choice == 0){
+				break;
+			}
+			Item selectedItem = items.get(choice - 1);
+			if(inv.store(selectedItem)){
+				items.remove(selectedItem);
+			} else {
+				TextTools.display("there is no room in your bag for the " + selectedItem.name);
+			}
+		}
+	}
+	public void storeItemsDuringExplore(Inventory inv){
+		while(true){
+			String question = "what will you take?";
+			Item selectedItem = inv.selectItemFromBackpack(question);
+			if(selectedItem == null){
+				break;
+			}
+			if(this.addItem(selectedItem)){
+				inv.discardItem(selectedItem);
+			} else {
+				TextTools.display("There is no room in the " + name + " for your " + selectedItem.name);
+			}
+		}
+	}
 	
 	/**
 	 * adds an item to the item container, if it will fit, then updates space used and weight fields.
@@ -135,7 +180,23 @@ public abstract class ItemContainer {
 		}
 		return armor;
 	}
-	
+	public void accessSelectedItems(ArrayList<Item> itemsSelected, Inventory inv, Creature player){
+		String question = "which item would you like to use?";
+		String[] answers = new String[itemsSelected.size() + 1];
+		for (int i = 0; i < answers.length - 1; i++){
+			answers[i] = itemsSelected.get(i).name;
+		}
+		answers[answers.length - 1] = "cancel";
+		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
+		if (choice == 0){
+			return;
+		}
+		try {
+			itemsSelected.get(choice - 1).useFromInventory(inv, player);
+		} catch (Exception e) {
+			// do nothing -- this is temporary
+		}
+	}
 	
 	
 	public boolean removeItem(Item itm){

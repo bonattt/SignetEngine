@@ -14,10 +14,10 @@ public class DiceRoller {
 		for (int i = 0; i< dicePool; i++){
 			int roll = rand.nextInt(6);
 			if (roll == 0){
-				results[1] += 1;
+				results[1] += 1; // rolls of 0
 			}
 			else if (roll == 4 || roll == 5){
-				results[0] += 1;
+				results[0] += 1; // rolls of 5 or 6
 			}
 		}
 		return results;

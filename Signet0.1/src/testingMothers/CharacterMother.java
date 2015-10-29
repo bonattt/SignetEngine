@@ -1,7 +1,14 @@
 package testingMothers;
 
+import health.DamageType;
+import health.Wound;
+import items.Bandage;
+import items.Ointment;
+
 import java.util.HashMap;
 
+import misc.DeathException;
+import misc.TextTools;
 import sampleItems.*;
 import sampleWeapons.*;
 import creatures.PlayerCharacter;
@@ -17,6 +24,19 @@ public class CharacterMother {
 		HashMap<String, Integer> baseStats = getJarredStatMap();
 		HashMap<String, Integer> damageMultipliers = getJarredDamageMultipliers();
 		PlayerCharacter dickDefenderOfLife = new PlayerCharacter(creatureName, baseStats, damageMultipliers);
+		woundDick(dickDefenderOfLife);
+		equipDick(dickDefenderOfLife);
+		return dickDefenderOfLife;
+	}
+	private static void woundDick(PlayerCharacter dickDefenderOfLife){
+		try {
+			dickDefenderOfLife.recieveWound(4, DamageType.SLASHING, "left arm");
+		} catch (DeathException e) {
+			TextTools.display("DICK HAS DIED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			e.printStackTrace();
+		}
+	}
+	private static void equipDick(PlayerCharacter dickDefenderOfLife){
 		dickDefenderOfLife.getInventory().initializeScifiEquipmentSlots(dickDefenderOfLife.getInventory().getEquipment());
 		dickDefenderOfLife.getInventory().equipWeapon("holster", new SamplePistol());
 		dickDefenderOfLife.getInventory().getEquipment().equipClothing(new SampleShirt());
@@ -26,10 +46,10 @@ public class CharacterMother {
 		dickDefenderOfLife.getInventory().store(new SampleHelmet());
 		dickDefenderOfLife.getInventory().store(new SampleCombatKnife());
 		dickDefenderOfLife.getInventory().store(new SamplePants());
-		
-		
-		return dickDefenderOfLife;
+		dickDefenderOfLife.getInventory().store(new Bandage());
+		dickDefenderOfLife.getInventory().store(new Ointment());
 	}
+	
 	private static HashMap<String,Integer> getJarredStatMap(){
 		HashMap<String,Integer> map = new HashMap<String,Integer>();
 		map.put("str", 12);	// strength

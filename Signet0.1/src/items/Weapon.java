@@ -160,7 +160,32 @@ public abstract class Weapon extends Item implements CombatItem {
 		return parry;
 	}
 	@Override
-	public void useFromInventory(Inventory inv, Creature character) throws Exception {
-		throw new Exception("useFromInventory is not defined in this class");
+	public void useFromInventory(Inventory inv, Creature player) {
+		String question = "What will you do with your " + name;
+		String[] answers = new String[]{"carry", "equip", "discard", "inspect", "cancel"};
+		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
+		if(choice == 0){
+			return;
+		} else if (choice == 1){
+			tryToCarry(inv, player);
+		} else if (choice == 2){ 
+			tryToEquip(inv, player);
+		} else if (choice == 3){
+			inv.discardItem(this);
+		} else if (choice == 4){
+			this.inspect(player);
+		} else {
+			System.out.println("ERROR");
+		}
+	}
+	private void tryToCarry(Inventory inv, Creature player){
+		if(inv.getWeapon() == null){
+			if(inv.tryToCarryWeapon(inv, this)){
+				inv.discardItem(this);
+			}
+		}
+	}
+	private void tryToEquip(Inventory inv, Creature player){
+		
 	}
 }

@@ -23,16 +23,42 @@ public class UnitTestWoundMedication {
 	public void setup(){
 		genericBodypart = new Arm("arm");
 	}
-	
+	@Test
+	public void testWoundDealsLessDamageIfBandaged(){
+		Wound wound1 = new SlashingWound(6, genericBodypart);
+		Wound wound2 = new SlashingWound(6, genericBodypart);
+		int timePassed = 3000;
+		double healingFactor = 1;
+		wound2.setBandage(new Bandage());
+		
+		
+		double healthDamage1 = wound1.passTime(timePassed, healingFactor, false)[0];
+		double healthDamage2 = wound2.passTime(timePassed, healingFactor, false)[0];
+		
+		assertTrue(healthDamage2 < healthDamage1);
+	}
+	@Test
+	public void testWoundDealsLessDamageIfTreated(){
+		Wound wound1 = new SlashingWound(6, genericBodypart);
+		Wound wound2 = new SlashingWound(6, genericBodypart);
+		int timePassed = 3000;
+		double healingFactor = 1;
+		wound2.setTreatment(new Ointment());
+		
+		double healthDamage1 = wound1.passTime(timePassed, healingFactor, false)[0];
+		double healthDamage2 = wound2.passTime(timePassed, healingFactor, false)[0];
+		
+		assertTrue(healthDamage2 < healthDamage1);
+	}	
 	@Test
 	public void testWoundHealsFasterWithBandage() {
 		Wound wound1 = new SlashingWound(6, genericBodypart);
 		Wound wound2 = new SlashingWound(6, genericBodypart);
 		int timePassed = 3000;
 		double healingFactor = 1;
+		wound2.setBandage(new Bandage());
 		wound1.passTime(timePassed, healingFactor, false);
 		wound2.passTime(timePassed, healingFactor, false);
-		wound2.setBandage(new Bandage(1.35, 1.35, wound2));
 		String field = "recoveryClock";
 		int recovery1 = 0;
 		int recovery2 = 0;
@@ -59,9 +85,9 @@ public class UnitTestWoundMedication {
 		Wound wound2 = new SlashingWound(6, genericBodypart);
 		int timePassed = 3000;
 		double healingFactor = 1;
+		wound2.setTreatment(new Ointment());
 		wound1.passTime(timePassed, healingFactor, false);
 		wound2.passTime(timePassed, healingFactor, false);
-		wound2.setTreatment(new Ointment(1.35, 1.35, wound2));
 		String field = "recoveryClock";
 		int recovery1 = 0;
 		int recovery2 = 0;

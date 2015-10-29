@@ -59,18 +59,20 @@ public class Environment {
 		TextTools.display("\n\n\n\n\n\n\n\n\nwelcome to signet!\n");
 		while (true) {
 			String question = "You are in " + location.name + " what will you do?";
-			String[] answers = new String[]{"travel", "explore", "save and quit"};
-			int choice = TextTools.questionAsker(question, answers, TextTools.BACK_DISABLED);
+			String[] answers = new String[]{"travel", "explore", "inventory", "save and quit"};
+			int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
 			if (choice == 1){
 				travel();
 				
 			} else if (choice == 2){
 				GameEvent event = location.selectExploreDestination();
 				event.triggerEvent(player);
-			} else if (choice == 3){
+			} else if (choice == 3) {
+				player.getInventory().accessInventoryDuringExplore(player);
+			} else if (choice == 0){
 				choice = TextTools.questionAsker("Are you sure?", new String[]{"yes", "no"}, TextTools.BACK_ENABLED);
 				if (choice == 1){
-					TextTools.display("Saving game...\nGame saved!");
+					TextTools.display("Saving game...\nGame saved! (not really)");
 					break;
 				}
 			} else {
@@ -79,7 +81,7 @@ public class Environment {
 		}
 	}
 	
-	public void travel(){
+	public void travel() throws DeathException{
 		String fileName = location.travel(player);
 		if (locationIndex.containsKey(fileName)){
 			location = locationIndex.get(fileName);

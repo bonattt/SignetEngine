@@ -2,13 +2,137 @@ package unitTests;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
+import inventory.Inventory;
+import inventory.ItemContainer;
+import items.Item;
+
+import org.junit.Before;
 import org.junit.Test;
+
+import sampleItems.*;
 
 public class UnitTestInventory {
 
+	private Inventory inv;
+	
+	@Before
+	public void setup(){
+		inv = new Inventory();
+	}
+	
 	@Test
-	public void NoTestsWritten(){
-		fail("no tests have been implemented yet");
+	public void addingItemIncreasesWeight(){
+		int weightInitial = inv.getCarriedWeight();
+		inv.store(new SampleHelmet());
+		assertTrue(weightInitial < inv.getCarriedWeight());
+	}
+	
+	@Test
+	public void discardingItemRemovesIt(){
+		ArrayList<Item> itemsStored = null;
+		try {
+			Field field = Inventory.class.getDeclaredField("backpack");
+			field.setAccessible(true);
+			ItemContainer bag = (ItemContainer) field.get(inv);
+			field = ItemContainer.class.getDeclaredField("items");
+			field.setAccessible(true);
+			itemsStored = (ArrayList<Item>) field.get(bag);
+		} catch (NoSuchFieldException e) {
+			fail("threw an excaption");
+		} catch (SecurityException e) {
+			fail("threw an excaption");
+		} catch (IllegalArgumentException e) {
+			fail("threw an excaption");
+		} catch (IllegalAccessException e) {
+			fail("threw an excaption");
+		}
+		Item item = new SampleThingy();
+		itemsStored.add(item);
+		inv.discardItem(item);
+		assertFalse(itemsStored.contains(item));
+	}
+	@Test
+	public void storingItemAddsItem(){
+		ArrayList<Item> itemsStored = null;
+		try {
+			Field field = Inventory.class.getDeclaredField("backpack");
+			field.setAccessible(true);
+			ItemContainer bag = (ItemContainer) field.get(inv);
+			field = ItemContainer.class.getDeclaredField("items");
+			field.setAccessible(true);
+			itemsStored = (ArrayList<Item>) field.get(bag);
+		} catch (NoSuchFieldException e) {
+			fail("threw an excaption");
+		} catch (SecurityException e) {
+			fail("threw an excaption");
+		} catch (IllegalArgumentException e) {
+			fail("threw an excaption");
+		} catch (IllegalAccessException e) {
+			fail("threw an excaption");
+		}
+		Item item = new SampleThingy();
+		itemsStored.add(item);
+		assertTrue(itemsStored.contains(item));
+	}
+	@Test
+	public void discardingItemReducesItemCount(){
+		ArrayList<Item> itemsStored = null;
+		try {
+			Field field = Inventory.class.getDeclaredField("backpack");
+			field.setAccessible(true);
+			ItemContainer bag = (ItemContainer) field.get(inv);
+			field = ItemContainer.class.getDeclaredField("items");
+			field.setAccessible(true);
+			itemsStored = (ArrayList<Item>) field.get(bag);
+		} catch (NoSuchFieldException e) {
+			fail("threw an excaption");
+		} catch (SecurityException e) {
+			fail("threw an excaption");
+		} catch (IllegalArgumentException e) {
+			fail("threw an excaption");
+		} catch (IllegalAccessException e) {
+			fail("threw an excaption");
+		}
+		Item item = new SampleThingy();
+		itemsStored.add(item);
+		int initialCount = itemsStored.size();
+		inv.discardItem(item);
+		assertEquals(initialCount - 1,itemsStored.size());
+	}
+	@Test
+	public void addingItemIncreasesItemCount(){
+		ArrayList<Item> itemsStored = null;
+		try {
+			Field field = Inventory.class.getDeclaredField("backpack");
+			field.setAccessible(true);
+			ItemContainer bag = (ItemContainer) field.get(inv);
+			field = ItemContainer.class.getDeclaredField("items");
+			field.setAccessible(true);
+			itemsStored = (ArrayList<Item>) field.get(bag);
+		} catch (NoSuchFieldException e) {
+			fail("threw an excaption");
+		} catch (SecurityException e) {
+			fail("threw an excaption");
+		} catch (IllegalArgumentException e) {
+			fail("threw an excaption");
+		} catch (IllegalAccessException e) {
+			fail("threw an excaption");
+		}
+		Item item = new SampleThingy();
+		int initialCount = itemsStored.size();
+		itemsStored.add(item);
+		assertEquals(initialCount + 1,itemsStored.size());
+	}
+	@Test
+	public void discardingItemReducesWeight(){
+		Item item = new SampleThingy();
+		inv.store(item);
+		int initialWeight = inv.getCarriedWeight();
+		inv.discardItem(item);
+		assertEquals(initialWeight - item.getWeight(), inv.getCarriedWeight());
 	}
 	
 }

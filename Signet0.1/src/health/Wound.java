@@ -36,7 +36,7 @@ public class Wound {
 	fatigueDamage,			// fatigue caused at a constant rate 
 	crippling;				// this )
 	
-	private Ointment medication;
+	private Ointment ointment;
 	private Bandage bandage;
 	private Infection infection;
 	private BodyPart location;
@@ -76,6 +76,16 @@ public class Wound {
 		randomizeHealingTimes();
 				
 	}
+	public boolean isBandaged(){
+		return bandage != null;
+	}
+	public boolean hasOintment(){
+		return ointment != null;
+	}
+	public boolean isTreated(){
+		return (ointment != null) || (bandage != null);
+	}
+	
 	private void randomizeHealingTimes(){
 		Random r = DiceRoller.rand;
 		for (int i = 0; i < recoveryTime.length-1; i++){
@@ -120,16 +130,12 @@ public class Wound {
 		return wound.getInstantDamage();
 	}
 	public void setTreatment(Ointment arg){
-		medication = arg;
-	}
-	public boolean isBandaged(){
-		if (bandage == null){
-			return false;
-		}
-		return true;
+		ointment = arg;
+		arg.setWound(this);
 	}
 	public void setBandage(Bandage arg) {
 		bandage = arg;
+		arg.setWound(this);
 	}
 	public int getCrippling(){
 		return crippling[severity - 1];
@@ -167,10 +173,21 @@ public class Wound {
 		double infectionRate = chanceOfInfection[severity - 1];
 		if (resting){
 			healingFactor *= 1.1;
+		} if (bandage != null){
+			healingFactor *= bandage.getHealingRateAdjustment();
+			infectionRate *= bandage.getInfectionMultiplier();
+			// TODO bandage.passTime(timePassed, healingFactor, this);
+			if (bandage.needsToBeChanged()){
+				System.out.println("your bandage needs to be changed");
+			}
+		} if (ointment != null){
+			healingFactor *= ointment.getHealingRateAdjustment();
+			infectionRate *= ointment.getInfectionMultiplier();
+	//		if(!medication.passTime(timePassed, healingFactor, this)){
+	//			medication = null;
+	//		}
 		}
-		
 		damage = dealDamageOverTime(timePassed);
-		
 		healWoundOverTime(timePassed, healingFactor);
 		if (infection != null){
 			healingFactor *= infection.getHealingAdjustment();
@@ -188,19 +205,6 @@ public class Wound {
 			for (int i = 0; i < infectionClock; i++){
 				checkIfWoundGetsInfected();
 			}
-		} if (bandage != null){
-			healingFactor *= bandage.getHealingRateAdjustment();
-			infectionRate *= bandage.getInfectionMultiplier();
-			// TODO bandage.passTime(timePassed, healingFactor, this);
-			if (bandage.needsToBeChanged()){
-				System.out.println("your bandage needs to be changed");
-			}
-		} if (medication != null){
-			healingFactor *= medication.getHealingRateAdjustment();
-			infectionRate *= medication.getInfectionMultiplier();
-//			if(!medication.passTime(timePassed, healingFactor, this)){
-//				medication = null;
-//			}
 		}
 		return damage;
 	}
@@ -212,12 +216,19 @@ public class Wound {
 		if (severity != originalSeverity){
 			return new double[]{0, 0, 0};
 		}
+		double damageMultiplier = 1;
+		if (bandage != null){
+			damageMultiplier *= bandage.getDamageMultiplier();
+		} if (ointment != null){
+			damageMultiplier *= ointment.getDamageMultiplier();
+		}
+		
 		double[] damage = new double[3];
 		int damageCount = timePassed / damageRate[severity - 1];	// int division, gets completed number of damage increments
 		bleedingClock = timePassed % damageRate[severity - 1];		// gets remainder and stores it in bleedingClock
-		damage[0] = healthDamage[severity-1] * damageCount;
-		damage[1] = stunDamage[severity-1] * damageCount;
-		damage[2] = fatigueDamage[severity-1] * damageCount;
+		damage[0] = healthDamage[severity-1] * damageCount * damageMultiplier;
+		damage[1] = stunDamage[severity-1] * damageCount * damageMultiplier;
+		damage[2] = fatigueDamage[severity-1] * damageCount * damageMultiplier;
 		return damage;
 	}
 	public void healWoundOverTime(int timePassed, double healingFactor){
