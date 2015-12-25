@@ -3,12 +3,14 @@ package items;
 import inventory.Gear;
 import inventory.Inventory;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import misc.TextTools;
 import creatures.Creature;
 
-public abstract class Armor extends Item {
+public class Armor extends Item {
 	
 	private static final double ARMOR_INDIRECT_DAMAGE_REDUCTION = 2/3;
 	// damage recieved by armor while blocking attacks is reduced.
@@ -19,6 +21,8 @@ public abstract class Armor extends Item {
 	
 	public Armor(int size, int wt, int dur, int hard, int dam) {
 		super(size, wt, dur, hard, dam);
+		damageResistance = new HashMap<Integer,Integer>();
+		typeConversion = new HashMap<Integer,Integer>();
 	}
 	@Override
 	public boolean isArmor(){
@@ -32,6 +36,77 @@ public abstract class Armor extends Item {
 		damageResistance = resistances;
 		slot = armorSlot;
 		typeConversion = typeconversion;
+	}
+	@Override
+	public void saveToFile(PrintWriter writer) {
+		writer.println("armor");
+		saveBaseStats(writer);
+		saveDamageResistanceToFile(writer);
+		saveTypeConversion(writer);
+	}
+	
+	public static Armor loadAlpha0_1(Scanner scanner) {
+		String name = scanner.nextLine();
+		int size, weight, durability, hardness, damage;
+		size = scanner.nextInt();
+		weight = scanner.nextInt();
+		durability = scanner.nextInt();
+		hardness = scanner.nextInt();
+		damage = scanner.nextInt();
+		Armor armor = new Armor(size, weight, durability, hardness, damage);
+		armor.description = Item.loadItemDescriptionAlpha0_1(scanner);
+		armor.damageResistance = loadDamageResistanceAlpha0_1(scanner);
+		armor.typeConversion = loadTypeConversionAlpha0_1(scanner);
+		armor.name = name;
+		return armor;
+	}
+	public boolean equals(Armor item) {
+		return (item.getSize() == getSize()) &&
+				(item.getWeight() == getWeight()) &&
+				(item.getDurability() == getDurability()) &&
+				(item.getHardness() == getHardness()) &&
+				(item.getDamage() == getDamage()) &&
+				(item.damageResistance.equals(damageResistance)) &&
+				(item.typeConversion.equals(typeConversion)) &&
+				(item.name.equals(name)) &&
+				(item.description.equals(description));
+	}
+	
+	private void saveDamageResistanceToFile(PrintWriter writer) {
+		for (int damageType : damageResistance.keySet()){
+			writer.println(damageType);
+			writer.println(damageResistance.get(damageType));
+		}
+		writer.println("end damage resistance");
+	}
+	private void saveTypeConversion(PrintWriter writer) {
+		for (int damageType : typeConversion.keySet()){
+			writer.println(damageType);
+			writer.println(typeConversion.get(damageType));
+		}
+		writer.println("end type conversion");
+	}
+	private static HashMap<Integer, Integer> loadDamageResistanceAlpha0_1(Scanner scanner) {
+		HashMap<Integer, Integer> resistance = new HashMap<Integer, Integer>();
+		String current = scanner.nextLine();
+		while(!current.equals("end damage resistance")){
+			int key = Integer.parseInt(current);
+			int value = scanner.nextInt();
+			resistance.put(key, value);
+			current = scanner.nextLine();
+		}
+		return resistance;
+	}
+	private static HashMap<Integer, Integer> loadTypeConversionAlpha0_1(Scanner scanner) {
+		HashMap<Integer, Integer> conversion = new HashMap<Integer, Integer>();
+		String current = scanner.nextLine();
+		while(!current.equals("end type conversion")){
+			int key = Integer.parseInt(current);
+			int value = scanner.nextInt();
+			conversion.put(key, value);
+			current = scanner.nextLine();
+		}
+		return conversion;
 	}
 	
 	public void modifyStats(int[] stats){

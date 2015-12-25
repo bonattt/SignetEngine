@@ -5,8 +5,10 @@ import items.Item;
 import items.Weapon;
 import items.WornItem;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
 
@@ -27,6 +29,7 @@ public class Gear {
 		clothingWorn = new HashMap<String, WornItem>();
 		armorEquipped = new HashMap<String, Armor>();
 		equippedWeapons = new HashMap<String, Weapon>();
+		stats = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		totalWeight = 0;
 		
 	}
@@ -40,6 +43,37 @@ public class Gear {
 		str.append("clothing equipped: ");
 		str.append(clothingWorn.toString());
 		return str.toString();
+	}
+	
+	public static Gear loadAlpha0_1fromFile(Scanner scanner){
+		return null;
+	}
+	
+	public void saveToFile(PrintWriter writer){
+		writer.println("equipment");
+		writer.println(totalWeight);
+		writer.println("clothingWorn");
+		saveClothingWornToFile(writer);
+		saveArmorToFile(writer);
+		saveEquippedWeaponsToFile(writer);
+		writer.println("end equipment");
+	}
+	private void saveClothingWornToFile(PrintWriter writer){
+		writer.println("clothing");
+		
+		
+		writer.println("end clothing");
+	}
+	private void saveArmorToFile(PrintWriter writer){
+		writer.println("armor");
+		
+		
+		writer.println("end armor");
+	}
+	private void saveEquippedWeaponsToFile(PrintWriter writer){
+		writer.println("equipped weapons");
+		
+		writer.println("end equipped weapons");
 	}
 	
 	public int getWeight(){

@@ -1,14 +1,9 @@
 package health;
 
-import items.Armor;
-
-import java.util.ArrayList;
+import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Scanner;
 
 import misc.DeathException;
 import creatures.Creature;
@@ -63,6 +58,25 @@ public class Body {
 	
 	public int getHealthDamage(){
 		return healthDamage;
+	}
+	public static Body loadAlpha1_0fromFile(Scanner scanner){
+		return null;
+	}
+	
+	public void saveToFile(PrintWriter writer){
+		writer.println("body");
+		writer.println(fatigueActual);
+		writer.println(painActual);
+		writer.println(healthDamage);
+		writer.println(stunDamage);
+		saveBodyPartsToFile(writer);
+	}
+	private void saveBodyPartsToFile(PrintWriter writer){
+		writer.println("bodyparts");
+		for(String key : bodyparts.keySet()){
+			bodyparts.get(key).saveToFile(writer);
+		}
+		writer.println("end bodyparts");
 	}
 	public void recieveWound(int damage, int dType, String location) throws DeathException{
 		recieveWound(damage, dType, bodyparts.get(location));

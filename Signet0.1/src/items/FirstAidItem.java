@@ -1,6 +1,8 @@
 package items;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import misc.TextTools;
 import inventory.Inventory;
@@ -24,7 +26,7 @@ public abstract class FirstAidItem extends Item {
 		String question = "which wound would you like to treat?";
 		String[] answers = new String[wounds.size() + 1];
 		for (int i = 0; i < wounds.size(); i++){
-			answers[i] = wounds.get(i).name;
+			answers[i] = wounds.get(i).name();
 		}
 		answers[answers.length - 1] = "cancel";
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
@@ -56,9 +58,30 @@ public abstract class FirstAidItem extends Item {
 	public double getInfectionMultiplier(){
 		return infectionMultiplier;
 	}
+	protected boolean firstAidEquals(FirstAidItem item) {
+		return (item.getSize() == getSize()) &&
+				(item.getWeight() == getWeight()) &&
+				(item.getDurability() == getDurability()) &&
+				(item.getHardness() == getHardness()) &&
+				(item.getDamage() == getDamage()) &&
+				doubleEquals(item.getInfectionMultiplier(), getInfectionMultiplier()) &&
+				doubleEquals(item.getDamageMultiplier(), getDamageMultiplier()) &&
+				doubleEquals(item.getHealingRateAdjustment(), getHealingRateAdjustment())
+				;
+	}
+	private static boolean doubleEquals(double arg1, double arg2) {
+		return (.001 > Math.abs(arg1 - arg2));
+	}
+	
+	protected void saveFirstAidStatsToFile(PrintWriter writer) {
+//		size, weight, durability, harnesss, damage, infectionRate, damageMultiplier, healingRate
+		saveBaseStats(writer);
+		writer.println(getInfectionMultiplier());
+		writer.println(getDamageMultiplier());
+		writer.println(getHealingRateAdjustment());
+	}
 	@Override
 	public void handleUseWhileEquipped(Inventory inv, Creature player, int choice){
 		System.out.println("Ammo should not be used while equipped");
-		// does nothing
 	}
 }

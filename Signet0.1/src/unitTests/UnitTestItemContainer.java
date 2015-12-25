@@ -1,21 +1,61 @@
 package unitTests;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-import inventory.Bag;
+import inventory.Inventory;
 import inventory.ItemContainer;
+import items.Armor;
 import items.Item;
 import testMocks.*;
 
-public class UnitTestBag {
+public class UnitTestItemContainer {
 
 	@Test
+	public void testPossitiveEquals() {
+		ItemContainer bag1 = Inventory.getStartingBackpack();
+		ItemContainer bag2 = new ItemContainer(Inventory.STARTING_BAG_WEIGHT,
+				Inventory.STARTING_BAG_SIZE, "backpack");
+		assertTrue(bag1.equals(bag2));
+		assertTrue(bag2.equals(bag1));
+	}
+	
+	@Test
+	public void testNegativeEquals() {
+		ItemContainer bag1 = new ItemContainer(10, 100, "backpack1");
+		ItemContainer bag2 = new ItemContainer(100, 10, "backpack2");
+		assertTrue(! bag1.equals(bag2));
+		assertTrue(! bag2.equals(bag1));
+	}
+	
+	@Test
+	public void testPossitiveContentsEqual() {
+		ItemContainer bag1 = Inventory.getStartingBackpack();
+		ItemContainer bag2 = Inventory.getStartingBackpack();
+		Item obj1 = new Armor(2, 2, 2, 2, 0);
+		bag1.addItem(obj1);
+		bag2.addItem(obj1);
+		assertTrue(bag1.contentsEqual(bag2));
+		assertTrue(bag2.contentsEqual(bag1));
+	}
+	
+	@Test
+	public void testNegativeContentsEqual() {
+		ItemContainer bag1 = Inventory.getStartingBackpack();
+		ItemContainer bag2 = Inventory.getStartingBackpack();
+		Item obj1 = new Armor(2, 2, 2, 2, 0);
+		bag1.addItem(obj1);
+		assertTrue(! bag1.contentsEqual(bag2));
+		assertTrue(! bag2.contentsEqual(bag1));
+	}
+	
+	@Test
 	public void testBagStoresItems() {
-		ItemContainer bag = new Bag();
+		ItemContainer bag = Inventory.getStartingBackpack();
 		Item mock = new ItemMock();
 		bag.addItem(mock);
 		try {
@@ -41,7 +81,7 @@ public class UnitTestBag {
 	}
 	@Test
 	public void testBagCanRemoveStoredItems() {
-		ItemContainer bag = new Bag();
+		ItemContainer bag = Inventory.getStartingBackpack();
 		Item mock = new ItemMock();
 		bag.addItem(mock);
 		bag.removeItem(mock);

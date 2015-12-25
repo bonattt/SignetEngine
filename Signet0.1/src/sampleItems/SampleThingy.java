@@ -1,5 +1,7 @@
 package sampleItems;
 
+import java.io.PrintWriter;
+
 import misc.TextTools;
 import creatures.Creature;
 import inventory.Inventory;
@@ -34,6 +36,11 @@ public class SampleThingy extends Item {
 			int choice) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void saveToFile(PrintWriter writer) {
+		System.out.println("saveToFile unimplemented in thingy");
 	}
 
 }

@@ -2,11 +2,13 @@ package health;
 
 import items.Armor;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 
-public abstract class BodyPart {
+public class BodyPart {
 	
 	protected ArrayList<Wound> injuries = new ArrayList<Wound>();
 	protected double damageMultiplier, painMultiplier, cripplingMultiplier;
@@ -14,10 +16,11 @@ public abstract class BodyPart {
 	public String name;
 	private Armor naturalArmor;
 	
-	public BodyPart(String name, double damage, double pain, double crippling, double[]statMultipliers){
-		this(name, damage, pain, crippling, statMultipliers, null);
+	public BodyPart(String name, double damageRate, double painRate, double cripplingRate, double[]statMultipliers){
+		this(name, damageRate, painRate, cripplingRate, statMultipliers, null);
 	}
 	public BodyPart(String name, double damage, double pain, double crippling, double[]statMultipliers, Armor naturalArmor){
+		this.name = name;
 		this.damageMultiplier = damage;
 		this.painMultiplier = pain;
 		this.statMultipliers = statMultipliers;
@@ -29,6 +32,32 @@ public abstract class BodyPart {
 	}
 	public ArrayList<Wound> getInjuries(){
 		return injuries;
+	}
+	public static BodyPart loadAlpha1_0fromFile(Scanner scanner){
+		return null;
+	}
+	public void saveToFile(PrintWriter writer){
+		writer.println(name);
+		writer.println(damageMultiplier);
+		writer.println(painMultiplier);
+		writer.println(cripplingMultiplier);
+		for (int i = 0; i < statMultipliers.length; i++){
+			writer.println(statMultipliers[i]);
+		}
+		if (naturalArmor == null){
+			writer.println("no natural armor");
+		} else {
+			writer.println("natural armor");
+			naturalArmor.saveToFile(writer);
+		}
+		saveInjuriesToFile(writer);
+	}
+	private void saveInjuriesToFile(PrintWriter writer){
+		writer.println("injuries");
+		for(int i = 0; i < injuries.size(); i++){
+			injuries.get(i).saveToFile(writer);
+		}
+		writer.println("end injuries");
 	}
 	
 	public boolean hasNaturalArmor(){

@@ -3,10 +3,9 @@ package sampleWeapons;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import items.CombatItem;
 import items.Weapon;
 
-public class SampleSword extends Weapon implements CombatItem {
+public class SampleSword extends Weapon {
 	
 	private static final int MIGHT = 2;
 	private static final int ACCURACY = 1;

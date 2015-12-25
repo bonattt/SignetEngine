@@ -2,16 +2,14 @@ package creatures;
 
 import health.Body;
 import health.BodyPart;
-import health.DamageType;
 import health.Wound;
 import inventory.Inventory;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.Scanner;
 
-import main.GameRunner;
 import misc.DeathException;
 import misc.DiceRoller;
 import misc.TextTools;
@@ -35,15 +33,12 @@ public abstract class Creature {
 	public HashMap<String,Integer> damageMultipliers;
 	public HashMap<String, Skill> skills;
 	
-	public Creature(String creatureName, HashMap<String,Integer> baseStats, HashMap<String,Integer> damageMultipliers){
+	public Creature(String creatureName, HashMap<String,Integer> baseStats, HashMap<String,Integer> damageMultipliers, HashMap<String, Skill> startingSkills){
 		this.name = creatureName;
-		inv = null;
-		body = null;
 		this.damageMultipliers = damageMultipliers;
 		stats_base = baseStats;
-		this.name = creatureName;
 		stats_adjusted = stats_base; // TODO make this a deep copy, then make it actually modify stats.
-		skills = startingSkills();
+		skills = startingSkills;
 		inv = new Inventory();
 		body = new Body(this);
 	}
@@ -54,20 +49,37 @@ public abstract class Creature {
 	public abstract String handleDeath(DeathException e);
 	public abstract String handleKills(DeathException e);
 	
-	public HashMap<String, Skill> startingSkills(){
-		HashMap<String, Skill> skills = new HashMap<String, Skill>();
-		skills.put("knives", new KnifeSkill());
-		return skills;
+	public void saveToFile(PrintWriter writer){
+		writer.println(name);
+		saveStats(writer);
+		saveDamageMultipliers(writer);
+		inv.saveToFile(writer);
+		body.saveToFile(writer);
+		saveSkills(writer);
+	}
+	private void saveStats(PrintWriter writer){
+		for (int i = 0; i < ABILITIES.length; i++){
+			String key = ABILITIES[i];
+			writer.println(stats_base.get(key));
+		}
+	}
+	private void saveDamageMultipliers(PrintWriter writer){
+//		writer.println("damage characteristics");
+		for(String key : damageMultipliers.keySet()){
+			writer.println(key);
+			writer.println(damageMultipliers.get(key));
+		}
+		writer.println("end damage characteristics");
+	}
+	private void saveSkills(PrintWriter writer){
+//		writer.println("skills");
+		for (String key : skills.keySet()){
+			writer.println(key);
+			skills.get(key).saveToFile(writer);
+		}
+		writer.println("end skills");
 	}
 	
-	public int rollInititative(){
-		int init = stats_adjusted.get("rec") + stats_adjusted.get("agl");
-		Random r = new Random();
-		for (int i = 0; i < 3; i++){
-			init += r.nextInt(6);
-		}		
-		return init;
-	}
 	public ArrayList<Wound> listAllWounds(){
 		HashMap<String, BodyPart> bodyparts = body.getBodyParts();
 		ArrayList<Wound> injuries = new ArrayList<Wound>();
@@ -107,10 +119,10 @@ public abstract class Creature {
 	public void setStat(String key, int value){
 		stats_base.put(key, value);
 	}
-	private void adjustSingleStat(String key, int modifier){
-		int starting = stats_adjusted.get(key);
-		stats_adjusted.put(key, starting + modifier);
-	}
+//	private void adjustSingleStat(String key, int modifier){
+//		int starting = stats_adjusted.get(key);
+//		stats_adjusted.put(key, starting + modifier);
+//	}
 	public void refreshCombatStats(){
 		// TODO implement
 	}

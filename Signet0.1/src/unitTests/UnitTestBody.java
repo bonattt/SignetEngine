@@ -1,9 +1,9 @@
 package unitTests;
 
-import injuries.SlashingWound;
 import health.Body;
 import health.BodyPart;
 import health.DamageType;
+import health.Injuries;
 import health.Wound;
 import misc.DeathException;
 import static org.junit.Assert.*;
@@ -81,7 +81,7 @@ public class UnitTestBody {
 		} catch (DeathException e) {
 			fail("Player died");
 		}
-		Wound testWound = new SlashingWound(4, body.getBodyParts().get("chest"));
+		Wound testWound = Injuries.getSlashingWound(4, body.getBodyParts().get("chest"));
 		double totalPain = testWound.getPain() * body.countWounds();
 		assertTrue(totalPain > body.getPain());
 	}

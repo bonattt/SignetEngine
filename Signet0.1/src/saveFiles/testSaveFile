@@ -1,0 +1,321 @@
+SIGNET alpha version 1.0
+Jarred
+12
+10
+10
+4
+1
+4
+6
+12
+8
+8
+end damage characteristics
+inventory
+0
+item container
+backpack
+0
+0
+327
+122
+1000
+10
+items contained
+METHOD 'saveToFile' IS UNIMPLIMENTED IN CLASS 'item'
+METHOD 'saveToFile' IS UNIMPLIMENTED IN CLASS 'item'
+METHOD 'saveToFile' IS UNIMPLIMENTED IN CLASS 'item'
+METHOD 'saveToFile' IS UNIMPLIMENTED IN CLASS 'item'
+METHOD 'saveToFile' IS UNIMPLIMENTED IN CLASS 'item'
+METHOD 'saveToFile' IS UNIMPLIMENTED IN CLASS 'item'
+end item container
+equipment
+0
+clothingWorn
+clothing
+end clothing
+armor
+end armor
+equipped weapons
+end equipped weapons
+end equipment
+no light source
+METHOD 'saveToFile' IS UNIMPLIMENTED IN CLASS 'item'
+end inventory
+body
+1.0
+1.0
+2
+0
+bodyparts
+left leg
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+chest
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+belly
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+back
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+right leg
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+head
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+left foot
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+right shoulder
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+left shoulder
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+left arm
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+slash4
+4
+4
+0
+[I@42a57993
+[I@75b84c92
+[I@6bc7c054
+[I@232204a1
+[I@4aa298b7
+[I@7d4991ad
+[I@28d93b30
+[I@1b6d3586
+[I@4554617c
+[D@74a14482
+0
+0
+0
+no ointment
+no bandage
+no infection
+end injuries
+right arm
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+left hand
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+right foot
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+right hand
+0.5
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+no natural armor
+injuries
+end injuries
+end bodyparts
+knives
+Knife
+8
+0
+0
+combat
+rightHand
+visual
+end tags
+agl
+end linked attribute
+end skills

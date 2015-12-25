@@ -1,5 +1,8 @@
 package items;
 
+import java.io.PrintWriter;
+import java.util.Scanner;
+
 import creatures.Creature;
 import inventory.Gear;
 import inventory.Inventory;
@@ -18,22 +21,90 @@ public abstract class Item {
 	public String name;
 	public String description;
 	
-	public Item (int size, int wt, int dur, int hard, int dam){
+	public Item (int size, int wt, int dur, int hard, int dam) {
 		this.size = size;
 		weight = wt;
 		durability = dur;
 		hardness = hard;
 		damage = dam;
+		name = "";
+		description = "";
 	}
+	
+	public boolean equals(Item item) {
+		return (this.size == item.size) &&
+				(this.weight == item.weight) &&
+				(this.durability == item.durability) &&
+				(this.hardness == item.hardness) &&
+				(this.name.equals(item.name)) &&
+				(this.description.equals(item.description));
+	}
+	
 	public void inspect(Creature player) {
 		TextTools.display(description);
 		// TODO add a pause in text reading here.
 	}
 	public abstract void useFromInventory(Inventory inv, Creature player) throws Exception;
 	public abstract void handleUseWhileEquipped(Inventory inv, Creature player, int choice);
+	public abstract void saveToFile(PrintWriter writer);
+	public static Item loadAlpha0_1(Scanner scanner) {
+		String itemType = scanner.nextLine();
+		if (itemType.equals("armor")) {
+			return Armor.loadAlpha0_1(scanner);
+		} else if (itemType.equals("bandage")) {
+			return Bandage.loadAlpha0_1(scanner);
+		} else if (itemType.equals("light source")) {
+			return LightSource.loadAlpha0_1(scanner);
+		} else if (itemType.equals("ointment")) {
+			return Ointment.loadAlpha0_1(scanner);
+		} else if (itemType.equals("ranged weapon")) {
+			return RangedWeapon.loadAlpha0_1(scanner);
+		} else if (itemType.equals("weapon")) {
+			return Weapon.loadAlpha0_1(scanner);
+		} else if (itemType.equals("worn item")) {
+			return WornItem.loadAlpha0_1(scanner);
+		} else {
+			System.out.println("Load Alpha 0.1, unrecognized item type '" + itemType + "'\n cannot load item");
+			return null;
+		}
+	}
+	private void saveDescriptionToFile(PrintWriter writer) {
+		String[] desc = description.split("\n");
+		for (int i = 0; i < desc.length; i++) {
+			writer.println(desc[i]);
+		}
+		writer.println("end description");
+	}
+	public void saveBaseStats(PrintWriter writer) {
+		writer.println(name);
+		writer.println(size);
+		writer.println(weight);
+		writer.println(durability);
+		writer.println(hardness);
+		writer.println(damage);
+		saveDescriptionToFile(writer);
+	}
+	
+	public static String loadItemDescriptionAlpha0_1(Scanner scanner) {
+		StringBuilder desc = new StringBuilder();
+		// BANDAIDE FIX - the phantom blank line has showed up here again.
+		// an extra line "" is being read from the file where one doesn't exist.
+		scanner.nextLine();
+		String current = scanner.nextLine();
+		boolean first = true;
+		while(! current.equals("end description")) {
+			if (!first) {
+				desc.append("\n");
+			}
+			desc.append(current);
+			current = scanner.nextLine();
+			first = false;
+		}
+		return desc.toString();
+	}
 	
 	public String toString(){
-		return name;
+		return "Item: " + name;
 	}
 	
 	public void useWhileEquipped(Inventory inv, Creature player){
@@ -104,11 +175,20 @@ public abstract class Item {
 		return false;
 	}
 	
-	public int getSize(){
+	public int getSize() {
 		return size;
 	}
-	public int getWeight(){
+	public int getWeight() {
 		return weight;
+	}
+	public int getDurability() {
+		return durability;
+	}
+	public int getHardness() {
+		return hardness;
+	}
+	public int getDamage() {
+		return damage;
 	}
 	public String checkDamage(){
 		return "";
@@ -132,7 +212,17 @@ public abstract class Item {
 		}
 		return false;
 	}
+	public boolean baseEqual(Item item) {
+		return (item.getSize() == size) &&
+				(item.getWeight() == weight) &&
+				(item.getDurability() == durability) &&
+				(item.getHardness() == hardness) &&
+				(item.getDamage() == damage) &&
+				(item.name.equals(name)) &&
+				(item.description.equals(description));
+	}
 	
-	
-	public abstract void itemBreaks();
+	public void itemBreaks(){
+		System.out.println("UNIMPLEMENTED [Item].itemBreaks()");
+	}
 }

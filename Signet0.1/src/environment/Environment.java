@@ -2,6 +2,13 @@ package environment;
 
 import indices.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 //import java.io.BufferedReader;
 //import java.io.FileNotFoundException;
 //import java.io.FileReader;
@@ -9,6 +16,16 @@ import indices.*;
 import java.util.HashMap;
 import java.util.Scanner;
 //import java.util.stream.Stream;
+
+
+
+
+
+
+
+
+
+
 
 import sampleEvents.LootGenericChest;
 import misc.DeathException;
@@ -38,6 +55,8 @@ public class Environment {
 	private static final int default_start_time = 8000;
 	private static final int default_start_date = 13;
 	private static final int default_start_month = 5;
+	private static final String gameSaveFilePath = "src/savedFiles/savefile01";
+	private static final String versionName = "SIGNET alpha version 0.1";
 	
 	public Environment(String startLocation){
 		this(startLocation, default_start_time, default_start_date, default_start_month);
@@ -80,7 +99,49 @@ public class Environment {
 			}
 		}
 	}
+	public static void loadGame(){
+		loadGameFromFile(gameSaveFilePath);
+	}	
+	public void saveGame(){
+		saveGameToFile(gameSaveFilePath);
+	}
+	public static void loadGameFromFile(String filePath){
+		try {
+			Scanner scanner = new Scanner(new File(filePath));
+			String versionStr = scanner.nextLine();
+			if(versionStr.equals("SIGNET alpha version 0.1")){
+				loadAlpha0_1fromFile(scanner);
+			} else {
+				System.out.println("Unknown game version \nGame load canceled.");
+			}
+			scanner.close();			
+		} catch (FileNotFoundException e) {
+			System.out.println("ERROR laoding file - file not found");
+			e.printStackTrace();
+		}
+	}
+	public static void loadAlpha0_1fromFile(Scanner scanner){
+//		weather; 
+//		location;
+//		terrain;
+//		clock;
+		PlayerCharacter player = PlayerCharacter.loadAlpha0_1fromFile(scanner);
+	}
 	
+	public void saveGameToFile(String filePath){
+		try {
+			PrintWriter writer = new PrintWriter(filePath, "UTF-8");
+			writer.println(versionName);
+			player.saveToFile(writer);
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("FileNotFoundException exception in save game");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("IOException exception in save game");
+		} 
+	}
 	public void travel() throws DeathException{
 		String fileName = location.travel(player);
 		if (locationIndex.containsKey(fileName)){

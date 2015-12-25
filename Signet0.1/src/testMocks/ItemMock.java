@@ -1,5 +1,7 @@
 package testMocks;
 
+import java.io.PrintWriter;
+
 import creatures.Creature;
 import inventory.Gear;
 import inventory.Inventory;
@@ -34,6 +36,10 @@ public class ItemMock extends Item {
 			int choice) {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public void saveToFile(PrintWriter writer) {
+		System.out.println("ERROR - item mock cannot be saved");
 	}
 
 }

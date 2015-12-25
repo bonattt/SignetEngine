@@ -9,9 +9,11 @@ import java.util.HashMap;
 
 import misc.DeathException;
 import misc.TextTools;
+import sampleCombatSkills.KnifeSkill;
 import sampleItems.*;
 import sampleWeapons.*;
 import creatures.PlayerCharacter;
+import creatures.Skill;
 /**
  * Jarred the impaler, object mother character.
  * @author bonattt
@@ -23,7 +25,9 @@ public class CharacterMother {
 		String creatureName = "Jarred";
 		HashMap<String, Integer> baseStats = getJarredStatMap();
 		HashMap<String, Integer> damageMultipliers = getJarredDamageMultipliers();
-		PlayerCharacter dickDefenderOfLife = new PlayerCharacter(creatureName, baseStats, damageMultipliers);
+		HashMap<String, Skill> skills = new HashMap<String, Skill>();
+		skills.put("knives", new KnifeSkill());
+		PlayerCharacter dickDefenderOfLife = new PlayerCharacter(creatureName, baseStats, damageMultipliers, skills);
 		woundDick(dickDefenderOfLife);
 		equipDick(dickDefenderOfLife);
 		return dickDefenderOfLife;

@@ -5,19 +5,22 @@ import java.util.Scanner;
 
 import misc.DeathException;
 import creatures.Creature;
+import creatures.Skill;
 
 public class TestMonster extends Creature {
 	
-	
-
 	public TestMonster() {
-		super("generic-saurace-rex", getGenericMonsterStats(), new HashMap<String, Integer>());
+		super("generic-saurace-rex", getGenericMonsterStats(), new HashMap<String, Integer>(), getStartingSkills());
 	}
 
 	@Override
 	public void die() throws DeathException {
 		throw new DeathException("You killed the generic-saurace-rex!!", false);
 		
+	}
+	private static HashMap<String, Skill> getStartingSkills(){
+		HashMap<String, Skill> skills = new HashMap<String, Skill>();
+		return skills;
 	}
 	private static HashMap<String, Integer> getGenericMonsterStats(){
 		HashMap<String,Integer> map = new HashMap<String,Integer>();

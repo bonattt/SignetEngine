@@ -1,13 +1,14 @@
 package inventory;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import creatures.Creature;
-import misc.DiceRoller;
 import misc.TextTools;
 import items.*;
 
-public abstract class ItemContainer {
+public class ItemContainer {
 	
 	public String name;
 	
@@ -30,6 +31,67 @@ public abstract class ItemContainer {
 		baseWeight = weight;
 		this.name = name;
 	}
+	public void saveToFile(PrintWriter writer){
+		writer.println("item container");
+		writer.println(name);
+		writer.println(concealmentHits);
+		writer.println(concealability);
+		writer.println(spaceUsed);
+		writer.println(weightContained);
+		writer.println(baseSpace);
+		writer.println(baseWeight);
+		for (int i = 0; i < items.size(); i++){
+			items.get(i).saveToFile(writer);
+		}
+		writer.println("end item container");
+	}
+	public static ItemContainer loadAlpha0_1(Scanner scanner){
+		String name = scanner.nextLine();
+		@SuppressWarnings("unused")
+		int concealmentHits, concealability, spaceUsed, weightContained, baseSpace, baseWeight;
+		concealmentHits = scanner.nextInt();
+		concealability = scanner.nextInt();
+		spaceUsed = scanner.nextInt();
+		weightContained = scanner.nextInt();
+		baseSpace = scanner.nextInt();
+		baseWeight = scanner.nextInt();
+		ArrayList<Item> items = loadItemsAlpha0_1(scanner);
+		return new ItemContainer(baseWeight, baseSpace, name, items);
+	}
+	private static ArrayList<Item> loadItemsAlpha0_1(Scanner scanner) {
+		ArrayList<Item> items = new ArrayList<Item>();
+//		scanner.nextLine();
+		// This is my bandaid fix for an unexplained blank line "" that keeps being read
+		// at certain points in the code.
+		String current = scanner.nextLine();
+		scanner.nextLine();
+		while(!current.equals("end item container")) {
+			Item item = Item.loadAlpha0_1(scanner);
+			items.add(item);
+			
+		}
+		return items;
+	}
+	public boolean equals(ItemContainer obj) {
+		return (obj.concealability == this.concealability)
+				&& (obj.name.equals(this.name))
+				&& (obj.baseWeight == this.baseWeight)
+				&& (obj.baseSpace == this.baseSpace);
+	}
+	
+	public boolean contentsEqual(ItemContainer obj) {
+		if(this.items.size() != obj.items.size()) {
+			return false;
+		}
+		for (Item item : this.items) {
+			if (!obj.items.contains(item)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	
 	/**
 	 * this method retuns a boolean for whether the concealed container was found by a searcher.
 	 * @return

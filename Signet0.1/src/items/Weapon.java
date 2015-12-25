@@ -3,13 +3,15 @@ package items;
 import inventory.Gear;
 import inventory.Inventory;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import creatures.Creature;
 import misc.TextTools;
 
-public abstract class Weapon extends Item implements CombatItem {
+public class Weapon extends Item {
 
 	public static final int LIGHT = 0;
 	public static final int ONE_HANDED = 1;
@@ -29,6 +31,14 @@ public abstract class Weapon extends Item implements CombatItem {
 		this.accuracy = accuracy;
 		this.might = might;
 	}
+	public Weapon(int size, int weight, int durability, int hardness, int damage,
+			int weaponType, int parry, int accuracy, int might) {
+		super(size, weight, durability, hardness, damage);
+		this.weaponType = weaponType;
+		this.parry = parry;
+		this.accuracy = accuracy;
+		this.might = might;
+	}
 	/**
 	 * puts all availible combat actions into 
 	 * @param combat
@@ -37,6 +47,42 @@ public abstract class Weapon extends Item implements CombatItem {
 	
 	public int getWeaponType(){
 		return weaponType;
+	}
+	
+	@Override
+	public void saveToFile(PrintWriter writer) {
+		writer.println("weapon");
+		saveBaseStats(writer);
+		writer.println(weaponType);
+		writer.println(parry);
+		writer.println(accuracy);
+		writer.println(might);
+	}
+//	private void saveDescriptionToFile(PrintWriter writer){
+//		String[] desc = description.split("\n");
+//		writer.println(desc.length);
+//		for (int i = 0; i < desc.length; i++) {
+//			writer.println(desc[i]);
+//		}
+//	}
+	public static Weapon loadAlpha0_1(Scanner scanner) {
+		int size, weight, durability, hardness, damage, weaponType, parry, accuracy, might;
+		String name = scanner.nextLine();
+		size = scanner.nextInt();
+		weight = scanner.nextInt();
+		durability = scanner.nextInt();
+		hardness = scanner.nextInt();
+		damage = scanner.nextInt();
+		String description = Item.loadItemDescriptionAlpha0_1(scanner);
+		weaponType = scanner.nextInt();
+		parry = scanner.nextInt();
+		accuracy = scanner.nextInt();
+		might = scanner.nextInt();
+		Weapon weapon =  new Weapon(size, weight, durability, hardness, damage,
+				weaponType, parry, accuracy, might);
+		weapon.name = name;
+		weapon.description = description;
+		return weapon;
 	}
 
 	@Override
@@ -186,6 +232,24 @@ public abstract class Weapon extends Item implements CombatItem {
 		}
 	}
 	private void tryToEquip(Inventory inv, Creature player){
-		
+		System.out.println("UNIMPLEMENTED - weapon.\"tryToEquip\"(...)");
+	}
+	@Override
+	public boolean equals(Item item){
+		Weapon weapon;
+		try {
+			weapon = (Weapon) item;
+		} catch (ClassCastException e) {
+			return false;
+		}
+		return (super.equals(weapon)) &&
+				(weapon.name.equals(name)) &&
+				((weapon.getAccuracy() == getAccuracy())) &&
+				((weapon.getMight() == getMight())) &&
+				((weapon.getParry() == weapon.getParry())) &&
+				((weapon.getSize() == weapon.getSize())) && 
+				((weapon.getWeaponType() == getWeaponType())) &&
+				((weapon.getWeight() == getWeight())) &&
+				(weapon.description.equals(description));
 	}
 }

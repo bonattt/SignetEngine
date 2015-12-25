@@ -1,12 +1,14 @@
 package items;
 
+import java.io.PrintWriter;
+
 import misc.TextTools;
 import inventory.Gear;
 import inventory.Inventory;
 import inventory.ItemContainer;
 import creatures.Creature;
 
-public abstract class WornItem extends Item {
+public class WornItem extends Item {
 
 	public String slot;
 	
@@ -23,6 +25,26 @@ public abstract class WornItem extends Item {
 		return false;
 	}
 
+	@Override
+	public void saveToFile(PrintWriter writer) {
+		writer.println("worn item");
+		writer.println(name);
+		writer.println(getSize());
+		writer.println(getWeight());
+		writer.println(getDurability());
+		writer.println(getHardness());
+		writer.println(getDamage());
+	}
+	
+	public boolean equals(WornItem item) {
+		return (item.getSize() == getSize()) &&
+				(item.getWeight() == getWeight()) &&
+				(item.getDurability() == getDurability()) &&
+				(item.getHardness() == getHardness()) &&
+				(item.getDamage() == getDamage());
+	}
+	
+	
 	@Override
 	public void handleUseWhileEquipped(Inventory inv, Creature player, int choice){
 		if(choice == 1) {				// Stow

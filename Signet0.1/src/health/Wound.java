@@ -1,28 +1,25 @@
 package health;
 
+import java.io.PrintWriter;
 import java.util.Random;
+import java.util.Scanner;
 
 import misc.DiceRoller;
-import injuries.BluntWound;
-import injuries.BurnWound;
-import injuries.PiercingWound;
-import injuries.SlashingWound;
 import items.Bandage;
 import items.Ointment;
 
 public class Wound {
 	
 	protected static final int INFECTION_FREQUENCY = 24000; // 24 hours
-	
-	
-	public String name;
-	
+
 	private int 
 	recoveryClock,			// time passed since wound was dealt or since wound reached current severity
 	bleedingClock,			// time left until bleeding damage is taken again.
 	infectionClock;			// time left until infection may occur again.
 	
 	private double[] pain;	// pain inflicted by the wound. 
+	
+	private String[] names; // names used at different severities.
 	
 	private int[]
 	recoveryTime,			// time required for the wound to heal and reduce in severity by 1.
@@ -52,11 +49,12 @@ public class Wound {
 	 * 6 - terminal wound:	unless treated immediately, will lead to death within minutes (ie. evisceration) 
 	 * 7 - instant death:	(ie. broken neck, crushed skull, beheading)
 	 */	
-	public Wound(int severity, int dt, BodyPart woundLocation, int[] health, int[] stun, int[] fatigue, int[] rate,
+	public Wound(int severity, int dt, String[] names, BodyPart woundLocation, int[] health, int[] stun, int[] fatigue, int[] rate,
 			int[] instHealth, int[] instStun, int[] instFatigue, int[] healTime, int[] infection, double[] pain, int[] cripple){
 		if (severity > 7){
 			throw new IllegalArgumentException("you cannot have a wound severity higher than 7");
 		}
+		this.names = names;
 		this.severity = severity;
 		originalSeverity = severity;
 		damageType = dt;
@@ -69,13 +67,62 @@ public class Wound {
 		instantHealthDamage = instHealth; 
 		instantStun = instStun;
 		instantFatigue = instFatigue;
-		recoveryTime = healTime;
+		/* recovery time must be a shallow copy so the healing time required can be slightly randomized and 
+		   different between different wounds */
+		recoveryTime = healTime.clone();
 		chanceOfInfection = infection;
 		this.pain = pain;
 		crippling = cripple;
 		randomizeHealingTimes();
-				
 	}
+	
+	public static Wound loadAlpha1_0fromFile(Scanner scanner){
+		return null;
+	}
+	
+	public String name() {
+		return names[severity - 1];
+	}
+	
+	public void saveToFile(PrintWriter writer){
+		writer.println(names);
+		writer.println(severity);
+		writer.println(originalSeverity);
+		writer.println(damageType);
+		writer.println(healthDamage);
+		writer.println(stunDamage);
+		writer.println(fatigueDamage);
+		writer.println(damageRate);
+		writer.println(instantHealthDamage);
+		writer.println(instantStun);
+		writer.println(instantFatigue);
+		writer.println(recoveryTime);
+		writer.println(chanceOfInfection);
+		writer.println(pain);
+		
+		writer.println(recoveryClock);
+		writer.println(bleedingClock);
+		writer.println(infectionClock);
+		
+		if(ointment == null){
+			writer.println("no ointment");
+		} else {
+			ointment.saveToFile(writer);
+		}
+		
+		if (bandage == null){
+			writer.println("no bandage");
+		} else {
+			bandage.saveToFile(writer);
+		}
+		
+		if (infection == null){
+			writer.println("no infection");
+		} else {
+			infection.saveToFile(writer);
+		}
+	}
+	
 	public boolean isBandaged(){
 		return bandage != null;
 	}
@@ -114,18 +161,7 @@ public class Wound {
 	 * @return
 	 */
 	public static int[] addNewWound(int damage, int dt, BodyPart woundLocation){
-		Wound wound;
-		if (dt == DamageType.SLASHING){
-			wound = new SlashingWound(damage, woundLocation);
-		} else if (dt == DamageType.BLUNT) {
-			wound = new BluntWound(damage, woundLocation);
-		} else if (dt == DamageType.PIERCING) {
-			wound = new PiercingWound(damage, woundLocation);
-		} else if (dt == DamageType.FIRE) {
-			wound = new BurnWound(damage, woundLocation);
-		} else {
- 			throw new IllegalArgumentException("That damage type has not been implemented yet!!");
-		}
+		Wound wound = Injuries.getNewWound(damage, dt, woundLocation);
 		woundLocation.addNewWound(wound);
 		return wound.getInstantDamage();
 	}

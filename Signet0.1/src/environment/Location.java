@@ -43,12 +43,12 @@ public class Location {
 			    String line;
 			    int lineNumber = 1;
 				while( ( line = reader.readLine() ) != null ) {
-					if (Environment.getInstance().print_debugs){
+					if (Environment.print_debugs){
 						System.out.print("location >>> read file line '"+line+"', ");
 					}
 					if (lineNumber == 1){
 						name = line;
-						if (Environment.getInstance().print_debugs){
+						if (Environment.print_debugs){
 							System.out.println("action: add as name");
 						}
 						lineNumber++;

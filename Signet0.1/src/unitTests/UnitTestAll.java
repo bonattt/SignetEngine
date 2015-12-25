@@ -17,7 +17,7 @@ public class UnitTestAll {
 }
 @RunWith(Suite.class)
 	@Suite.SuiteClasses({
-	    UnitTestBag.class,
+	    UnitTestItemContainer.class,
 	    UnitTestBody.class,
 	    UnitTestBodyPart.class,
 	    UnitTestCreature.class,

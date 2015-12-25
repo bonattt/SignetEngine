@@ -2,7 +2,7 @@ package items;
 
 import java.util.HashMap;
 
-public abstract class RangedWeapon extends Weapon implements CombatItem {
+public abstract class RangedWeapon extends Weapon {
 
 	private int 
 	ammoRemaining,

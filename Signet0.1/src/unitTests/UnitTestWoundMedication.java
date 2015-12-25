@@ -4,10 +4,10 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
 
-import injuries.SlashingWound;
 import items.Bandage;
 import items.Ointment;
 import health.BodyPart;
+import health.Injuries;
 import health.Wound;
 
 import org.junit.Before;
@@ -25,8 +25,8 @@ public class UnitTestWoundMedication {
 	}
 	@Test
 	public void testWoundDealsLessDamageIfBandaged(){
-		Wound wound1 = new SlashingWound(6, genericBodypart);
-		Wound wound2 = new SlashingWound(6, genericBodypart);
+		Wound wound1 = Injuries.getSlashingWound(6, genericBodypart);
+		Wound wound2 = Injuries.getSlashingWound(6, genericBodypart);
 		int timePassed = 3000;
 		double healingFactor = 1;
 		wound2.setBandage(new Bandage());
@@ -39,8 +39,8 @@ public class UnitTestWoundMedication {
 	}
 	@Test
 	public void testWoundDealsLessDamageIfTreated(){
-		Wound wound1 = new SlashingWound(6, genericBodypart);
-		Wound wound2 = new SlashingWound(6, genericBodypart);
+		Wound wound1 = Injuries.getSlashingWound(6, genericBodypart);
+		Wound wound2 = Injuries.getSlashingWound(6, genericBodypart);
 		int timePassed = 3000;
 		double healingFactor = 1;
 		wound2.setTreatment(new Ointment());
@@ -52,8 +52,8 @@ public class UnitTestWoundMedication {
 	}	
 	@Test
 	public void testWoundHealsFasterWithBandage() {
-		Wound wound1 = new SlashingWound(6, genericBodypart);
-		Wound wound2 = new SlashingWound(6, genericBodypart);
+		Wound wound1 = Injuries.getSlashingWound(6, genericBodypart);
+		Wound wound2 = Injuries.getSlashingWound(6, genericBodypart);
 		int timePassed = 3000;
 		double healingFactor = 1;
 		wound2.setBandage(new Bandage());
@@ -81,8 +81,8 @@ public class UnitTestWoundMedication {
 	}
 	@Test
 	public void testWoundHealsFasterWithOintment() {
-		Wound wound1 = new SlashingWound(6, genericBodypart);
-		Wound wound2 = new SlashingWound(6, genericBodypart);
+		Wound wound1 = Injuries.getSlashingWound(6, genericBodypart);
+		Wound wound2 = Injuries.getSlashingWound(6, genericBodypart);
 		int timePassed = 3000;
 		double healingFactor = 1;
 		wound2.setTreatment(new Ointment());

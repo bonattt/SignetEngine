@@ -1,13 +1,18 @@
 package inventory;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import creatures.Creature;
 import misc.TextTools;
 import items.*;
 
 public class Inventory {
+	
+	public static final int STARTING_BAG_SIZE = 1000;
+	public static final int STARTING_BAG_WEIGHT = 10;
 
 	private ItemContainer backpack;
 	private Gear equipment;
@@ -17,10 +22,14 @@ public class Inventory {
 	
 	public Inventory (){
 		equipment = new Gear();
-		backpack = new Bag();
+		backpack = getStartingBackpack();
 		equippedWeapon = null;
 //		initializeEquipmentSlots(equippedItems);
 	}
+	public LightSource getLightSource(){
+		return lightSource;
+	}
+	
 	public static HashMap<String, Item> convertHashMapWeaponsToItems(HashMap<String, Weapon> oldItems){
 		HashMap<String, Item> newItems = new HashMap<String, Item>();
 		for (String key : oldItems.keySet()){
@@ -28,6 +37,10 @@ public class Inventory {
 		}
 		return newItems;
 	}
+	public static ItemContainer getStartingBackpack(){
+		return new ItemContainer(STARTING_BAG_WEIGHT, STARTING_BAG_SIZE, "backpack");
+	}
+	
 	public boolean tryToCarryWeapon(Inventory inv, Weapon weapon){
 		if(equippedWeapon == null){
 			equippedWeapon = weapon;
@@ -44,6 +57,30 @@ public class Inventory {
 			return tryToEquipCarriedWeaponToEquipNewWeapon(inv, weapon);
 		}
 		return false;
+	}
+	public static Inventory loadAlpha1_0fromFile (Scanner scanner){
+		return null;
+	}
+	
+	public void saveToFile(PrintWriter writer){
+		writer.println("inventory");
+		writer.println(carriedWeight);
+		backpack.saveToFile(writer);
+		equipment.saveToFile(writer);
+		
+		if(lightSource == null){
+			writer.println("no light source");
+		} else {
+			lightSource.saveToFile(writer);
+		}
+		
+		if (equippedWeapon == null){
+			writer.println("no equipped weapon");
+		} else {
+			equippedWeapon.saveToFile(writer);
+		}
+		
+		writer.println("end inventory");
 	}
 	private boolean tryToEquipCarriedWeaponToEquipNewWeapon(Inventory inv, Weapon weapon){
 		if(inv.getEquipment().selectLocationToEquip(weapon)){
@@ -245,8 +282,8 @@ public class Inventory {
 		targetItem.useWhileEquipped(this, player);
 	}
 	
-	public ArrayList<CombatItem> listEquippedWeapons(){
-		ArrayList<CombatItem> list = new ArrayList<CombatItem>();
+	public ArrayList<Weapon> listEquippedWeapons(){
+		ArrayList<Weapon> list = new ArrayList<Weapon>();
 		for (String key : equipment.getEquippedWeapons().keySet()){
 			list.add(equipment.getEquippedWeapons().get(key));
 		}

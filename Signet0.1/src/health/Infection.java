@@ -1,5 +1,7 @@
 package health;
 
+import java.io.PrintWriter;
+
 import misc.DiceRoller;
 /**
  * Infection
@@ -50,6 +52,12 @@ public class Infection {
 		dicePool = strength;
 		timeIncrement = DEFAULT_TIME_INCREMENT;
 		timePassed = 0;
+	}
+	
+	public void saveToFile(PrintWriter writer){
+		String str = "METHOD 'saveToFile' UNIMPLIMENTED IN CLASS 'infection'";
+		System.out.println(str);
+		writer.println(str);
 	}
 	
 	public double getHealingAdjustment(){
