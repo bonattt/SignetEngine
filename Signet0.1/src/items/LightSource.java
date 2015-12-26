@@ -3,14 +3,13 @@ package items;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import inventory.Gear;
 import inventory.Inventory;
 import creatures.Creature;
 
 public class LightSource extends Item {
 
-	public LightSource(int size, int wt, int dur, int hard, int dam) {
-		super(size, wt, dur, hard, dam);
+	public LightSource(int size, int wt, int dur, int hard, int dam, String name, String description) {
+		super(size, wt, dur, hard, dam, name, description);
 	}
 
 	@Override
@@ -35,18 +34,17 @@ public class LightSource extends Item {
 		writer.println("light source");
 		saveBaseStats(writer);
 	}
-	public static LightSource loadAlpha0_1(Scanner scanner) {
-		String name = scanner.nextLine();
+	public static LightSource loadLightSourceAlpha0_1(Scanner scanner) {
 		int size, weight, durability, hardness, damage;
+		String name = scanner.nextLine();
+		String description = Item.loadItemDescriptionAlpha0_1(scanner);
 		size = scanner.nextInt();
 		weight = scanner.nextInt();
 		durability = scanner.nextInt();
 		hardness = scanner.nextInt();
 		damage = scanner.nextInt();
-		String description = Item.loadItemDescriptionAlpha0_1(scanner);
-		LightSource item = new LightSource(size, weight, durability, hardness, damage);
-		item.name = name;
-		item.description = description;
+		scanner.nextLine(); // realign the scanner to read strings after .nextInt()
+		LightSource item = new LightSource(size, weight, durability, hardness, damage, name, description);
 		return item;
 	}
 	
@@ -63,9 +61,7 @@ public class LightSource extends Item {
 		hardness = scanner.nextInt();
 		damage = scanner.nextInt();
 		String description = Item.loadItemDescriptionAlpha0_1(scanner);
-		LightSource item = new LightSource(size, weight, durability, hardness, damage);
-		item.name = name;
-		item.description = description;
+		LightSource item = new LightSource(size, weight, durability, hardness, damage, name, description);
 		return item;
 	}
 	

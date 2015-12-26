@@ -2,8 +2,6 @@ package misc;
 
 import java.util.Random;
 
-import main.GameRunner;
-
 public class DiceRoller {
 	
 	public static Random rand = new Random();

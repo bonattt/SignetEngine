@@ -9,10 +9,9 @@ import java.util.HashMap;
 
 import misc.DeathException;
 import misc.TextTools;
-import sampleCombatSkills.KnifeSkill;
 import sampleItems.*;
-import sampleWeapons.*;
 import creatures.PlayerCharacter;
+import creatures.SampleSkills;
 import creatures.Skill;
 /**
  * Jarred the impaler, object mother character.
@@ -26,7 +25,8 @@ public class CharacterMother {
 		HashMap<String, Integer> baseStats = getJarredStatMap();
 		HashMap<String, Integer> damageMultipliers = getJarredDamageMultipliers();
 		HashMap<String, Skill> skills = new HashMap<String, Skill>();
-		skills.put("knives", new KnifeSkill());
+		skills.put("knives", SampleSkills.knives(2));
+		skills.put("electronics", SampleSkills.electronics(3));
 		PlayerCharacter dickDefenderOfLife = new PlayerCharacter(creatureName, baseStats, damageMultipliers, skills);
 		woundDick(dickDefenderOfLife);
 		equipDick(dickDefenderOfLife);
@@ -42,14 +42,14 @@ public class CharacterMother {
 	}
 	private static void equipDick(PlayerCharacter dickDefenderOfLife){
 		dickDefenderOfLife.getInventory().initializeScifiEquipmentSlots(dickDefenderOfLife.getInventory().getEquipment());
-		dickDefenderOfLife.getInventory().equipWeapon("holster", new SamplePistol());
-		dickDefenderOfLife.getInventory().getEquipment().equipClothing(new SampleShirt());
-		dickDefenderOfLife.getInventory().getEquipment().equipArmor(new SampleArmorJacket());
-		dickDefenderOfLife.getInventory().pickUpWeapon(new SampleAssaultRifle());
+		dickDefenderOfLife.getInventory().equipWeapon("holster", SampleWeapons.getSamplePistol());
+		dickDefenderOfLife.getInventory().getEquipment().equipClothing(SampleClothing.getSampleShirt());
+		dickDefenderOfLife.getInventory().getEquipment().equipArmor(SampleArmor.getSampleArmorJacket());
+		dickDefenderOfLife.getInventory().pickUpWeapon(SampleWeapons.getSampleAssaultRifle());
 		dickDefenderOfLife.getInventory().store(new SampleThingy());
-		dickDefenderOfLife.getInventory().store(new SampleHelmet());
-		dickDefenderOfLife.getInventory().store(new SampleCombatKnife());
-		dickDefenderOfLife.getInventory().store(new SamplePants());
+		dickDefenderOfLife.getInventory().store(SampleArmor.getSampleHelmet());
+		dickDefenderOfLife.getInventory().store(SampleWeapons.getSampleCombatKnife());
+		dickDefenderOfLife.getInventory().store(SampleClothing.getSamplePants());
 		dickDefenderOfLife.getInventory().store(new Bandage());
 		dickDefenderOfLife.getInventory().store(new Ointment());
 	}

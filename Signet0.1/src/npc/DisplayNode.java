@@ -25,8 +25,8 @@ public class DisplayNode extends DialogueNode {
 	public DialogueNode openNode(PlayerCharacter player, NPC npc) throws DeathException{
 		System.out.println(nodeText);
 		System.out.print("press enter to continue");
-		Scanner inputScanner = new Scanner(System.in);
-		inputScanner.nextLine();
+		Scanner scan = new Scanner(System.in);
+		scan.nextLine();
 		return defaultNextNode;
 	}
 	

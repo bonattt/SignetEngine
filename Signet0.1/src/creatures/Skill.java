@@ -23,7 +23,7 @@ public class Skill {
 		HashMap<String, Integer> index = new HashMap<String, Integer>();
 		return index;
 	}
-	public Skill(String name, int id, String[] linkedAttributes, SkillTags[] tags, int startingRanks){
+	public Skill(String name, int id, int startingRanks, String[] linkedAttributes, SkillTags[] tags){
 		this.name = name;
 		this.id = id;		
 		this.tags = tags;
@@ -32,7 +32,7 @@ public class Skill {
 		this.exp = 0;
 	}
 	public Skill(String name, int id, String[] linkedAttributes, SkillTags[] tags){
-		this(name, id, linkedAttributes, tags, 0);
+		this(name, id, 0, linkedAttributes, tags);
 	}
 	public void saveToFile(PrintWriter writer){
 		writer.println(name);
@@ -83,7 +83,7 @@ public class Skill {
 			attributes[i] = attributeList.get(i);
 		}
 		
-		Skill skill = new Skill(name, id, attributes, tags, ranks);
+		Skill skill = new Skill(name, id, ranks, attributes, tags);
 		skill.exp = exp;
 		return skill;
 	}
@@ -103,7 +103,7 @@ public class Skill {
 		} else if (tag.equals("leftArm")) {
 			return SkillTags.leftArm;
 		} else if (tag.equals("rightArm")) {
-			return SkillTags.rightArm;
+			return SkillTags.PRIMARY_ARM;
 		} else if (tag.equals("leftFoot")) {
 			return SkillTags.leftFoot;
 		} else if (tag.equals("rightFoot")) {
@@ -146,7 +146,7 @@ public class Skill {
 			return "combat";
 		} else if (tag == SkillTags.leftArm) {
 			return "leftArm";
-		} else if (tag == SkillTags.rightArm) {
+		} else if (tag == SkillTags.PRIMARY_ARM) {
 			return "rightArm";
 		} else if (tag == SkillTags.leftFoot) {
 			return "leftFoot";

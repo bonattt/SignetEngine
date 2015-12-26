@@ -4,13 +4,11 @@ import health.Body;
 import inventory.Inventory;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
 import environment.Environment;
 import misc.DeathException;
-import misc.TextTools;
 
 public class PlayerCharacter extends Creature  {
 

@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import creatures.Creature;
+
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -11,7 +14,6 @@ import inventory.Inventory;
 import inventory.ItemContainer;
 import items.Armor;
 import items.Item;
-import testMocks.*;
 
 public class UnitTestItemContainer {
 
@@ -36,7 +38,7 @@ public class UnitTestItemContainer {
 	public void testPossitiveContentsEqual() {
 		ItemContainer bag1 = Inventory.getStartingBackpack();
 		ItemContainer bag2 = Inventory.getStartingBackpack();
-		Item obj1 = new Armor(2, 2, 2, 2, 0);
+		Item obj1 = new Armor(2, 2, 2, 2, 0, "name", "description");
 		bag1.addItem(obj1);
 		bag2.addItem(obj1);
 		assertTrue(bag1.contentsEqual(bag2));
@@ -47,7 +49,7 @@ public class UnitTestItemContainer {
 	public void testNegativeContentsEqual() {
 		ItemContainer bag1 = Inventory.getStartingBackpack();
 		ItemContainer bag2 = Inventory.getStartingBackpack();
-		Item obj1 = new Armor(2, 2, 2, 2, 0);
+		Item obj1 = new Armor(2, 2, 2, 2, 0, "name", "description");
 		bag1.addItem(obj1);
 		assertTrue(! bag1.contentsEqual(bag2));
 		assertTrue(! bag2.contentsEqual(bag1));
@@ -106,5 +108,28 @@ public class UnitTestItemContainer {
 		}
 		
 	}
+}
+class ItemMock extends Item {
 
+	public ItemMock() {
+		super(0, 0, 0, 0, 0, "name", "description");
+	}
+
+	@Override
+	public void useFromInventory(Inventory inv, Creature player)
+			throws Exception {
+		// do nothing
+	}
+
+	@Override
+	public void handleUseWhileEquipped(Inventory inv, Creature player,
+			int choice) {
+		// do nothing
+		
+	}
+
+	@Override
+	public void saveToFile(PrintWriter writer) {
+		// do nothing
+	}
 }

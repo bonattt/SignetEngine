@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 import misc.TextTools;
 import inventory.Inventory;
-import creatures.Creature;
 import health.Wound;
 
 
@@ -26,16 +25,18 @@ public class Ointment extends FirstAidItem {
 	
 
 	public Ointment() {
-		super(SIZE, WEIGHT, DURABILITY, HARDNESS, DAMAGE, HEALING_RATE, DAMAGE_MULTIPLIER, HEALING_RATE);
-		this.name = "Simple Ointment";
+		super(SIZE, WEIGHT, DURABILITY, HARDNESS, DAMAGE, "Simple Ointment", "this is just an ointment",
+				HEALING_RATE, DAMAGE_MULTIPLIER, HEALING_RATE);
 	}
-	public Ointment(double healingRate, double infectionRate, double damageMultiplier, String name) {
-		super(SIZE, WEIGHT, DURABILITY, HARDNESS, DAMAGE, healingRate, infectionRate, damageMultiplier);
-		this.name = name;
+	public Ointment(String name, String description,
+			double healingRate, double infectionRate, double damageMultiplier) {
+		super(SIZE, WEIGHT, DURABILITY, HARDNESS, DAMAGE, name, description,
+				healingRate, infectionRate, damageMultiplier);
 	}
-	public Ointment(int size, int weight, int durability, int harnesss, int damage,
-			double infectionRate, double damageMultiplier, double healingRate) {
-		super(size, weight, durability, harnesss, damage, infectionRate, damageMultiplier, healingRate);
+	public Ointment(int size, int weight, int durability, int harnesss, int damage, String name,
+			String description, double infectionRate, double damageMultiplier, double healingRate) {
+		super(size, weight, durability, harnesss, damage, name, description,
+				infectionRate, damageMultiplier, healingRate);
 	}
 	public boolean passTime(int timePassed, double healingFactor, Wound wound){
 		// TODO implement passTime		
@@ -62,30 +63,29 @@ public class Ointment extends FirstAidItem {
 		}
 		inv.discardItem(this);
 		injury.setTreatment(this);
-		TextTools.display("you treated the wound with a " + name);
+		TextTools.display("you treated the wound with a " + this.name());
 	}
 	@Override
 	public void saveToFile(PrintWriter writer) {
 		writer.println("ointment");
 		saveFirstAidStatsToFile(writer);
 	}
-	public static Item loadAlpha0_1(Scanner scanner) {
-		String name = scanner.nextLine();
+	public static Item loadOintmentAlpha0_1(Scanner scanner) {
 		int size, weight, durability, hardness, damage;
-		double infectionRate,damageMultiplier,healingRate;
+		double infectionRate, damageMultiplier, healingRate;
+		String name = scanner.nextLine();
+		String descrip = Item.loadItemDescriptionAlpha0_1(scanner);
 		size = scanner.nextInt();
 		weight = scanner.nextInt();
 		durability = scanner.nextInt();
 		hardness = scanner.nextInt();
 		damage = scanner.nextInt();
-		String descrip = Item.loadItemDescriptionAlpha0_1(scanner);
 		infectionRate = scanner.nextDouble();
 		damageMultiplier = scanner.nextDouble();
 		healingRate = scanner.nextDouble();
-		Ointment item = new Ointment(size, weight, durability, hardness, damage,
-				infectionRate,damageMultiplier,healingRate);
-		item.name = name;
-		item.description = descrip;
+		scanner.nextLine(); // realign the scanner to read strings after .nextInt()
+		Ointment item = new Ointment(size, weight, durability, hardness, damage, name, descrip,
+				infectionRate, damageMultiplier, healingRate);
 		return item;
 	}
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import testingMothers.CharacterMother;
-import items.Weapon;
+import items.MeleeWeapon;
 import misc.TextTools;
 import creatures.PlayerCharacter;
 
@@ -33,25 +33,25 @@ public class ExploritoryTestSwitchWeapons {
 	
 	private static void displayTestResults(PlayerCharacter player){
 
-		Weapon currentWeapon = player.getInventory().getWeapon();
+		MeleeWeapon currentWeapon = player.getInventory().getWeapon();
 		if(currentWeapon == null) {
 			TextTools.display("held weapon: null");
 		} else {
-			TextTools.display("held weapon: " + currentWeapon.name);
+			TextTools.display("held weapon: " + currentWeapon.name());
 		}
 		
 		currentWeapon = player.getInventory().getEquippedWeapons().get("holster");
 		if(currentWeapon == null) {
 			TextTools.display("holster: null");
 		} else {
-			TextTools.display("holster: " + currentWeapon.name);
+			TextTools.display("holster: " + currentWeapon.name());
 		}
 		
 		currentWeapon = player.getInventory().getEquippedWeapons().get("boot");
 		if(currentWeapon == null) {
 			TextTools.display("boot: null");
 		} else {
-			TextTools.display("boot: " + currentWeapon.name);
+			TextTools.display("boot: " + currentWeapon.name());
 		}
 		
 		player.getInventory().displayBackpack();

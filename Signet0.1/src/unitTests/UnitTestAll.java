@@ -17,11 +17,13 @@ public class UnitTestAll {
 }
 @RunWith(Suite.class)
 	@Suite.SuiteClasses({
-	    UnitTestItemContainer.class,
 	    UnitTestBody.class,
 	    UnitTestBodyPart.class,
 	    UnitTestCreature.class,
 	    UnitTestInventory.class,
+	    UnitTestItem.class,
+	    UnitTestItemContainer.class,
+	    UnitTestSaveAndLoad.class,
 	    UnitTestWound.class,
 	    UnitTestWoundMedication.class
 	})

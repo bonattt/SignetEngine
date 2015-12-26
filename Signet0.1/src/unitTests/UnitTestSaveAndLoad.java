@@ -12,7 +12,7 @@ import items.Bandage;
 import items.Item;
 import items.LightSource;
 import items.Ointment;
-import items.Weapon;
+import items.MeleeWeapon;
 import items.WornItem;
 
 import java.io.File;
@@ -21,17 +21,13 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 
 import org.junit.Test;
 
-import sampleItems.SampleHelmet;
-import sampleItems.SampleShirt;
-import sampleWeapons.SampleAssaultRifle;
-import sampleWeapons.SampleCombatKnife;
-import sampleWeapons.SampleSword;
+import sampleItems.SampleArmor;
+import sampleItems.SampleClothing;
+import sampleItems.SampleWeapons;
 import testingMothers.CharacterMother;
 import creatures.Creature;
 import creatures.PlayerCharacter;
@@ -42,9 +38,12 @@ public class UnitTestSaveAndLoad {
 
 	private static final String filePath = "src/unitTests/unitTestSaveFile.txt";
 	
+	static {
+		System.out.println("untested classes:\n\thealth.Infection\n\tcreatures.Trait\n\t"
+				+ "creatures.PlayerCharacter\n\tnpc.*\n\tenvironment.*\n");
+	}
 	@Test
 	public void testSingleSkillLoads() {
-		
 		try {
 			String name = "java programing";
 			int id = Integer.MAX_VALUE;
@@ -53,7 +52,7 @@ public class UnitTestSaveAndLoad {
 			int ranks = 3;
 			int exp = 100;
 			
-			Skill skillSaved = new Skill(name, id, linkedAtrb, tags, ranks);
+			Skill skillSaved = new Skill(name, id, ranks, linkedAtrb, tags);
 			skillSaved.gainExperience(exp);
 			
 			PrintWriter writer = new PrintWriter(filePath, "UTF-8");
@@ -132,7 +131,7 @@ public class UnitTestSaveAndLoad {
 	}
 
 //	@Test
-	public void testBodyBasicSaveLoad(){
+	public void testBodyBasicSaveLoad() {
 		try {
 			Body bodSaved = getStartingBody();
 			Body bodLoaded = getLoadedBody(bodSaved);
@@ -229,32 +228,6 @@ public class UnitTestSaveAndLoad {
 		} catch (FileNotFoundException e) {
 			fail("exception thrown");
 		}
-		
-	
-	}
-	
-	@Test
-	public void testItemStatsSaveLoad(){
-		try {
-			PlayerCharacter saved = CharacterMother.getDickDefenderOfLife();
-			PrintWriter writer = new PrintWriter(filePath);
-			saved.saveToFile(writer);
-			writer.close();
-			Scanner scanner = new Scanner(new File(filePath));
-			PlayerCharacter loaded = PlayerCharacter.loadAlpha0_1fromFile(scanner);
-			scanner.close();
-			assertEquals(saved.stats_base.size(), loaded.stats_base.size());
-			for (String key : saved.stats_base.keySet()){
-				assertTrue(loaded.stats_base.containsKey(key));
-				assertEquals(saved.stats_base.get(key), loaded.stats_base.get(key));
-			}
-			
-			
-		} catch (FileNotFoundException e) {
-			fail("exception thrown");
-		}
-		
-		
 	}
 	
 //	@Test
@@ -305,7 +278,7 @@ public class UnitTestSaveAndLoad {
 	}
 
 //	@Test
-	public void testInjurySaveLoad(){
+	public void testWoundSaveLoad() {
 		try {
 			BodyPart woundLocation = new BodyPart("limb", 1, 1, 1, new double[]{1, 1, 1, 1, 1, 1, 1, 1, 1});
 			int severity = 3;
@@ -398,20 +371,37 @@ public class UnitTestSaveAndLoad {
 			fail("exception thrown");
 		}
 	}
+	@Test
+	public void testItem_WornItemSaveLoad() {
+		WornItem saved = new WornItem(10, 10, 20, 0, 0, "clothing", "nice clothing");
+		
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(filePath);
+			saved.saveToFile(writer);
+			writer.close();
+			
+			Scanner scanner = new Scanner(new File(filePath));
+			String itemType = scanner.nextLine();
+			assertEquals("worn item", itemType);
+			WornItem loaded = (WornItem) Item.loadAlpha0_1(scanner, itemType);
+			scanner.close();
+			
+			assertTrue(saved.equals(loaded));
+			assertTrue(loaded.equals(saved));
+			
+		} catch (FileNotFoundException e) {
+			fail("exception thrown");
+		}
+	}
 
 	@Test
-	public void testItemContainerSaveLoad(){
+	public void testItemContainerSaveLoad() {
 		try {
 			ItemContainer saved = Inventory.getStartingBackpack();
-			Weapon wpn1 = new Weapon(1, 1, 1, 1);
-			wpn1.description = "this is weapon number one";
-			wpn1.name = "weapon one";
-			Weapon wpn2 = new Weapon(2, 2, 2, 2);
-			wpn2.name = "weapon two";
-			wpn2.description = "this is weapon number two";
-			WornItem clothing = new WornItem(10, 10, 10, 2, 0);
-			clothing.name = "clothing";
-			clothing.description = "this is clothing";
+			MeleeWeapon wpn1 = new MeleeWeapon(1, 1, 1, 1, "item_name", "item_description");
+			MeleeWeapon wpn2 = new MeleeWeapon(2, 2, 2, 2, "item_name", "item_description");
+			WornItem clothing = new WornItem(10, 10, 10, 2, 0, "item_name", "item_description");
 			
 			saved.addItem(wpn1);
 			saved.addItem(wpn2);
@@ -422,69 +412,29 @@ public class UnitTestSaveAndLoad {
 			writer.close();
 			
 			Scanner scanner = new Scanner(new File(filePath));
-			scanner.nextLine(); // clears "item container" identifier.
 			ItemContainer loaded = ItemContainer.loadAlpha0_1(scanner);
 			scanner.close();
 			
 			assertTrue(saved.equals(loaded));
 			assertTrue(loaded.equals(saved));
 			
-//			assertEquals(saved.name, loaded.name);
-//			Field field = ItemContainer.class.getDeclaredField("concealmentHits");
-//			field.setAccessible(true);
-//			assertEquals(field.getInt(saved), field.getInt(loaded));
-//			
-//			field = ItemContainer.class.getDeclaredField("concealability");
-//			field.setAccessible(true);
-//			assertEquals(field.getInt(saved), field.getInt(loaded));
-//			
-//			field = ItemContainer.class.getDeclaredField("spaceUsed");
-//			field.setAccessible(true);
-//			assertEquals(field.getInt(saved), field.getInt(loaded));
-//			
-//			field = ItemContainer.class.getDeclaredField("weightContained");
-//			field.setAccessible(true);
-//			assertEquals(field.getInt(saved), field.getInt(loaded));
-//			
-//			field = ItemContainer.class.getDeclaredField("baseSpace");
-//			field.setAccessible(true);
-//			assertEquals(field.getInt(saved), field.getInt(loaded));
-//			
-//			field = ItemContainer.class.getDeclaredField("baseWeight");
-//			field.setAccessible(true);
-//			assertEquals(field.getInt(saved), field.getInt(loaded));
-//			
-//			field = ItemContainer.class.getDeclaredField("items");
-//			field.setAccessible(true);
-//			assertEquals(((ArrayList<Item>) field.get(saved)).size(), ((ArrayList<Item>) field.get(loaded)).size());
-			
 		} catch (FileNotFoundException e) {
 			fail("threw exception");
-//		} catch (NoSuchFieldException e) {
-//			fail("threw exception");
 		} catch (SecurityException e) {
 			fail("threw exception");
 		} catch (IllegalArgumentException e) {
 			fail("threw exception");
-//		} catch (IllegalAccessException e) {
-//			fail("threw exception");
 		}	
 	}
 
 	@Test
-	public void testItemContainerContainsCorrectItemsAfterSaveLoad(){
+	public void testItemContainerContainsCorrectItemsAfterSaveLoad() {
 		try {
 
 			ItemContainer saved = Inventory.getStartingBackpack();
-			Weapon wpn1 = new Weapon(1, 1, 1, 1);
-			wpn1.description = "this is weapon number one";
-			wpn1.name = "weapon one";
-			Weapon wpn2 = new Weapon(2, 2, 2, 2);
-			wpn2.name = "weapon two";
-			wpn2.description = "this is weapon number two";
-			WornItem clothing = new WornItem(10, 10, 10, 2, 0);
-			clothing.name = "clothing";
-			clothing.description = "this is clothing";
+			MeleeWeapon wpn1 = new MeleeWeapon(1, 1, 1, 1, "item_name", "item_description");
+			MeleeWeapon wpn2 = new MeleeWeapon(2, 2, 2, 2, "item_name", "item_description");
+			WornItem clothing = new WornItem(10, 10, 10, 2, 0, "item_name", "item_description");
 			
 			saved.addItem(wpn1);
 			saved.addItem(wpn2);
@@ -495,17 +445,20 @@ public class UnitTestSaveAndLoad {
 			writer.close();
 			
 			Scanner scanner = new Scanner(new File(filePath));
-			scanner.nextLine(); // clears "item container" identifier.
 			ItemContainer loaded = ItemContainer.loadAlpha0_1(scanner);
 			scanner.close();
 			
 			Field field = ItemContainer.class.getDeclaredField("items");
 			field.setAccessible(true);
+			@SuppressWarnings("unchecked")
 			ArrayList<Item> savedItems = ((ArrayList<Item>) field.get(saved));
+			@SuppressWarnings("unchecked")
 			ArrayList<Item> loadedItems = ((ArrayList<Item>) field.get(loaded));
-
-			for (Item item : savedItems){
-				assertTrue(loadedItems.contains(item));
+			
+			assertEquals(savedItems.size(), loadedItems.size());
+			for (int i = 0; i < savedItems.size(); i++){
+				assertTrue(savedItems.get(i).equals(loadedItems.get(i)));
+				assertTrue(loadedItems.get(i).equals(savedItems.get(i)));
 			}
 			
 		} catch (FileNotFoundException e) {
@@ -518,7 +471,9 @@ public class UnitTestSaveAndLoad {
 			fail("threw exception");
 		} catch (IllegalAccessException e) {
 			fail("threw exception");
-		}	
+		} catch (ClassCastException e) {
+			fail("threw exception");
+		}
 	}
 //	@Test
 	public void testItem_defaultSaveLoad() {
@@ -527,8 +482,7 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testItem_ArmorSaveLoad() {
 		try {
-			Armor saved = new Armor(1000, 1000, 25, 10, 0);
-			saved.name = "armor";
+			Armor saved = new Armor(1000, 1000, 25, 10, 0, "item_name", "item_description");
 			PrintWriter writer = new PrintWriter(filePath);
 			saved.saveToFile(writer);
 			writer.close();
@@ -538,7 +492,7 @@ public class UnitTestSaveAndLoad {
 			scanner.close();
 			
 			assertTrue(saved.equals(loaded));
-			assertEquals(saved.description, loaded.description);
+			assertEquals(saved.description(), loaded.description());
 			
 		} catch (FileNotFoundException e) {
 			fail("an exception was thrown.");
@@ -547,9 +501,7 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testArmor2() {
 		try {
-			Armor saved = new Armor(100, 100, 15, 5, 1);
-			saved.name = "armor_name";
-			saved.description = "This armor is shiney";
+			Armor saved = new Armor(100, 100, 15, 5, 1, "armor_name", "this armor is shiney");
 			PrintWriter writer = new PrintWriter(filePath);
 			saved.saveToFile(writer);
 			writer.close();
@@ -559,7 +511,7 @@ public class UnitTestSaveAndLoad {
 			scanner.close();
 			
 			assertTrue(saved.equals(loaded));
-			assertEquals(saved.description, loaded.description);
+			assertEquals(saved.description(), loaded.description());
 			
 		} catch (FileNotFoundException e) {
 			fail("an exception was thrown.");
@@ -568,7 +520,8 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testItem_BandageSaveLoad() {
 		try {
-			Bandage saved = new Bandage(2.5, 2.5, 2.5, "bandage");
+			Bandage saved = new Bandage("bandage", "this is for when your arm gets chopped off",
+					2.5, 2.5, 2.5);
 			PrintWriter writer = new PrintWriter(filePath);
 			saved.saveToFile(writer);
 			writer.close();
@@ -609,13 +562,12 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testItem_WeaponSaveLoad() {
 		try {
-			Weapon saved = new Weapon(4, 3, 2, 1);
-			saved.name = "weapon_name";
+			MeleeWeapon saved = new MeleeWeapon(4, 3, 2, 1, "weapon_name", "item_description");
 			PrintWriter writer = new PrintWriter(filePath);
 			saved.saveToFile(writer);
 			writer.close();
 			Scanner scanner = new Scanner(new File(filePath));
-			Weapon loaded = (Weapon) Item.loadAlpha0_1(scanner);
+			MeleeWeapon loaded = (MeleeWeapon) Item.loadAlpha0_1(scanner);
 			scanner.close();
 			
 			assertTrue(saved.equals(loaded));
@@ -627,17 +579,15 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testWeaponDescriptionSaveLoad() {
 		try {
-			Weapon saved = new Weapon(4, 3, 2, 1);
-			saved.name = "weapon_name";
-			saved.description = "this is the description of a fabulous sword:\n    tada!!";
+			MeleeWeapon saved = new MeleeWeapon(4, 3, 2, 1, "item_name", "item_description");
 			PrintWriter writer = new PrintWriter(filePath);
 			saved.saveToFile(writer);
 			writer.close();
 			Scanner scanner = new Scanner(new File(filePath));
 			System.out.println(scanner.nextLine());
-			Weapon loaded = Weapon.loadAlpha0_1(scanner);
+			MeleeWeapon loaded = MeleeWeapon.loadMeleeWeaponAlpha0_1(scanner);
 			scanner.close();
-			assertEquals(saved.description, loaded.description);
+			assertEquals(saved.description(), loaded.description());
 		} catch (FileNotFoundException e) {
 			fail("exception thrown");
 		}
@@ -646,8 +596,7 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testItem_LightSourceSaveLoad() {
 		try {
-			LightSource saved = new LightSource(4, 3, 2, 1, 0);
-			saved.name = "light";
+			LightSource saved = new LightSource(4, 3, 2, 1, 0, "item_name", "item_description");
 			PrintWriter writer = new PrintWriter(filePath);
 			saved.saveToFile(writer);
 			writer.close();
@@ -664,7 +613,7 @@ public class UnitTestSaveAndLoad {
 	
 	
 //	@Test
-	public void testEquipmentSaveLoad(){
+	public void testGearSaveLoad(){
 		
 		try {
 			Gear saved = new Gear();
@@ -672,9 +621,9 @@ public class UnitTestSaveAndLoad {
 			System.out.println(saved.getWeaponSlots());
 			System.out.println(saved.getClothingSlots());
 			
-			saved.addWeapon("test slot", new SampleSword());
-			saved.equipArmor(new SampleHelmet());
-			saved.equipClothing(new SampleShirt());
+			saved.addWeapon("test slot", SampleWeapons.getSampleSword());
+			saved.equipArmor(SampleArmor.getSampleHelmet());
+			saved.equipClothing(SampleClothing.getSampleShirt());
 			
 			PrintWriter writer;
 			writer = new PrintWriter(filePath);

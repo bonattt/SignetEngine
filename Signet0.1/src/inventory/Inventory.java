@@ -46,9 +46,9 @@ public class Inventory {
 			equippedWeapon = weapon;
 			return true;
 		}
-		String question = "you are already carrying a " + equippedWeapon.name + " what would you like to do?";
-		String[] answers = new String[]{"stow " + equippedWeapon.name,
-										"equip " + equippedWeapon.name,
+		String question = "you are already carrying a " + equippedWeapon.name() + " what would you like to do?";
+		String[] answers = new String[]{"stow " + equippedWeapon.name(),
+										"equip " + equippedWeapon.name(),
 										"cancel"};
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
 		if(choice == 1){
@@ -153,7 +153,7 @@ public class Inventory {
 		ArrayList<Item> items = backpack.getAllItems();
 		String[] answers = new String[items.size() + 1];
 		for (int i = 0; i < items.size(); i++){
-			answers[i] = items.get(i).name;
+			answers[i] = items.get(i).name();
 		}
 		answers[answers.length - 1] = "cancel";
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
@@ -261,7 +261,7 @@ public class Inventory {
 		for(String key : equippedItems.keySet()){
 			Item current = equippedItems.get(key);
 			if(current != null){
-				answers[i] = current.name + " [" + key + "]";
+				answers[i] = current.name() + " [" + key + "]";
 			}
 				else {
 				answers[i] = "empty [" + key + "]";
@@ -336,10 +336,10 @@ public class Inventory {
 		}
 	}	
 	private void equipNewWeaponWhileCarryingSmallWeapon(String weaponSlot, Weapon newWeapon){
-		String question = "You are alrady carrying a " + equippedWeapon.name + " what would you like to do with it?";
-		String[] answers = new String[]{"swap " + equippedWeapon.name + " with " + newWeapon.name,
-											"drop " + equippedWeapon.name,
-											"stow " + equippedWeapon.name + " in " + backpack.name,
+		String question = "You are alrady carrying a " + equippedWeapon.name() + " what would you like to do with it?";
+		String[] answers = new String[]{"swap " + equippedWeapon.name() + " with " + newWeapon.name(),
+											"drop " + equippedWeapon.name(),
+											"stow " + equippedWeapon.name() + " in " + backpack.name(),
 											"cancel"};
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
 		// if (choice == 0) do nothing
@@ -352,13 +352,13 @@ public class Inventory {
 		}
  	}	
 	private void equipNewWeaponWhileCarryingLargeWeapon(String weaponSlot, Weapon newWeapon){
-		String question = "Your " + equippedWeapon.name + " is too big to be equipped. What will you do?";
+		String question = "Your " + equippedWeapon.name() + " is too big to be equipped. What will you do?";
 		StringBuilder stow = new StringBuilder();
 		stow.append("stow ");
-		stow.append(equippedWeapon.name);
+		stow.append(equippedWeapon.name());
 		stow.append(" in ");
-		stow.append(backpack.name);
-		String[] answers = new String[]{"drop " + equippedWeapon.name,
+		stow.append(backpack.name());
+		String[] answers = new String[]{"drop " + equippedWeapon.name(),
 										stow.toString(),
 										"cancel"};
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
@@ -377,12 +377,12 @@ public class Inventory {
 		} else {
 			StringBuilder str = new StringBuilder();
 			str.append("There is not enough room in your ");
-			str.append(backpack.name);
+			str.append(backpack.name());
 			str.append(" to store your ");
-			str.append(equippedWeapon.name);
+			str.append(equippedWeapon.name());
 			str.append(" would you like to drop it instead?");
 			TextTools.display(str.toString());
-			String[] answers = new String[]{"drop " + equippedWeapon.name, "cancel"};
+			String[] answers = new String[]{"drop " + equippedWeapon.name(), "cancel"};
 			int choice = TextTools.questionAsker("", answers, TextTools.BACK_ENABLED);
 			if (choice == 1){
 				switchWeaponsDropOld(weaponSlot, newWeapon);
@@ -442,7 +442,7 @@ public class Inventory {
 			if (equipment.getEquippedWeapons().get(key) == null){
 				selection[i][1] = "empty";
 			} else {
-				selection[i][1] = equipment.getEquippedWeapons().get(key).name;
+				selection[i][1] = equipment.getEquippedWeapons().get(key).name();
 			}
 			i += 1;
 		}
@@ -454,8 +454,8 @@ public class Inventory {
 			equipment.equipClothing(newClothing);
 			return;
 		}
-		String question = newClothing.slotIsAlreadyOccupiedString(oldClothing.name);
-		String[] answers = new String[]{"drop " + oldClothing.name, "stow " + oldClothing.name, "cancel"};
+		String question = newClothing.slotIsAlreadyOccupiedString(oldClothing.name());
+		String[] answers = new String[]{"drop " + oldClothing.name(), "stow " + oldClothing.name(), "cancel"};
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
 		if(choice == 1){
 			equipClothingDropOld(newClothing);
@@ -478,8 +478,8 @@ public class Inventory {
 				backpack.removeItem(newClothing);
 			}
 		} else {
-			String question = (notEnoughRoomInInventoryForItem(oldArmor.name));
-			String[] answers = new String[]{"drop " + oldArmor.name, "cancel"};
+			String question = (notEnoughRoomInInventoryForItem(oldArmor.name()));
+			String[] answers = new String[]{"drop " + oldArmor.name(), "cancel"};
 			int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
 			if (choice == 1){
 				equipClothingDropOld(newClothing);
@@ -502,8 +502,8 @@ public class Inventory {
 			}
 			return;
 		}
-		String question = newArmor.slotIsAlreadyOccupiedString(oldArmor.name);
-		String[] answers = new String[]{"drop " + oldArmor.name, "stow " + oldArmor.name, "cancel"};
+		String question = newArmor.slotIsAlreadyOccupiedString(oldArmor.name());
+		String[] answers = new String[]{"drop " + oldArmor.name(), "stow " + oldArmor.name(), "cancel"};
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
 		if(choice == 1){
 			equipArmorDropOld(newArmor);
@@ -526,8 +526,8 @@ public class Inventory {
 				backpack.removeItem(newArmor);
 			}
 		} else {
-			String question = (notEnoughRoomInInventoryForItem(oldArmor.name));
-			String[] answers = new String[]{"drop " + oldArmor.name, "cancel"};
+			String question = (notEnoughRoomInInventoryForItem(oldArmor.name()));
+			String[] answers = new String[]{"drop " + oldArmor.name(), "cancel"};
 			int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
 			if (choice == 1){
 				equipArmorDropOld(newArmor);
@@ -537,7 +537,7 @@ public class Inventory {
 	private String notEnoughRoomInInventoryForItem(String itemName){
 		StringBuilder str = new StringBuilder();
 			str.append("There is not enough room in your ");
-			str.append(backpack.name);
+			str.append(backpack.name());
 			str.append(" to store your ");
 			str.append(itemName);
 			str.append(" would you like to drop it instead?");

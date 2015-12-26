@@ -88,10 +88,10 @@ public class UnitTestCreature {
 	}
 	private static void storyManyItems(Creature player){
 		for (int i = 0; i < 5; i++) {
-			player.getInventory().store(new SampleArmorJacket());
-			player.getInventory().store(new SampleHelmet());
-			player.getInventory().store(new SamplePants());
-			player.getInventory().store(new SampleShirt());
+			player.getInventory().store(SampleArmor.getSampleArmorJacket());
+			player.getInventory().store(SampleArmor.getSampleHelmet());
+			player.getInventory().store(SampleClothing.getSamplePants());
+			player.getInventory().store(SampleClothing.getSampleShirt());
 			player.getInventory().store(new SampleThingy());
 		}
 	}

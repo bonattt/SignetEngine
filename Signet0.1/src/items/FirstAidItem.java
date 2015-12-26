@@ -2,7 +2,6 @@ package items;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import misc.TextTools;
 import inventory.Inventory;
@@ -14,8 +13,9 @@ public abstract class FirstAidItem extends Item {
 	protected double infectionMultiplier, healingMultiplier, damageMultiplier;
 	protected Wound woundTreated;
 
-	public FirstAidItem(int size, int wt, int dur, int hard, int dam, double infection, double damage, double healing) {
-		super(size, wt, dur, hard, dam);
+	public FirstAidItem(int size, int wt, int dur, int hard, int dam, String name, String description,
+			double infection, double damage, double healing) {
+		super(size, wt, dur, hard, dam, name, description);
 		infectionMultiplier = infection;
 		healingMultiplier = healing;
 		damageMultiplier = damage;

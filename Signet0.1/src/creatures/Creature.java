@@ -8,12 +8,10 @@ import inventory.Inventory;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 import misc.DeathException;
 import misc.DiceRoller;
 import misc.TextTools;
-import sampleCombatSkills.*;
 
 public abstract class Creature {
 	/* 

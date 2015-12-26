@@ -24,16 +24,18 @@ public class Bandage extends FirstAidItem{
 	private static final double HEALING_RATE = 1.2;
 
 	public Bandage() {
-		super(SIZE, WEIGHT, DURABILITY, HARDNESS, DAMAGE, HEALING_RATE, DAMAGE_MULTIPLIER, HEALING_RATE);
-		this.name = "Simple Bandage";
+		super(SIZE, WEIGHT, DURABILITY, HARDNESS, DAMAGE, "Simple Bandage", "this is just a simple bandage",
+				HEALING_RATE, DAMAGE_MULTIPLIER, HEALING_RATE);
 	}
-	public Bandage(double healingRate, double infectionRate, double damageMultiplier, String name) {
-		super(SIZE, WEIGHT, DURABILITY, HARDNESS, DAMAGE, healingRate, infectionRate, damageMultiplier);
-		this.name = name;
+	public Bandage(String name, String description,
+			double healingRate, double infectionRate, double damageMultiplier) {
+		super(SIZE, WEIGHT, DURABILITY, HARDNESS, DAMAGE, name, description,
+				healingRate, infectionRate, damageMultiplier);
 	}
-	public Bandage(int size, int weight, int durability, int harnesss, int damage,
-			double infectionRate, double damageMultiplier, double healingRate) {
-		super(size, weight, durability, harnesss, damage, infectionRate, damageMultiplier, healingRate);
+	public Bandage(int size, int weight, int durability, int harnesss, int damage, String name,
+			String description, double infectionRate, double damageMultiplier, double healingRate) {
+		super(size, weight, durability, harnesss, damage, name, description,
+				infectionRate, damageMultiplier, healingRate);
 	}
 	public boolean needsToBeChanged(){
 		// TODO implement needs to be changed on Bandage.
@@ -64,15 +66,16 @@ public class Bandage extends FirstAidItem{
 		}
 		inv.discardItem(this);
 		injury.setBandage(this);
-		TextTools.display("you treated the wound with a " + name);
+		TextTools.display("you treated the wound with a " + this.name());
 	}
 	@Override
 	public void saveToFile(PrintWriter writer) {
 		writer.println("bandage");
 		saveFirstAidStatsToFile(writer);
 	}
-	public static Bandage loadAlpha0_1(Scanner scanner) {
+	public static Bandage loadBandageAlpha0_1(Scanner scanner) {
 		String name = scanner.nextLine();
+		String description = Bandage.loadItemDescriptionAlpha0_1(scanner);
 		int size, weight, durability, hardness, damage;
 		double infectionRate,damageMultiplier,healingRate;
 		size = scanner.nextInt();
@@ -80,13 +83,12 @@ public class Bandage extends FirstAidItem{
 		durability = scanner.nextInt();
 		hardness = scanner.nextInt();
 		damage = scanner.nextInt();
-		String description = Bandage.loadItemDescriptionAlpha0_1(scanner);
 		infectionRate = scanner.nextDouble();
 		damageMultiplier = scanner.nextDouble();
 		healingRate = scanner.nextDouble();
-		Bandage item = new Bandage(size, weight, durability, hardness, damage,
+		scanner.nextLine(); // realign the scanner to read strings after .nextDouble()
+		Bandage item = new Bandage(size, weight, durability, hardness, damage, name, description,
 				infectionRate,damageMultiplier,healingRate);
-		item.name = name;
 		return item;
 	}
 }

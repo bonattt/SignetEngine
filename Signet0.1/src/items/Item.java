@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 import creatures.Creature;
-import inventory.Gear;
 import inventory.Inventory;
 import inventory.ItemContainer;
 import misc.DiceRoller;
@@ -18,18 +17,26 @@ public abstract class Item {
 	private int hardness;	// items resistance to damage.
 	private int damage;		// damage dealt to the item's durability.
 	private int[] args;
-	public String name;
-	public String description;
+	private String name;
+	private String description;
 	
-	public Item (int size, int wt, int dur, int hard, int dam) {
+	public Item (int size, int wt, int dur, int hard, int dam, String name, String description) {
 		this.size = size;
 		weight = wt;
 		durability = dur;
 		hardness = hard;
 		damage = dam;
-		name = "";
-		description = "";
+		this.name = name;
+		this.description = description;
 	}
+	
+	public String name() {
+		return name;
+	}
+	public String description() {
+		return description;
+	}
+	
 	
 	public boolean equals(Item item) {
 		return (this.size == item.size) &&
@@ -49,20 +56,24 @@ public abstract class Item {
 	public abstract void saveToFile(PrintWriter writer);
 	public static Item loadAlpha0_1(Scanner scanner) {
 		String itemType = scanner.nextLine();
+		return loadAlpha0_1(scanner, itemType);
+	}
+		
+	public static Item loadAlpha0_1(Scanner scanner, String itemType) {
 		if (itemType.equals("armor")) {
 			return Armor.loadAlpha0_1(scanner);
 		} else if (itemType.equals("bandage")) {
-			return Bandage.loadAlpha0_1(scanner);
+			return Bandage.loadBandageAlpha0_1(scanner);
 		} else if (itemType.equals("light source")) {
-			return LightSource.loadAlpha0_1(scanner);
+			return LightSource.loadLightSourceAlpha0_1(scanner);
 		} else if (itemType.equals("ointment")) {
-			return Ointment.loadAlpha0_1(scanner);
+			return Ointment.loadOintmentAlpha0_1(scanner);
 		} else if (itemType.equals("ranged weapon")) {
-			return RangedWeapon.loadAlpha0_1(scanner);
+			return RangedWeapon.loadRangedWeaponAlpha0_1(scanner);
 		} else if (itemType.equals("weapon")) {
-			return Weapon.loadAlpha0_1(scanner);
+			return MeleeWeapon.loadMeleeWeaponAlpha0_1(scanner);
 		} else if (itemType.equals("worn item")) {
-			return WornItem.loadAlpha0_1(scanner);
+			return WornItem.loadWornItemAlpha0_1(scanner);
 		} else {
 			System.out.println("Load Alpha 0.1, unrecognized item type '" + itemType + "'\n cannot load item");
 			return null;
@@ -77,19 +88,18 @@ public abstract class Item {
 	}
 	public void saveBaseStats(PrintWriter writer) {
 		writer.println(name);
+		saveDescriptionToFile(writer);
 		writer.println(size);
 		writer.println(weight);
 		writer.println(durability);
 		writer.println(hardness);
 		writer.println(damage);
-		saveDescriptionToFile(writer);
 	}
 	
 	public static String loadItemDescriptionAlpha0_1(Scanner scanner) {
 		StringBuilder desc = new StringBuilder();
 		// BANDAIDE FIX - the phantom blank line has showed up here again.
 		// an extra line "" is being read from the file where one doesn't exist.
-		scanner.nextLine();
 		String current = scanner.nextLine();
 		boolean first = true;
 		while(! current.equals("end description")) {
@@ -191,7 +201,7 @@ public abstract class Item {
 		return damage;
 	}
 	public String checkDamage(){
-		return "";
+		return "this item has " + damage + " damage.";
 	}
 	
 	public boolean resistDamage(int damage, int armorPiercing) {

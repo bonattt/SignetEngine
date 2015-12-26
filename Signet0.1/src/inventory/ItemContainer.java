@@ -10,7 +10,9 @@ import items.*;
 
 public class ItemContainer {
 	
-	public String name;
+	private String name;
+	
+	public static boolean DEBUG_VALUE_TEMP = false;
 	
 	private ArrayList<Item> items;
 	
@@ -31,8 +33,11 @@ public class ItemContainer {
 		baseWeight = weight;
 		this.name = name;
 	}
+	public String name() {
+		return name;
+	}
+	
 	public void saveToFile(PrintWriter writer){
-		writer.println("item container");
 		writer.println(name);
 		writer.println(concealmentHits);
 		writer.println(concealability);
@@ -46,9 +51,8 @@ public class ItemContainer {
 		writer.println("end item container");
 	}
 	public static ItemContainer loadAlpha0_1(Scanner scanner){
-		String name = scanner.nextLine();
-		@SuppressWarnings("unused")
 		int concealmentHits, concealability, spaceUsed, weightContained, baseSpace, baseWeight;
+		String name = scanner.nextLine();
 		concealmentHits = scanner.nextInt();
 		concealability = scanner.nextInt();
 		spaceUsed = scanner.nextInt();
@@ -60,15 +64,12 @@ public class ItemContainer {
 	}
 	private static ArrayList<Item> loadItemsAlpha0_1(Scanner scanner) {
 		ArrayList<Item> items = new ArrayList<Item>();
-//		scanner.nextLine();
-		// This is my bandaid fix for an unexplained blank line "" that keeps being read
-		// at certain points in the code.
-		String current = scanner.nextLine();
-		scanner.nextLine();
-		while(!current.equals("end item container")) {
-			Item item = Item.loadAlpha0_1(scanner);
+		System.out.println("DEBUG: '" + scanner.nextLine() + "'");
+		String itemType = scanner.nextLine();
+		while(!itemType.equals("end item container")) {
+			Item item = Item.loadAlpha0_1(scanner, itemType);
 			items.add(item);
-			
+			itemType = scanner.nextLine();
 		}
 		return items;
 	}
@@ -148,7 +149,7 @@ public class ItemContainer {
 			String question = "what will you take?";
 			String[] answers = new String[items.size() + 1];
 			for (int i = 0; i < items.size(); i++){
-				answers[i] = items.get(i).name;
+				answers[i] = items.get(i).name();
 			}
 			answers[answers.length - 1] = "cancel";
 			int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
@@ -159,7 +160,7 @@ public class ItemContainer {
 			if(inv.store(selectedItem)){
 				items.remove(selectedItem);
 			} else {
-				TextTools.display("there is no room in your bag for the " + selectedItem.name);
+				TextTools.display("there is no room in your bag for the " + selectedItem.name());
 			}
 		}
 	}
@@ -173,7 +174,7 @@ public class ItemContainer {
 			if(this.addItem(selectedItem)){
 				inv.discardItem(selectedItem);
 			} else {
-				TextTools.display("There is no room in the " + name + " for your " + selectedItem.name);
+				TextTools.display("There is no room in the " + name + " for your " + selectedItem.name());
 			}
 		}
 	}
@@ -246,7 +247,7 @@ public class ItemContainer {
 		String question = "which item would you like to use?";
 		String[] answers = new String[itemsSelected.size() + 1];
 		for (int i = 0; i < answers.length - 1; i++){
-			answers[i] = itemsSelected.get(i).name;
+			answers[i] = itemsSelected.get(i).name();
 		}
 		answers[answers.length - 1] = "cancel";
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
@@ -305,7 +306,7 @@ public class ItemContainer {
 	private String printNoRoomInContainer(Item itm){
 		StringBuilder str = new StringBuilder();
 		str.append("There is no room for that ");
-		str.append(itm.name);
+		str.append(itm.name());
 		str.append(" in your ");
 		str.append(name);
 		str.append(".");

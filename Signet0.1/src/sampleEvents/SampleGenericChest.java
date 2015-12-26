@@ -1,7 +1,6 @@
 package sampleEvents;
 
 import sampleItems.*;
-import sampleWeapons.*;
 import inventory.ItemContainer;
 
 public class SampleGenericChest extends ItemContainer {
@@ -11,14 +10,14 @@ public class SampleGenericChest extends ItemContainer {
 	
 	public SampleGenericChest(String name) {
 		super(WEIGHT, SIZE, name);
-		this.addItem(new SampleShirt());
-		this.addItem(new SamplePants());
-		this.addItem(new SampleAssaultRifle());
-		this.addItem(new SampleCombatKnife());
-		this.addItem(new SampleHelmet());
+		this.addItem(SampleClothing.getSampleShirt());
+		this.addItem(SampleClothing.getSamplePants());
+		this.addItem(SampleWeapons.getSampleAssaultRifle());
+		this.addItem(SampleWeapons.getSampleCombatKnife());
+		this.addItem(SampleArmor.getSampleHelmet());
 		this.addItem(new SampleThingy());
-		this.addItem(new SampleSword());
-		this.addItem(new SamplePistol());
+		this.addItem(SampleWeapons.getSampleSword());
+		this.addItem(SampleWeapons.getSamplePistol());
 	}
 	public SampleGenericChest() {
 		this("generic chest");

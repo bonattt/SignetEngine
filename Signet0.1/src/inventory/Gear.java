@@ -1,7 +1,7 @@
 package inventory;
 
 import items.Armor;
-import items.Item;
+import items.MeleeWeapon;
 import items.Weapon;
 import items.WornItem;
 
@@ -9,8 +9,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
 
 import misc.TextTools;
 import creatures.Creature;
@@ -247,7 +245,7 @@ public class Gear {
 			TextTools.display("ERROR weapon slot does not exist");
 			return false;
 		} else if ((equippedWeapons.get(slot) != null)) {
-			TextTools.display(weapon.name + " cannot be equipped because that slot is occupied");
+			TextTools.display(weapon.name() + " cannot be equipped because that slot is occupied");
 			return false;
 		} else {
 			equippedWeapons.put(slot, weapon);
@@ -282,7 +280,7 @@ public class Gear {
 			if (currentWeapon == null){
 				answers[i] = key + " [empty]";
 			} else {
-				answers[i] = key + " [" + currentWeapon.name + "]";
+				answers[i] = key + " [" + currentWeapon.name() + "]";
 			}
 			i += 1;
 		}

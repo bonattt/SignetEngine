@@ -238,8 +238,8 @@ public class Wound {
 			infectionClock += timePassed;
 			// integer division, truncates to 0 checks to avoid infection if clock < 1 day
 			int numbChecks = infectionClock / INFECTION_FREQUENCY; 
-			for (int i = 0; i < infectionClock; i++){
-				checkIfWoundGetsInfected();
+			for (int i = 0; i < numbChecks; i++){
+				checkIfWoundGetsInfected(infectionRate);
 			}
 		}
 		return damage;
@@ -278,7 +278,7 @@ public class Wound {
 		}
 	}
 	
-	public void checkIfWoundGetsInfected(){
-		// TODO implement this
+	public void checkIfWoundGetsInfected(double infectionRate){
+		System.out.println("METHOD 'checkIfWoundGetsInfected' IN CLASS 'Wound' IS UNIMPLEMENTED");
 	}
 }

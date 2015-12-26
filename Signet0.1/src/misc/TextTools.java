@@ -1,9 +1,5 @@
 package misc;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -16,7 +12,6 @@ public class TextTools {
 //		return questionAsker(question, answers, BACK_DISABLED);
 //	}
 	public static int questionAsker(String question, String[] answers, int backEnabled){
-		int choice = -1;
 		display(question);
 		display("");
 		while (true) {
@@ -43,12 +38,13 @@ public class TextTools {
 			Scanner scan = new Scanner(System.in);
 			String next = scan.nextLine();
 			choice = Integer.parseInt(next);
+			scan.close();
 		} catch (InputMismatchException e){
 			// if input is not translatable into an int, than set it to minvalue int to flag invalid input.
 			choice = Integer.MIN_VALUE;
 		} catch (NumberFormatException e){
 			choice = Integer.MIN_VALUE;
-		}
+		} 
 		if (choice < (answers.length+1 - backEnabled)){
 			return choice;
 		}

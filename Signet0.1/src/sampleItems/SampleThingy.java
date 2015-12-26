@@ -16,8 +16,7 @@ public class SampleThingy extends Item {
 	private static final int DAMAGE = 0;
 	
 	public SampleThingy() {
-		super(SIZE, WEIGHT, DURABILITY, HARDNESS, DAMAGE);
-		name = "mysterious Thingy-ma-bob";
+		super(SIZE, WEIGHT, DURABILITY, HARDNESS, DAMAGE, "Thingy-ma-bob", "this thingy-ma-bob is very mysterious.");
 	}
 
 	@Override

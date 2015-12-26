@@ -1,6 +1,5 @@
 package items;
 
-import inventory.Gear;
 import inventory.Inventory;
 
 import java.io.PrintWriter;
@@ -19,8 +18,8 @@ public class Armor extends Item {
 	private HashMap<Integer, Integer> typeConversion;
 	public String slot;
 	
-	public Armor(int size, int wt, int dur, int hard, int dam) {
-		super(size, wt, dur, hard, dam);
+	public Armor(int size, int wt, int dur, int hard, int dam, String name, String description) {
+		super(size, wt, dur, hard, dam, name, description);
 		damageResistance = new HashMap<Integer,Integer>();
 		typeConversion = new HashMap<Integer,Integer>();
 	}
@@ -41,23 +40,25 @@ public class Armor extends Item {
 	public void saveToFile(PrintWriter writer) {
 		writer.println("armor");
 		saveBaseStats(writer);
+		writer.println(slot);
 		saveDamageResistanceToFile(writer);
 		saveTypeConversion(writer);
 	}
 	
 	public static Armor loadAlpha0_1(Scanner scanner) {
 		String name = scanner.nextLine();
+		String description = Item.loadItemDescriptionAlpha0_1(scanner);
 		int size, weight, durability, hardness, damage;
 		size = scanner.nextInt();
 		weight = scanner.nextInt();
 		durability = scanner.nextInt();
 		hardness = scanner.nextInt();
 		damage = scanner.nextInt();
-		Armor armor = new Armor(size, weight, durability, hardness, damage);
-		armor.description = Item.loadItemDescriptionAlpha0_1(scanner);
+		scanner.nextLine(); // realign the scanner to read strings after .nextInt()
+		Armor armor = new Armor(size, weight, durability, hardness, damage, name, description);
+		armor.slot = scanner.nextLine();
 		armor.damageResistance = loadDamageResistanceAlpha0_1(scanner);
 		armor.typeConversion = loadTypeConversionAlpha0_1(scanner);
-		armor.name = name;
 		return armor;
 	}
 	public boolean equals(Armor item) {
@@ -68,8 +69,8 @@ public class Armor extends Item {
 				(item.getDamage() == getDamage()) &&
 				(item.damageResistance.equals(damageResistance)) &&
 				(item.typeConversion.equals(typeConversion)) &&
-				(item.name.equals(name)) &&
-				(item.description.equals(description));
+				(item.name().equals(this.name())) &&
+				(item.description().equals(this.description()));
 	}
 	
 	private void saveDamageResistanceToFile(PrintWriter writer) {
@@ -142,7 +143,7 @@ public class Armor extends Item {
 				inv.getEquipment().removeArmor(slot);
 				inv.store(this);
 			} else {
-				TextTools.display("There is no room in your " + name + " in you inventory");
+				TextTools.display("There is no room in your " + this.name() + " in you inventory");
 			}
 		} else if (choice == 2) {		// discard
 			inv.getEquipment().removeArmor(slot);
@@ -153,7 +154,7 @@ public class Armor extends Item {
 	
 	@Override
 	public void useFromInventory(Inventory inv, Creature character) throws Exception {
-		String question = "What would you like to do with the " + name;
+		String question = "What would you like to do with the " + this.name();
 		String[] answers = new String[]{"equip", "discard", "inspect", "cancel"};
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
 		if(choice == 0){
@@ -203,7 +204,7 @@ public class Armor extends Item {
 	public String slotIsAlreadyOccupiedString(String oldArmorName){
 		StringBuilder str = new StringBuilder();
 		str.append("You cannot equip your " );
-		str.append(name);
+		str.append(this.name());
 		str.append(" because your ");
 		str.append(slot);
 		str.append(" slot is already occupied by ");

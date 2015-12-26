@@ -26,7 +26,7 @@ public class UnitTestInventory {
 	@Test
 	public void addingItemIncreasesWeight(){
 		int weightInitial = inv.getCarriedWeight();
-		inv.store(new SampleHelmet());
+		inv.store(SampleArmor.getSampleHelmet());
 		assertTrue(weightInitial < inv.getCarriedWeight());
 	}
 	

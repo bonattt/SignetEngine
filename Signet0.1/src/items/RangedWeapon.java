@@ -1,19 +1,46 @@
 package items;
 
-import java.util.HashMap;
+import inventory.Inventory;
 
-public abstract class RangedWeapon extends Weapon {
+import java.io.PrintWriter;
+import java.util.Scanner;
 
+import misc.TextTools;
+import creatures.Creature;
+
+public class RangedWeapon extends Weapon {
+
+	public static final int LIGHT = 3;
+	public static final int ONE_HANDED = 4;
+	public static final int TWO_HANDED = 5;
+	public static final int HEAVY = 6;
+	
 	private int 
 	ammoRemaining,
-	ammoCapacity;
+	ammoCapacity,
+	range;
 	
 	public String ammoName = "ammo";
 	
-	public RangedWeapon(int might, int accuracy, int parry,	int weaponType, int ammo) {
-		super(might, accuracy, parry, weaponType);
+	public RangedWeapon(String name, String description,
+			int size, int wt, int dur, int hard, int dam,
+			int might, int accuracy, int range, int weaponType, int ammo) {
+		super(size, wt, dur, hard, dam, name, description,
+				might, accuracy, weaponType);
+		this.range = range;
+		ammoCapacity = ammo;
+		ammoRemaining = ammo;
 	}
-
+	public int getRange() {
+		return range;
+	}
+	public int getAmmoCapacity() {
+		return ammoCapacity;
+	}
+	public int getAmmoRemaining() {
+		return ammoRemaining;
+	}
+	
 	@Override
 	public boolean isRangedWeapon(){
 		return true;
@@ -23,9 +50,9 @@ public abstract class RangedWeapon extends Weapon {
 		return false;
 	}
 	
-	
 	public boolean useAmmo(int ammoUsed){
 		if (ammoUsed > ammoRemaining){
+			TextTools.display("not enough ammo");
 			return false; // return false if not enough ammo.
 		}
 		ammoRemaining -= ammoUsed;
@@ -42,13 +69,50 @@ public abstract class RangedWeapon extends Weapon {
 	public String checkRemainingAmmo() {
 		StringBuilder str = new StringBuilder();
 		str.append("Your ");
-		str.append(name);
+		str.append(this.name());
 		str.append(" has ");
 		str.append(ammoRemaining);
 		str.append(" ");
 		str.append(ammoName);
 		str.append(" remaining");
 		return str.toString();
+	}
+	
+	public int getRemainingAmmo() {
+		return ammoRemaining;
+	}
+
+	@Override
+	public void saveToFile(PrintWriter writer) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public static RangedWeapon loadRangedWeaponAlpha0_1(Scanner scanner) {
+		RangedWeapon weapon = null;
+		
+		return weapon;
+	}
+	
+	@Override
+	public boolean equals(Item item){
+		RangedWeapon weapon;
+		try {
+			weapon = (RangedWeapon) item;
+		} catch (ClassCastException e) {
+			return false;
+		}
+		return (super.equals(weapon)) &&
+				(weapon.name().equals(this.name()) &&
+				(weapon.getAccuracy() == this.getAccuracy()) &&
+				(weapon.getMight() == this.getMight()) &&
+				(weapon.getSize() == this.getSize()) && 
+				(weapon.getRange() == this.getRange()) && 
+				(weapon.getAmmoCapacity() == this.getAmmoCapacity()) &&
+				(weapon.getAmmoRemaining() == this.getAmmoRemaining()) &&
+				(weapon.getWeaponType() == this.getWeaponType()) &&
+				(weapon.getWeight() == this.getWeight()) &&
+				(weapon.description().equals(this.description())));
 	}
 
 }
