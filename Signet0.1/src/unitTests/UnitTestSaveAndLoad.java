@@ -13,6 +13,7 @@ import items.Item;
 import items.LightSource;
 import items.Ointment;
 import items.MeleeWeapon;
+import items.RangedWeapon;
 import items.WornItem;
 
 import java.io.File;
@@ -20,7 +21,10 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import org.junit.Test;
@@ -42,9 +46,9 @@ public class UnitTestSaveAndLoad {
 		System.out.println("untested classes:\n\thealth.Infection\n\tcreatures.Trait\n\t"
 				+ "creatures.PlayerCharacter\n\tnpc.*\n\tenvironment.*\n");
 	}
+	
 	@Test
-	public void testSingleSkillLoads() {
-		try {
+	public void testSingleSkillLoads() throws FileNotFoundException {
 			String name = "java programing";
 			int id = Integer.MAX_VALUE;
 			String[] linkedAtrb = new String[]{"Str"};
@@ -52,82 +56,102 @@ public class UnitTestSaveAndLoad {
 			int ranks = 3;
 			int exp = 100;
 			
-			Skill skillSaved = new Skill(name, id, ranks, linkedAtrb, tags);
-			skillSaved.gainExperience(exp);
+			Skill saved = new Skill(name, id, ranks, linkedAtrb, tags);
+			saved.gainExperience(exp);
 			
-			PrintWriter writer = new PrintWriter(filePath, "UTF-8");
-			skillSaved.saveToFile(writer);
+			PrintWriter writer = new PrintWriter(filePath);
+			saved.saveToFile(writer);
 			writer.close();
 			
 			Scanner scanner = new Scanner(new File(filePath));
-			Skill skillLoaded = Skill.loadFromFile(scanner);
+			Skill loaded = Skill.loadFromFile(scanner);
 			scanner.close();
 			
-			assertEquals(name, skillLoaded.name);
-			assertEquals(id, skillLoaded.id);
-			assertEquals(linkedAtrb.length, skillLoaded.linkedAttributes.length);
-			assertEquals(linkedAtrb[0], skillLoaded.linkedAttributes[0]);
-			assertEquals(tags.length, skillLoaded.tags.length);
-			assertEquals(tags[0], tags[0]);
-			assertEquals(tags[1], tags[1]);
-			assertEquals(tags[2], tags[2]);
-			assertEquals(ranks, skillLoaded.ranks);
-			
-			Field f1 = Skill.class.getDeclaredField("exp");
-			f1.setAccessible(true);
-			int loadedExp = f1.getInt(skillLoaded);
-			
-			assertEquals(exp, loadedExp);
-			
-		} catch (FileNotFoundException e) {
-			fail("threw an exception");
-		} catch (UnsupportedEncodingException e) {
-			fail("threw an exception");
-		} catch (SecurityException e) {
-			fail("threw an exception");
-		} catch (IllegalArgumentException e) {
-			fail("threw an exception");
-		} 
-		catch (NoSuchFieldException e) {
-			fail("threw an exception");
-		} catch (IllegalAccessException e) {
-			fail("threw an exception");
-		}
+			assertEquals(saved, loaded);
 	}
 	
 	@Test
-	public void testPlayerStatsSaveLoad(){
-		try {
-			PlayerCharacter dick = CharacterMother.getDickDefenderOfLife();
-			PrintWriter writer = new PrintWriter(filePath, "UTF-8");
-			dick.saveToFile(writer);
-			writer.close();
-			
-			Scanner scanner = new Scanner(new File(filePath));
-			PlayerCharacter loadedPlayer = PlayerCharacter.loadAlpha0_1fromFile(scanner);
-			scanner.close();
-			
-			assertEquals(dick.name, loadedPlayer.name);
-			
-			assertEquals(dick.stats_base.size(), loadedPlayer.stats_base.size());
-			for(String key : dick.stats_base.keySet()){
-				assertTrue(loadedPlayer.stats_base.containsKey(key));
-				int dickStat = dick.stats_base.get(key);
-				int loadedStat = loadedPlayer.stats_base.get(key);
-				assertEquals(dickStat, loadedStat);
-			}
-			
-			assertEquals(dick.damageMultipliers.size(), loadedPlayer.damageMultipliers.size());
-			for(String key : dick.damageMultipliers.keySet()){
-				assertTrue(loadedPlayer.damageMultipliers.containsKey(key));
-				assertEquals(dick.damageMultipliers.get(key), loadedPlayer.damageMultipliers.get(key));
-			}
-			
-		} catch (FileNotFoundException e) {
-			fail("exception thrown");
-		} catch (UnsupportedEncodingException e) {
-			fail("exception thrown");
+	public void testPlayerSkillsSaveLoad() throws FileNotFoundException, NoSuchMethodException,
+			SecurityException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchFieldException {
+		
+		PlayerCharacter saved = CharacterMother.getDickDefenderOfLife();
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveSkills(writer);
+		writer.close();
+		
+		Scanner scanner = new Scanner(new File(filePath));
+		Method method = PlayerCharacter.class.getDeclaredMethod("loadAlpha0_1skills", scanner.getClass());
+		method.setAccessible(true);
+		@SuppressWarnings("unchecked")
+		HashMap<String, Skill> loadedMap = (HashMap<String, Skill>) method.invoke(null, scanner);
+		scanner.close();
+		
+		Field field = Creature.class.getDeclaredField("skills");
+		field.setAccessible(true);
+		@SuppressWarnings("unchecked")
+		HashMap<String, Skill> savedMap = (HashMap<String, Skill>) field.get(saved);
+		
+		for(String key : loadedMap.keySet()) {
+			assertEquals(savedMap.get(key), loadedMap.get(key));
 		}
+		assertEquals(savedMap.size(), loadedMap.size());
+	}
+	
+	@Test
+	public void testPlayerDamageMultipliersLoad() throws FileNotFoundException, NoSuchMethodException,
+			SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchFieldException {
+		
+		PlayerCharacter saved = CharacterMother.getDickDefenderOfLife();
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveDamageMultipliers(writer);
+		writer.close();
+		Scanner scanner = new Scanner(new File(filePath));
+		
+		Method method = PlayerCharacter.class.getDeclaredMethod("loadAlpha0_1damageMultipliers", scanner.getClass());
+		method.setAccessible(true);
+		Object loadedObj = method.invoke(null, scanner);
+		@SuppressWarnings("unchecked")
+		HashMap<String, Integer> loadedMap = (HashMap<String, Integer>) loadedObj;
+		scanner.close();
+		
+		Field field = Creature.class.getDeclaredField("damageMultipliers");
+		field.setAccessible(true);
+		@SuppressWarnings("unchecked")
+		HashMap<String, Integer> savedMap = (HashMap<String, Integer>) field.get(saved);
+		
+		for (String key : savedMap.keySet()) {
+			assertEquals(savedMap.get(key), loadedMap.get(key));
+		}
+		assertEquals(savedMap.size(), loadedMap.size());
+	}
+	
+	
+	
+	@Test
+	public void testPlayerStatsSaveLoad() throws FileNotFoundException, NoSuchMethodException,
+			SecurityException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException {
+		PlayerCharacter saved = CharacterMother.getDickDefenderOfLife();
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveStats(writer);
+		writer.close();
+		
+		Scanner scanner = new Scanner(new File(filePath));
+		Method method = PlayerCharacter.class.getDeclaredMethod("loadAlpha0_1stats", scanner.getClass());
+		method.setAccessible(true);
+		Object loadedObj = method.invoke(null, scanner);
+		@SuppressWarnings("unchecked")
+		HashMap<String, Integer> loadedMap = (HashMap<String, Integer>) loadedObj;
+		scanner.close();
+		
+		for (String key : loadedMap.keySet()) {
+			assertEquals(saved.getStat(key), (int) loadedMap.get(key));
+		}
+		assertEquals(Creature.ABILITIES.length, loadedMap.size());
+		
+		
 	}
 
 //	@Test
@@ -556,8 +580,19 @@ public class UnitTestSaveAndLoad {
 		}
 	}
 	@Test
-	public void testItem_RangedWeaponSaveLoad() {
-		fail();
+	public void testItem_RangedWeaponSaveLoad() throws FileNotFoundException {
+		RangedWeapon saved = new RangedWeapon("weapon","this shoots bullets",
+				100, 100, 100, 10, 0, 5, 5, 20, RangedWeapon.ONE_HANDED, 10, 10);
+		
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveToFile(writer);
+		writer.close();
+		Scanner scanner = new Scanner(new File(filePath));
+		RangedWeapon loaded = (RangedWeapon) Item.loadAlpha0_1(scanner);
+		scanner.close();
+
+		assertTrue(loaded.equals(saved));
+		assertTrue(saved.equals(loaded));
 	}
 	@Test
 	public void testItem_WeaponSaveLoad() {

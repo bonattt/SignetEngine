@@ -24,6 +24,12 @@ public class UnitTestInventory {
 	}
 	
 	@Test
+	public void invEqualsSelf() {
+		Inventory clone = new Inventory();
+		assertEquals(inv, clone);
+	}
+	
+	@Test
 	public void addingItemIncreasesWeight(){
 		int weightInitial = inv.getCarriedWeight();
 		inv.store(SampleArmor.getSampleHelmet());

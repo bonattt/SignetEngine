@@ -176,6 +176,34 @@ public class Skill {
 		}
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Skill) {
+			Skill skl = (Skill) o;
+			if (skl.linkedAttributes.length != this.linkedAttributes.length ||
+					skl.tags.length != this.tags.length) {
+				return false;
+			}
+			int i;
+			for (i = 0; i < this.linkedAttributes.length; i++) {
+				if (! this.linkedAttributes[i].equals(skl.linkedAttributes[i])) {
+					return false;
+				}
+			}
+			for (i = 0; i < this.tags.length; i++) {
+				if (this.tags[i] != skl.tags[i]) {
+					return false;
+				}
+			}
+			
+			return (skl.exp == this.exp &&
+					skl.id == this.id &&
+					skl.name.equals(this.name) &&
+					skl.ranks == this.ranks);
+		}
+		return false;
+	}
+	
 	public void setRanks(int newRank){
 		ranks = newRank;
 	}

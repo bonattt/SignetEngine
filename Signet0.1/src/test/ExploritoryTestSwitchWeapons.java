@@ -1,10 +1,7 @@
 package test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import testingMothers.CharacterMother;
-import items.MeleeWeapon;
+import items.Weapon;
 import misc.TextTools;
 import creatures.PlayerCharacter;
 
@@ -33,7 +30,7 @@ public class ExploritoryTestSwitchWeapons {
 	
 	private static void displayTestResults(PlayerCharacter player){
 
-		MeleeWeapon currentWeapon = player.getInventory().getWeapon();
+		Weapon currentWeapon = player.getInventory().getWeapon();
 		if(currentWeapon == null) {
 			TextTools.display("held weapon: null");
 		} else {

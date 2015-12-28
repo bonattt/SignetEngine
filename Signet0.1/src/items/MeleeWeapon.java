@@ -28,7 +28,7 @@ public class MeleeWeapon extends Weapon {
 	
 	@Override
 	public void saveToFile(PrintWriter writer) {
-		writer.println("weapon");
+		writer.println("melee weapon");
 		saveBaseStats(writer);
 		saveBaseWeaponStats(writer);
 		writer.println(parry);

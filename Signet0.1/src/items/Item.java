@@ -70,7 +70,7 @@ public abstract class Item {
 			return Ointment.loadOintmentAlpha0_1(scanner);
 		} else if (itemType.equals("ranged weapon")) {
 			return RangedWeapon.loadRangedWeaponAlpha0_1(scanner);
-		} else if (itemType.equals("weapon")) {
+		} else if (itemType.equals("melee weapon")) {
 			return MeleeWeapon.loadMeleeWeaponAlpha0_1(scanner);
 		} else if (itemType.equals("worn item")) {
 			return WornItem.loadWornItemAlpha0_1(scanner);

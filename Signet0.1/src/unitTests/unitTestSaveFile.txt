@@ -1,12 +1,23 @@
-bandage
-bandage
-this is for when your arm gets chopped off
-end description
-1
-1
-5
+electronics
+electronics
+7
+3
 0
+hands
+mental
+end tags
+dex
+anl
+end linked attribute
+knives
+knives
+8
+2
 0
-2.5
-2.5
-2.5
+combat
+rightHand
+end tags
+agl
+dex
+end linked attribute
+end skills

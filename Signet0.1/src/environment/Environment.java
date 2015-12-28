@@ -107,7 +107,7 @@ public class Environment {
 //		location;
 //		terrain;
 //		clock;
-		PlayerCharacter player = PlayerCharacter.loadAlpha0_1fromFile(scanner);
+		PlayerCharacter player = PlayerCharacter.loadAlpha0_1(scanner);
 	}
 	
 	public void saveGameToFile(String filePath){

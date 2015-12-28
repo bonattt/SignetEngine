@@ -20,12 +20,45 @@ public class Inventory {
 	private Weapon equippedWeapon;
 	private int carriedWeight;
 	
-	public Inventory (){
+	public Inventory(){
 		equipment = new Gear();
 		backpack = getStartingBackpack();
 		equippedWeapon = null;
 //		initializeEquipmentSlots(equippedItems);
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Inventory)) {
+			return false;
+		}
+		Inventory inv = (Inventory) o;
+		
+		if (this.lightSource == null) {
+			if (inv.lightSource != null) {
+				return false;
+			}
+		} else {
+			if (! inv.lightSource.equals(this.lightSource)) {
+				return false;
+			}
+		}
+		
+		if (this.equippedWeapon == null) {
+			if (inv.equippedWeapon != null) {
+				return false;
+			}
+		} else {
+			if (! inv.equippedWeapon.equals(this.equippedWeapon)) {
+				return false;
+			}
+		}
+		
+		return (inv.backpack.equals(this.backpack)) &&
+				(inv.equipment.equals(this.equipment)) &&
+				(inv.carriedWeight == this.carriedWeight);
+	}
+	
 	public LightSource getLightSource(){
 		return lightSource;
 	}
@@ -578,7 +611,7 @@ public class Inventory {
 	public HashMap<String, Weapon> getEquippedWeapons(){
 		return equipment.getEquippedWeapons();
 	}
-	
+	@Override
 	public String toString(){
 		StringBuilder str = new StringBuilder();
 		str.append("carried weight: ");

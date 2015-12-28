@@ -7,7 +7,7 @@ public class SampleWeapons {
 
 	public static RangedWeapon getSampleAssaultRifle() {
 		RangedWeapon weapon = new RangedWeapon("sample assault rifle", "this is a typical assault rifle",
-				100, 100, 100, 10, 0, 3, 3, 0, 2, 32);
+				100, 100, 100, 10, 0, 3, 3, 0, 2, 32, 32);
 		return weapon;
 	}
 	
@@ -18,7 +18,7 @@ public class SampleWeapons {
 	
 	public static RangedWeapon getSamplePistol() {
 		RangedWeapon weapon = new RangedWeapon("sample pistol", "this is the pistol",
-				25, 25, 50, 10, 0, 1, 1, 0, 1, 10);
+				25, 25, 50, 10, 0, 1, 1, 0, 1, 10, 10);
 		return weapon;
 	}
 	

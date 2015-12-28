@@ -24,12 +24,12 @@ public class RangedWeapon extends Weapon {
 	
 	public RangedWeapon(String name, String description,
 			int size, int wt, int dur, int hard, int dam,
-			int might, int accuracy, int range, int weaponType, int ammo) {
+			int might, int accuracy, int range, int weaponType, int ammoCap, int ammoRem) {
 		super(size, wt, dur, hard, dam, name, description,
 				might, accuracy, weaponType);
 		this.range = range;
-		ammoCapacity = ammo;
-		ammoRemaining = ammo;
+		ammoCapacity = ammoCap;
+		ammoRemaining = ammoRem;
 	}
 	public int getRange() {
 		return range;
@@ -84,13 +84,33 @@ public class RangedWeapon extends Weapon {
 
 	@Override
 	public void saveToFile(PrintWriter writer) {
-		// TODO Auto-generated method stub
-		
+		writer.println("ranged weapon");
+		saveBaseStats(writer);
+		saveBaseWeaponStats(writer);
+		writer.println(range);
+		writer.println(ammoCapacity);
+		writer.println(ammoRemaining);
 	}
 	
 	public static RangedWeapon loadRangedWeaponAlpha0_1(Scanner scanner) {
-		RangedWeapon weapon = null;
-		
+		int size, weight, durability, hardness, damage, weaponType, accuracy, might, range, ammoCap, ammoRem;
+		String name = scanner.nextLine();
+		String description = Item.loadItemDescriptionAlpha0_1(scanner);
+		size = scanner.nextInt();
+		weight = scanner.nextInt();
+		durability = scanner.nextInt();
+		hardness = scanner.nextInt();
+		damage = scanner.nextInt();
+		might = scanner.nextInt();
+		accuracy = scanner.nextInt();
+		weaponType = scanner.nextInt();
+		range = scanner.nextInt();
+		ammoCap = scanner.nextInt();
+		ammoRem = scanner.nextInt();
+		scanner.nextLine(); // realign the scanner to read lines after performing nextInt()
+		RangedWeapon weapon = new RangedWeapon(name, description,
+				size, weight, durability, hardness, damage, might, accuracy,
+				range, weaponType, ammoCap, ammoRem);
 		return weapon;
 	}
 	
@@ -102,8 +122,7 @@ public class RangedWeapon extends Weapon {
 		} catch (ClassCastException e) {
 			return false;
 		}
-		return (super.equals(weapon)) &&
-				(weapon.name().equals(this.name()) &&
+		return ((weapon.name().equals(this.name()) &&
 				(weapon.getAccuracy() == this.getAccuracy()) &&
 				(weapon.getMight() == this.getMight()) &&
 				(weapon.getSize() == this.getSize()) && 
@@ -112,7 +131,7 @@ public class RangedWeapon extends Weapon {
 				(weapon.getAmmoRemaining() == this.getAmmoRemaining()) &&
 				(weapon.getWeaponType() == this.getWeaponType()) &&
 				(weapon.getWeight() == this.getWeight()) &&
-				(weapon.description().equals(this.description())));
+				(weapon.description().equals(this.description()))));
 	}
 
 }

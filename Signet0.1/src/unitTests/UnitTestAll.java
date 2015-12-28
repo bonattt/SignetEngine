@@ -17,9 +17,12 @@ public class UnitTestAll {
 }
 @RunWith(Suite.class)
 	@Suite.SuiteClasses({
+		IntegrationTestSaveLoad.class,
 	    UnitTestBody.class,
 	    UnitTestBodyPart.class,
 	    UnitTestCreature.class,
+	    UnitTestFirstAid.class,
+	    UnitTestGear.class,
 	    UnitTestInventory.class,
 	    UnitTestItem.class,
 	    UnitTestItemContainer.class,

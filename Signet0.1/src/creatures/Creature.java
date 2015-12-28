@@ -27,9 +27,9 @@ public abstract class Creature {
 	private Body body;
 	private Inventory inv;
 	
-	public HashMap<String,Integer> stats_base, stats_adjusted;
-	public HashMap<String,Integer> damageMultipliers;
-	public HashMap<String, Skill> skills;
+	private HashMap<String,Integer> stats_base, stats_adjusted;
+	private HashMap<String,Integer> damageMultipliers;
+	private HashMap<String, Skill> skills;
 	
 	public Creature(String creatureName, HashMap<String,Integer> baseStats, HashMap<String,Integer> damageMultipliers, HashMap<String, Skill> startingSkills){
 		this.name = creatureName;
@@ -55,13 +55,13 @@ public abstract class Creature {
 		body.saveToFile(writer);
 		saveSkills(writer);
 	}
-	private void saveStats(PrintWriter writer){
+	public void saveStats(PrintWriter writer){
 		for (int i = 0; i < ABILITIES.length; i++){
 			String key = ABILITIES[i];
 			writer.println(stats_base.get(key));
 		}
 	}
-	private void saveDamageMultipliers(PrintWriter writer){
+	public void saveDamageMultipliers(PrintWriter writer){
 //		writer.println("damage characteristics");
 		for(String key : damageMultipliers.keySet()){
 			writer.println(key);
@@ -69,13 +69,17 @@ public abstract class Creature {
 		}
 		writer.println("end damage characteristics");
 	}
-	private void saveSkills(PrintWriter writer){
+	public void saveSkills(PrintWriter writer){
 //		writer.println("skills");
 		for (String key : skills.keySet()){
 			writer.println(key);
 			skills.get(key).saveToFile(writer);
 		}
 		writer.println("end skills");
+	}
+	
+	public int getStat(String stat) {
+		return stats_adjusted.get(stat);
 	}
 	
 	public ArrayList<Wound> listAllWounds(){

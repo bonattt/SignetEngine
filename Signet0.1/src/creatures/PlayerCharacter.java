@@ -31,7 +31,7 @@ public class PlayerCharacter extends Creature  {
 	public void saveToFile(PrintWriter writer){
 		super.saveToFile(writer);
 	}
-	public static PlayerCharacter loadAlpha0_1fromFile(Scanner scanner){
+	public static PlayerCharacter loadAlpha0_1(Scanner scanner){
 		String name = scanner.nextLine();
 		HashMap<String, Integer> baseStats = loadAlpha0_1stats(scanner);
 		HashMap<String, Integer> damageMultipliers = loadAlpha0_1damageMultipliers(scanner);
@@ -81,8 +81,12 @@ public class PlayerCharacter extends Creature  {
 	}
 	private static HashMap<String, Skill> loadAlpha0_1skills(Scanner scanner){
 		HashMap<String, Skill> skills = new HashMap<String, Skill>();
-		
-		
+		String line = scanner.nextLine();
+		while(! line.equals("end skills")) {
+			Skill current = Skill.loadFromFile(scanner);
+			skills.put(line, current);
+			line = scanner.nextLine();
+		}
 		return skills;
 	}
 	
