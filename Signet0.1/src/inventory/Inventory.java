@@ -486,7 +486,7 @@ public class Inventory {
 		return selection;
 	}
 	public void tryToEquipClothing(WornItem newClothing){
-		WornItem oldClothing = equipment.getClothing(newClothing.slot);
+		WornItem oldClothing = equipment.getClothing(newClothing.getSlot());
 		if(oldClothing == null){
 			equipment.equipClothing(newClothing);
 			return;
@@ -506,10 +506,10 @@ public class Inventory {
 	}
 	
 	private void equipClothingStowOld(WornItem newClothing){
-		Armor oldArmor = equipment.getArmor(newClothing.slot);
-		if((equipment.getClothing(newClothing.slot).getSize() - newClothing.getSize()) <= spaceRemaining()){
-			backpack.addItem(equipment.getArmor(newClothing.slot));
-			equipment.removeClothing(newClothing.slot);
+		Armor oldArmor = equipment.getArmor(newClothing.getSlot());
+		if((equipment.getClothing(newClothing.getSlot()).getSize() - newClothing.getSize()) <= spaceRemaining()){
+			backpack.addItem(equipment.getArmor(newClothing.getSlot()));
+			equipment.removeClothing(newClothing.getSlot());
 			equipment.equipClothing(newClothing);
 			if(backpack.contains(newClothing)){
 				backpack.removeItem(newClothing);
@@ -524,14 +524,14 @@ public class Inventory {
 		}
 	}
 	private void equipClothingDropOld(WornItem newClothing){
-		equipment.removeClothing(newClothing.slot);
+		equipment.removeClothing(newClothing.getSlot());
 		equipment.equipClothing(newClothing);
 		if(backpack.contains(newClothing)){
 			backpack.removeItem(newClothing);
 		}
 	}
 	public void tryToEquipArmor(Armor newArmor){
-		Armor oldArmor = equipment.getArmor(newArmor.slot);
+		Armor oldArmor = equipment.getArmor(newArmor.getSlot());
 		if(oldArmor == null){
 			equipment.equipArmor(newArmor);
 			if(backpack.contains(newArmor)){
@@ -554,10 +554,10 @@ public class Inventory {
 	}
 	
 	private void equipArmorStowOld(Armor newArmor){
-		Armor oldArmor = equipment.getArmor(newArmor.slot);
-		if((equipment.getArmor(newArmor.slot).getSize() - newArmor.getSize()) <= spaceRemaining()){
-			backpack.addItem(equipment.getArmor(newArmor.slot));
-			equipment.removeArmor(newArmor.slot);
+		Armor oldArmor = equipment.getArmor(newArmor.getSlot());
+		if((equipment.getArmor(newArmor.getSlot()).getSize() - newArmor.getSize()) <= spaceRemaining()){
+			backpack.addItem(equipment.getArmor(newArmor.getSlot()));
+			equipment.removeArmor(newArmor.getSlot());
 			equipment.equipArmor(newArmor);
 			if(backpack.contains(newArmor)){
 				backpack.removeItem(newArmor);
@@ -582,7 +582,7 @@ public class Inventory {
 	}
 	
 	private void equipArmorDropOld(Armor newArmor){
-		equipment.removeArmor(newArmor.slot);
+		equipment.removeArmor(newArmor.getSlot());
 		equipment.equipArmor(newArmor);
 		if(backpack.contains(newArmor)){
 			backpack.removeItem(newArmor);

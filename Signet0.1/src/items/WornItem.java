@@ -9,12 +9,16 @@ import creatures.Creature;
 
 public class WornItem extends Item {
 
-	public String slot;
+	private String slot;
 	
 	public WornItem(int size, int wt, int dur, int hard, int dam, String clothingSlot,
 			String name, String descrip) {
 		super(size, wt, dur, hard, dam, name, descrip);
 		this.slot = clothingSlot;
+	}
+	
+	public String getSlot() {
+		return slot;
 	}
 
 	@Override

@@ -93,7 +93,8 @@ public class Gear {
 					return false;
 				}
 			} else {
-				if (! current.equals(this.clothingWorn.get(key))) {
+				WornItem other = this.clothingWorn.get(key);
+				if (! current.equals(other)) {
 					return false;
 				}
 			}
@@ -196,11 +197,11 @@ public class Gear {
 	}
 	
 	public boolean equipClothing(WornItem clothing){
-		if (clothingWorn.get(clothing.slot) != null){
-			TextTools.display("You are already wearing something in the " + clothing.slot + " slot.");
+		if (clothingWorn.get(clothing.getSlot()) != null){
+			TextTools.display("You are already wearing something in the " + clothing.getSlot() + " slot.");
 			return false;
 		}
-		clothingWorn.put(clothing.slot, clothing);
+		clothingWorn.put(clothing.getSlot(), clothing);
 		return true;
 	}
 	
@@ -232,8 +233,8 @@ public class Gear {
 	}
 	
 	public boolean equipArmor(Armor armor){
-		if (armorEquipped.get(armor.slot) == null){
-			armorEquipped.put(armor.slot, armor);
+		if (armorEquipped.get(armor.getSlot()) == null){
+			armorEquipped.put(armor.getSlot(), armor);
 			return true;
 		} else {
 			TextTools.display("you already have armor equipped there");
@@ -290,12 +291,9 @@ public class Gear {
 		}
 	}
 	
-	public boolean removeWeapon(String slot){
-		if(weaponsCarried.get(slot) == null){
-			return false;
-		}
-		weaponsCarried.put(slot, null);
-		return true;
+	public Weapon removeWeapon(String slot){
+		Weapon removed = weaponsCarried.get(slot);
+		return removed;
 	}
 	
 	protected boolean selectLocationToEquip(Weapon newWeapon){

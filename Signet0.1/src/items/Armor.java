@@ -16,7 +16,7 @@ public class Armor extends Item {
 
 	private HashMap<Integer, Integer> damageResistance;
 	private HashMap<Integer, Integer> typeConversion;
-	public String slot;
+	private String slot;
 	
 	public Armor(int size, int wt, int dur, int hard, int dam, String slot, String name, String description) {
 		super(size, wt, dur, hard, dam, name, description);
@@ -24,6 +24,10 @@ public class Armor extends Item {
 		typeConversion = new HashMap<Integer,Integer>();
 		this.slot = slot;
 	}
+	public String getSlot() {
+		return slot;
+	}
+	
 	@Override
 	public boolean isArmor(){
 		return true;
