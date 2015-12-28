@@ -115,13 +115,11 @@ public class RangedWeapon extends Weapon {
 	}
 	
 	@Override
-	public boolean equals(Item item){
-		RangedWeapon weapon;
-		try {
-			weapon = (RangedWeapon) item;
-		} catch (ClassCastException e) {
+	public boolean equals(Object o){
+		if (! (o instanceof RangedWeapon)) {
 			return false;
 		}
+		RangedWeapon weapon = (RangedWeapon) o;
 		return ((weapon.name().equals(this.name()) &&
 				(weapon.getAccuracy() == this.getAccuracy()) &&
 				(weapon.getMight() == this.getMight()) &&

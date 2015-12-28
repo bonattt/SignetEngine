@@ -11,8 +11,10 @@ public class WornItem extends Item {
 
 	public String slot;
 	
-	public WornItem(int size, int wt, int dur, int hard, int dam, String name, String descrip) {
+	public WornItem(int size, int wt, int dur, int hard, int dam, String clothingSlot,
+			String name, String descrip) {
 		super(size, wt, dur, hard, dam, name, descrip);
+		this.slot = clothingSlot;
 	}
 
 	@Override
@@ -24,8 +26,14 @@ public class WornItem extends Item {
 		return false;
 	}
 
-	public boolean equals(WornItem item) {
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof WornItem)) {
+			return false;
+		}
+		WornItem item = (WornItem) o;
 		return (item.name().equals(this.name())) &&
+				(item.slot.equals(this.slot)) &&
 				(item.description().equals(this.description())) &&
 				(item.getSize() == getSize()) &&
 				(item.getWeight() == getWeight()) &&
@@ -38,6 +46,7 @@ public class WornItem extends Item {
 	public void saveToFile(PrintWriter writer) {
 		writer.println("worn item");
 		saveBaseStats(writer);
+		writer.println(slot);
 	}
 	
 	public static WornItem loadWornItemAlpha0_1(Scanner scanner) {
@@ -50,7 +59,8 @@ public class WornItem extends Item {
 		hardness = scanner.nextInt();
 		damage = scanner.nextInt();
 		scanner.nextLine(); // realign the scanner to read strings after .nextInt()
-		WornItem clothing = new WornItem(size, weight, durability, hardness, damage, name, desc);
+		String slot = scanner.nextLine();
+		WornItem clothing = new WornItem(size, weight, durability, hardness, damage, slot, name, desc);
 		return clothing;
 	}
 	

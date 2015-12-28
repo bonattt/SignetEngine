@@ -124,13 +124,11 @@ public class MeleeWeapon extends Weapon {
 	}
 	
 	@Override
-	public boolean equals(Item item){
-		MeleeWeapon weapon;
-		try {
-			weapon = (MeleeWeapon) item;
-		} catch (ClassCastException e) {
+	public boolean equals(Object o){
+		if (! (o instanceof MeleeWeapon)) {
 			return false;
 		}
+		MeleeWeapon weapon = (MeleeWeapon) o;
 		return (super.equals(weapon)) &&
 				(weapon.name().equals(this.name())) &&
 				((weapon.getAccuracy() == getAccuracy())) &&

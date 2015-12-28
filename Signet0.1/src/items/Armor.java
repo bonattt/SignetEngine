@@ -18,10 +18,11 @@ public class Armor extends Item {
 	private HashMap<Integer, Integer> typeConversion;
 	public String slot;
 	
-	public Armor(int size, int wt, int dur, int hard, int dam, String name, String description) {
+	public Armor(int size, int wt, int dur, int hard, int dam, String slot, String name, String description) {
 		super(size, wt, dur, hard, dam, name, description);
 		damageResistance = new HashMap<Integer,Integer>();
 		typeConversion = new HashMap<Integer,Integer>();
+		this.slot = slot;
 	}
 	@Override
 	public boolean isArmor(){
@@ -55,14 +56,20 @@ public class Armor extends Item {
 		hardness = scanner.nextInt();
 		damage = scanner.nextInt();
 		scanner.nextLine(); // realign the scanner to read strings after .nextInt()
-		Armor armor = new Armor(size, weight, durability, hardness, damage, name, description);
-		armor.slot = scanner.nextLine();
+		String slot = scanner.nextLine();
+		Armor armor = new Armor(size, weight, durability, hardness, damage, slot, name, description);
 		armor.damageResistance = loadDamageResistanceAlpha0_1(scanner);
 		armor.typeConversion = loadTypeConversionAlpha0_1(scanner);
 		return armor;
 	}
-	public boolean equals(Armor item) {
-		return (item.getSize() == getSize()) &&
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Armor)) {
+			return false;
+		}
+		Armor item = (Armor) o;
+		return (item.slot.equals(this.slot)) &&
+				(item.getSize() == getSize()) &&
 				(item.getWeight() == getWeight()) &&
 				(item.getDurability() == getDurability()) &&
 				(item.getHardness() == getHardness()) &&

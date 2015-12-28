@@ -5,6 +5,7 @@ import items.Armor;
 import items.Item;
 import items.LightSource;
 import items.MeleeWeapon;
+import items.WornItem;
 
 import org.junit.Test;
 
@@ -40,11 +41,58 @@ public class UnitTestItem {
 		assertFalse(weapon2.equals(weapon1));
 	}
 	@Test
+	public void testWornItemEquals() {
+		WornItem item1 = new WornItem(1, 1, 1, 1, 1, "clothing_slot", "clothing_name",
+				"clothing_description");
+		WornItem item2 = new WornItem(1, 1, 1, 1, 1, "clothing_slot", "clothing_name",
+				"clothing_description");
+		assertEquals(item1, item2);
+	}
+	@Test
+	public void testWornItemNotEqual() {
+		String slot = "clothing_slot";
+		String name = "clothing_name";
+		String desc = "clothing_description";
+		
+		WornItem item1 = new WornItem(1, 1, 1, 1, 1, slot, name, desc);
+		WornItem item2 = new WornItem(1, 1, 1, 1, 1, "different", name, desc);
+		assertNotEquals(item1, item2);
+
+		item1 = new WornItem(1, 1, 1, 1, 1, slot, "different", desc);
+		item2 = new WornItem(1, 1, 1, 1, 1, slot, name, desc);
+		assertNotEquals(item1, item2);
+		
+		item1 = new WornItem(1, 1, 1, 1, 1, slot, name, desc);
+		item2 = new WornItem(1, 1, 1, 1, 1, slot, name, "different");
+		assertNotEquals(item1, item2);
+		
+		item1 = new WornItem(1000, 1, 1, 1, 1, slot, name, desc);
+		item2 = new WornItem(1, 1, 1, 1, 1, slot, name, desc);
+		assertNotEquals(item1, item2);
+		
+		item1 = new WornItem(1, 1, 1, 1, 1, slot, name, desc);
+		item2 = new WornItem(1, 1000, 1, 1, 1, slot, name, desc);
+		assertNotEquals(item1, item2);
+
+		item1 = new WornItem(1, 1, 1000, 1, 1, slot, name, desc);
+		item2 = new WornItem(1, 1, 1, 1, 1, slot, name, desc);
+		assertNotEquals(item1, item2);
+
+		item1 = new WornItem(1, 1, 1, 1, 1, slot, name, desc);
+		item2 = new WornItem(1, 1, 1, 1000, 1, slot, name, desc);
+		assertNotEquals(item1, item2);
+		
+		item1 = new WornItem(1, 1, 1, 1, 1000, slot, name, desc);
+		item2 = new WornItem(1, 1, 1, 1, 1, slot, name, desc);
+		assertNotEquals(item1, item2);
+	}
+	
+	@Test
 	public void testArmorEquals() {
 		String name = "name";
 		String desc = "this is armor";
-		Armor armor1 = new Armor(1, 2, 3, 4, 5, name, desc);
-		Armor armor2 = new Armor(1, 2, 3, 4, 5, name, desc);
+		Armor armor1 = new Armor(1, 2, 3, 4, 5, "_slot_", name, desc);
+		Armor armor2 = new Armor(1, 2, 3, 4, 5, "_slot_", name, desc);
 		assertTrue(armor1.equals(armor2));
 		assertTrue(armor2.equals(armor1));
 		assertTrue(armor1.equals(armor1));
@@ -53,21 +101,29 @@ public class UnitTestItem {
 	public void testArmorNotEqual() {
 		String name = "name";
 		String desc = "this is armor";
-		Armor armor1 = new Armor(1, 2, 3, 4, 5, name, desc);
-		Armor armor2 = new Armor(5, 4, 3, 2, 1, name, desc);
+		String slot = "'armor slot'";
+		Armor armor1 = new Armor(1, 2, 3, 4, 5, slot, name, desc);
+		Armor armor2 = new Armor(5, 4, 3, 2, 1, slot,  name, desc);
 		assertFalse(armor1.equals(armor2));
 		assertFalse(armor2.equals(armor1));
 		
-		armor1 = new Armor(1, 2, 3, 4, 5, name, desc);
-		armor2 = new Armor(1, 2, 3, 4, 5, name, "different");
+		armor1 = new Armor(1, 2, 3, 4, 5, slot,  name, desc);
+		armor2 = new Armor(1, 2, 3, 4, 5, slot, name, "different");
 		assertFalse(armor1.equals(armor2));
 		assertFalse(armor2.equals(armor1));
 		
-		armor1 = new Armor(1, 2, 3, 4, 5, "different", desc);
-		armor2 = new Armor(1, 2, 3, 4, 5, name, desc);
+		armor1 = new Armor(1, 2, 3, 4, 5, slot, "different", desc);
+		armor2 = new Armor(1, 2, 3, 4, 5, slot,  name, desc);
+		assertFalse(armor1.equals(armor2));
+		assertFalse(armor2.equals(armor1));
+		
+		armor1 = new Armor(1, 2, 3, 4, 5, slot, name, desc);
+		armor2 = new Armor(1, 2, 3, 4, 5, "different",  name, desc);
 		assertFalse(armor1.equals(armor2));
 		assertFalse(armor2.equals(armor1));
 	}
+	
+	
 	@Test
 	public void testLightSourceEquals() {
 		String name = "name";

@@ -21,10 +21,24 @@ public class Inventory {
 	private int carriedWeight;
 	
 	public Inventory(){
-		equipment = new Gear();
+		HashMap<String, Weapon> weaponSlots = new HashMap<String, Weapon>();
+		HashMap<String, WornItem> clothingSlots = new HashMap<String, WornItem>();
+		HashMap<String, Armor> armorSlots = new HashMap<String, Armor>();
+		initializeEquipmentSlots(weaponSlots, clothingSlots, armorSlots);
+		equipment = new Gear(weaponSlots, clothingSlots, armorSlots);
 		backpack = getStartingBackpack();
 		equippedWeapon = null;
-//		initializeEquipmentSlots(equippedItems);
+	}
+	
+	private static void initializeEquipmentSlots(HashMap<String, Weapon> weaponSlots,
+			HashMap<String, WornItem> clothingSlots, HashMap<String, Armor> armorSlots) {
+		weaponSlots.put("boot-holster", null);
+		weaponSlots.put("hip-holster", null);
+		clothingSlots.put("shirt", null);
+		clothingSlots.put("pants", null);
+		clothingSlots.put("hat", null);
+		armorSlots.put("main armor", null);
+		armorSlots.put("helmet", null);
 	}
 
 	@Override
@@ -170,16 +184,6 @@ public class Inventory {
 	 */
 	public Gear getEquipment(){
 		return equipment;
-	}
-	
-	public void initializeScifiEquipmentSlots(Gear gear){
-		gear.createArmorSlot("armor");
-		gear.createArmorSlot("helmet");
-		gear.createWeaponSlot("holster");
-		gear.createWeaponSlot("boot");
-		gear.createClothingSlot("shirt");
-		gear.createClothingSlot("pants");
-		gear.createClothingSlot("hat");
 	}
 	
 	public Item selectItemFromBackpack(String question){

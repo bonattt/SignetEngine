@@ -7,7 +7,7 @@ import items.Armor;
 public class SampleArmor {
 
 	public static Armor getSampleArmorJacket() {
-		Armor armor = new Armor(200, 100, 100, 100, 1, "sample armor jacket", "this is an armored jacket");
+		Armor armor = new Armor(200, 100, 100, 100, 1, "main-armor", "sample armor jacket", "this is an armored jacket");
 		armor.initializeArmorStats("armor", getDamageResistanceTableArmorJacket(), getTypeConversionTableArmorJacket());
 		return armor;
 	}
@@ -22,7 +22,7 @@ public class SampleArmor {
 	}
 	
 	public static Armor getSampleHelmet() {
-		Armor armor = new Armor(200, 100, 100, 100, 0, "sample helmet", "this is a metal helmet");
+		Armor armor = new Armor(200, 100, 100, 100, 0, "helmet", "sample helmet", "this is a metal helmet");
 		armor.initializeArmorStats("helmet", getDamageResistanceTableHelmet(), getTypeConversionTableHelmet());
 		return armor;
 	}

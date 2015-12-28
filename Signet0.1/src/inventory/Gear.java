@@ -21,21 +21,96 @@ public class Gear {
 	
 	private HashMap<String, WornItem> clothingWorn;		// body slot (str) --> nonarmor clothing and worn magic items etc... (Item)
 	private HashMap<String, Armor> armorEquipped;		// body slot (str) --> armor (armor)
-	private HashMap<String, Weapon> equippedWeapons;	// slot name (str) --> item slot (ItemSlot)
+	private HashMap<String, Weapon> weaponsCarried;	// slot name (str) --> item slot (ItemSlot)
 	
-	public Gear(){
-		clothingWorn = new HashMap<String, WornItem>();
-		armorEquipped = new HashMap<String, Armor>();
-		equippedWeapons = new HashMap<String, Weapon>();
+	public Gear(HashMap<String, Weapon> weaponsSlots, HashMap<String, WornItem> clothingSlots,
+			HashMap<String, Armor> armorSlots) {
+		clothingWorn = clothingSlots;
+		armorEquipped = armorSlots;
+		weaponsCarried = weaponsSlots;
 		stats = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		totalWeight = 0;
-		
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		// mainly used for testing, so perfomance of "instanceof" is not critical.
+		if (! (o instanceof Gear)) {
+			return false;
+		}
+		Gear gear = (Gear) o;
+		if (gear.stats.length != this.stats.length) {
+			return false;
+		}
+		for (int i = 0; i < this.stats.length; i++) {
+			if (gear.stats[i] != this.stats[i]) {
+				return false;
+			}
+		}
+		
+		// check weapons
+		for (String key : gear.weaponsCarried.keySet()) {
+			if (! this.weaponsCarried.containsKey(key)) {
+				return false;
+			}
+			Weapon current = gear.weaponsCarried.get(key);
+			if (current == null) {
+				if (this.weaponsCarried.get(key) != null) {
+					return false;
+				}
+			} else {
+				if (! current.equals(this.weaponsCarried.get(key))) {
+					return false;
+				}
+			}
+		}
+		
+		// check armor
+		for (String key : gear.armorEquipped.keySet()) {
+			if (! this.armorEquipped.containsKey(key)) {
+				return false;
+			}
+			Armor current = gear.armorEquipped.get(key);
+			if (current == null) {
+				if (this.armorEquipped.get(key) != null) {
+					return false;
+				}
+			} else {
+				if (! current.equals(this.armorEquipped.get(key))) {
+					return false;
+				}
+			}
+		}
+
+		// check clothing
+		for (String key : gear.clothingWorn.keySet()) {
+			if (! this.clothingWorn.containsKey(key)) {
+				return false;
+			}
+			WornItem current = gear.clothingWorn.get(key);
+			if (current == null) {
+				if (this.clothingWorn.get(key) != null) {
+					return false;
+				}
+			} else {
+				if (! current.equals(this.clothingWorn.get(key))) {
+					return false;
+				}
+			}
+		}
+		
+		// done checking hashMaps
+		return (gear.totalWeight == this.totalWeight) &&
+				(this.weaponsCarried.size() == gear.weaponsCarried.size()) &&
+				(this.armorEquipped.size() == gear.armorEquipped.size()) &&
+				(this.clothingWorn.size() == gear.clothingWorn.size());
+	}
+	
+	@Override
 	public String toString(){
 		StringBuilder str = new StringBuilder();
 		str.append("weapons equipped: ");
-		str.append(equippedWeapons.toString());
+		str.append(weaponsCarried.toString());
 		str.append("armor equipped: ");
 		str.append(armorEquipped.toString());
 		str.append("clothing equipped: ");
@@ -43,7 +118,7 @@ public class Gear {
 		return str.toString();
 	}
 	
-	public static Gear loadAlpha0_1fromFile(Scanner scanner){
+	public static Gear loadAlpha0_1(Scanner scanner){
 		return null;
 	}
 	
@@ -75,23 +150,7 @@ public class Gear {
 	}
 	
 	public int getWeight(){
-		int weight = 0;
-		for(String key : clothingWorn.keySet()){
-			if (clothingWorn.get(key) != null){
-				weight += clothingWorn.get(key).getWeight();
-			}
-		}
-		for(String key : armorEquipped.keySet()){
-			if (armorEquipped.get(key) != null){
-				weight += armorEquipped.get(key).getWeight();
-			}
-		}
-		for(String key : equippedWeapons.keySet()){
-			if (equippedWeapons.get(key) != null){
-				weight += equippedWeapons.get(key).getWeight();
-			}
-		}
-		return weight;
+		return totalWeight;
 	}
 	
 	public void refreshWeight(){
@@ -99,14 +158,12 @@ public class Gear {
 		for (String key : clothingWorn.keySet()){
 			totalWeight += clothingWorn.get(key).getWeight();
 		}
-		
 		for (String key : armorEquipped.keySet()){
 			totalWeight += armorEquipped.get(key).getWeight();
 		}
-		
-		for (String key : equippedWeapons.keySet()){
-			totalWeight += equippedWeapons.get(key).getWeight();
-		}		
+		for (String key : weaponsCarried.keySet()){
+			totalWeight += weaponsCarried.get(key).getWeight();
+		}
 	}
 	
 	public int[] getStatMods(){
@@ -162,17 +219,6 @@ public class Gear {
 		return clothingWorn.get(clothingSlot);
 	}
 	
-	protected boolean createClothingSlot(String slot){
-		if (clothingWorn.containsKey(slot)){
-			TextTools.display("Clothing slot " + slot + " already exists!");
-			return false;
-		}
-		clothingWorn.put(slot, null);
-		return true;
-	}
-	
-	///////////
-	
 	public HashMap<String, Armor> getArmorEquipped(){
 		return armorEquipped;
 	}
@@ -209,15 +255,6 @@ public class Gear {
 		return armorRemoved;
 	}
 	
-	protected boolean createArmorSlot(String slot){
-		if(armorEquipped.containsKey(slot)){
-			TextTools.display("The armor slot " + slot + " already exists.");
-			return false;
-		}
-		armorEquipped.put(slot, null);
-		return true;
-	}
-	
 	public Armor getArmor(String slot){
 		return armorEquipped.get(slot);
 	}
@@ -226,57 +263,49 @@ public class Gear {
 	////////
 	
 	public HashMap<String, Weapon> getEquippedWeapons(){
-		return equippedWeapons;
+		return weaponsCarried;
 	}
 
 	public ArrayList<String> getWeaponSlots(){
 		ArrayList<String> slots = new ArrayList<String>();
-		for (String key : equippedWeapons.keySet()){
+		for (String key : weaponsCarried.keySet()){
 			slots.add(key);
 		}
 		return slots;
 	}
 	public Weapon getWeapon(String slot){
-		return equippedWeapons.get(slot);
+		return weaponsCarried.get(slot);
 	}
 	
 	public boolean addWeapon(String slot, Weapon weapon){
-		if (!equippedWeapons.containsKey(slot)){
+		if (!weaponsCarried.containsKey(slot)){
 			TextTools.display("ERROR weapon slot does not exist");
 			return false;
-		} else if ((equippedWeapons.get(slot) != null)) {
+		} else if ((weaponsCarried.get(slot) != null)) {
 			TextTools.display(weapon.name() + " cannot be equipped because that slot is occupied");
 			return false;
 		} else {
-			equippedWeapons.put(slot, weapon);
+			weaponsCarried.put(slot, weapon);
 			return true;
 		}
 	}
 	
 	public boolean removeWeapon(String slot){
-		if(equippedWeapons.get(slot) == null){
+		if(weaponsCarried.get(slot) == null){
 			return false;
 		}
-		equippedWeapons.put(slot, null);
+		weaponsCarried.put(slot, null);
 		return true;
 	}
 	
-	protected boolean createWeaponSlot(String slot){
-		if(equippedWeapons.containsKey(slot)){
-			TextTools.display("The weapon slot " + slot + " already exists.");
-			return false;
-		}
-		equippedWeapons.put(slot, null);
-		return true;
-	}
 	protected boolean selectLocationToEquip(Weapon newWeapon){
 		String question = "Where would you like to equip the weapon";
-		String[] weaponSlots = new String[equippedWeapons.size()];
-		String[] answers = new String[equippedWeapons.size() + 1];
+		String[] weaponSlots = new String[weaponsCarried.size()];
+		String[] answers = new String[weaponsCarried.size() + 1];
 		int i = 0;
-		for (String key : equippedWeapons.keySet()){
+		for (String key : weaponsCarried.keySet()){
 			weaponSlots[i] = key;
-			Weapon currentWeapon = equippedWeapons.get(key);
+			Weapon currentWeapon = weaponsCarried.get(key);
 			if (currentWeapon == null){
 				answers[i] = key + " [empty]";
 			} else {

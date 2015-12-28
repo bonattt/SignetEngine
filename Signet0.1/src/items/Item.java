@@ -37,8 +37,12 @@ public abstract class Item {
 		return description;
 	}
 	
-	
-	public boolean equals(Item item) {
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof Item)) {
+			return false;
+		}
+		Item item = (Item) o;
 		return (this.size == item.size) &&
 				(this.weight == item.weight) &&
 				(this.durability == item.durability) &&

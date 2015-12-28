@@ -38,7 +38,7 @@ public class UnitTestItemContainer {
 	public void testPossitiveContentsEqual() {
 		ItemContainer bag1 = Inventory.getStartingBackpack();
 		ItemContainer bag2 = Inventory.getStartingBackpack();
-		Item obj1 = new Armor(2, 2, 2, 2, 0, "name", "description");
+		Item obj1 = new Armor(2, 2, 2, 2, 0, "_slot_", "name", "description");
 		bag1.addItem(obj1);
 		bag2.addItem(obj1);
 		assertTrue(bag1.contentsEqual(bag2));
@@ -49,7 +49,7 @@ public class UnitTestItemContainer {
 	public void testNegativeContentsEqual() {
 		ItemContainer bag1 = Inventory.getStartingBackpack();
 		ItemContainer bag2 = Inventory.getStartingBackpack();
-		Item obj1 = new Armor(2, 2, 2, 2, 0, "name", "description");
+		Item obj1 = new Armor(2, 2, 2, 2, 0, "_slot2_", "name", "description");
 		bag1.addItem(obj1);
 		assertTrue(! bag1.contentsEqual(bag2));
 		assertTrue(! bag2.contentsEqual(bag1));

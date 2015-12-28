@@ -14,12 +14,12 @@ import items.LightSource;
 import items.Ointment;
 import items.MeleeWeapon;
 import items.RangedWeapon;
+import items.Weapon;
 import items.WornItem;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -397,7 +397,7 @@ public class UnitTestSaveAndLoad {
 	}
 	@Test
 	public void testItem_WornItemSaveLoad() {
-		WornItem saved = new WornItem(10, 10, 20, 0, 0, "clothing", "nice clothing");
+		WornItem saved = new WornItem(10, 10, 20, 0, 0, "_slot_", "clothing", "nice clothing");
 		
 		PrintWriter writer;
 		try {
@@ -425,7 +425,7 @@ public class UnitTestSaveAndLoad {
 			ItemContainer saved = Inventory.getStartingBackpack();
 			MeleeWeapon wpn1 = new MeleeWeapon(1, 1, 1, 1, "item_name", "item_description");
 			MeleeWeapon wpn2 = new MeleeWeapon(2, 2, 2, 2, "item_name", "item_description");
-			WornItem clothing = new WornItem(10, 10, 10, 2, 0, "item_name", "item_description");
+			WornItem clothing = new WornItem(10, 10, 10, 2, 0, "_slot_", "item_name", "item_description");
 			
 			saved.addItem(wpn1);
 			saved.addItem(wpn2);
@@ -458,7 +458,7 @@ public class UnitTestSaveAndLoad {
 			ItemContainer saved = Inventory.getStartingBackpack();
 			MeleeWeapon wpn1 = new MeleeWeapon(1, 1, 1, 1, "item_name", "item_description");
 			MeleeWeapon wpn2 = new MeleeWeapon(2, 2, 2, 2, "item_name", "item_description");
-			WornItem clothing = new WornItem(10, 10, 10, 2, 0, "item_name", "item_description");
+			WornItem clothing = new WornItem(10, 10, 10, 2, 0, "_slot_", "item_name", "item_description");
 			
 			saved.addItem(wpn1);
 			saved.addItem(wpn2);
@@ -506,7 +506,7 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testItem_ArmorSaveLoad() {
 		try {
-			Armor saved = new Armor(1000, 1000, 25, 10, 0, "item_name", "item_description");
+			Armor saved = new Armor(1000, 1000, 25, 10, 0, "armor_slot", "armor_name", "armor_description");
 			PrintWriter writer = new PrintWriter(filePath);
 			saved.saveToFile(writer);
 			writer.close();
@@ -525,7 +525,7 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testArmor2() {
 		try {
-			Armor saved = new Armor(100, 100, 15, 5, 1, "armor_name", "this armor is shiney");
+			Armor saved = new Armor(100, 100, 15, 5, 1, "armor_slot", "armor_name", "this armor is shiney");
 			PrintWriter writer = new PrintWriter(filePath);
 			saved.saveToFile(writer);
 			writer.close();
@@ -648,32 +648,33 @@ public class UnitTestSaveAndLoad {
 	
 	
 //	@Test
-	public void testGearSaveLoad(){
+	public void testGearSaveLoad() throws FileNotFoundException{
+
+		HashMap<String, Weapon> weapons = new HashMap<String, Weapon>();
+		HashMap<String, WornItem> clothing = new HashMap<String, WornItem>();
+		HashMap<String, Armor> armor = new HashMap<String, Armor>();
+		weapons.put("test_slot", null);
+		weapons.put("empty_slot", null);
+		clothing.put("shirt", null);
+		clothing.put("pants", null);
+		armor.put("main-armor", null);
 		
-		try {
-			Gear saved = new Gear();
-			System.out.println(saved.getArmorSlots());
-			System.out.println(saved.getWeaponSlots());
-			System.out.println(saved.getClothingSlots());
-			
-			saved.addWeapon("test slot", SampleWeapons.getSampleSword());
-			saved.equipArmor(SampleArmor.getSampleHelmet());
-			saved.equipClothing(SampleClothing.getSampleShirt());
-			
-			PrintWriter writer;
-			writer = new PrintWriter(filePath);
-			saved.saveToFile(writer);
-			writer.close();
-			Scanner scanner = new Scanner(new File(filePath));
-			Gear loaded = Gear.loadAlpha0_1fromFile(scanner);
-			scanner.close();
-			
-			assertArrayEquals(saved.getStatMods(), loaded.getStatMods());
-			
-		} catch (FileNotFoundException e) {
-			fail("exception thrown");
-		}
+		Gear saved = new Gear(weapons, clothing, armor);
+//		System.out.println(saved.getArmorSlots());
+//		System.out.println(saved.getWeaponSlots());
+//		System.out.println(saved.getClothingSlots());
+		saved.addWeapon("test_slot", SampleWeapons.getSampleSword());
+		saved.equipArmor(SampleArmor.getSampleHelmet());
+		saved.equipClothing(SampleClothing.getSampleShirt());
 		
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveToFile(writer);
+		writer.close();
+		Scanner scanner = new Scanner(new File(filePath));
+		Gear loaded = Gear.loadAlpha0_1(scanner);
+		scanner.close();
+		
+		assertEquals(saved, loaded);
 	}
 }
 

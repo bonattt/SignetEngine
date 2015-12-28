@@ -41,8 +41,7 @@ public class CharacterMother {
 		}
 	}
 	private static void equipDick(PlayerCharacter dickDefenderOfLife){
-		dickDefenderOfLife.getInventory().initializeScifiEquipmentSlots(dickDefenderOfLife.getInventory().getEquipment());
-		dickDefenderOfLife.getInventory().equipWeapon("holster", SampleWeapons.getSamplePistol());
+		dickDefenderOfLife.getInventory().equipWeapon("boot-holster", SampleWeapons.getSamplePistol());
 		dickDefenderOfLife.getInventory().getEquipment().equipClothing(SampleClothing.getSampleShirt());
 		dickDefenderOfLife.getInventory().getEquipment().equipArmor(SampleArmor.getSampleArmorJacket());
 		dickDefenderOfLife.getInventory().pickUpWeapon(SampleWeapons.getSampleAssaultRifle());
