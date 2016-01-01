@@ -8,19 +8,10 @@ import java.util.Scanner;
 import misc.DeathException;
 import creatures.Creature;
 import environment.GameClock;
-import bodyparts.*;
 
 public class Body {
 
 	private static final double HEALING_CONSTANT = .005;
-	private static final String[][] RANDOM_WOUND_TABLE = new String[][]{
-		{"right hand", "left hand", "right foot", "left foot", "right arm", "left arm", "right hand", "left hand", "right hand", "left hand"},
-		{"right hand", "left hand", "right hand", "left arm", "right arm", "left arm", "right hand", "left hand", "right arm", "left arm"},
-		{"right arm", "left arm", "left shoulder", "right shoulder", "belly", "right leg", "left leg", "right arm", "left arm", "belly"},
-		{"right arm", "left arm", "belly", "chest", "right shoulder", "left shoulder", "belly", "chest", "right arm", "head"},
-		{"belly", "belly", "belly", "belly", "chest", "chest", "chest", "head", "head", "head"},
-		{"belly", "chest", "head", "head", "head", "head", "head", "head", "head", "head"}		
-	};
 		
 	private Creature creature;
 	private int healthDamage, stunDamage;
@@ -30,7 +21,7 @@ public class Body {
 	
 	public HashMap<String, BodyPart> bodyparts;
 	
-	public Body(Creature c){
+	public Body(Creature c, HashMap<String, BodyPart> bodyparts){
 		creature = c;
 		fatigueActual = 1;
 		fatigueEffective = 1;
@@ -38,22 +29,7 @@ public class Body {
 		painEffective = 1;
 		healthDamage = 0;
 		stunDamage = 0;
-		
-		bodyparts = new HashMap<String, BodyPart>();
-		bodyparts.put("head", new Head("head"));
-		bodyparts.put("back", new UpperBody("back"));
-		bodyparts.put("chest", new UpperBody("chest"));
-		bodyparts.put("belly", new UpperBody("belly"));
-		bodyparts.put("left arm", new Arm("left arm"));
-		bodyparts.put("right arm", new Arm("right arm"));
-		bodyparts.put("left leg", new Leg("left leg"));
-		bodyparts.put("right leg", new Leg("right leg"));
-		bodyparts.put("left hand", new Hand("left hand"));
-		bodyparts.put("right hand", new Hand("right hand"));
-		bodyparts.put("left foot", new Foot("left foot"));
-		bodyparts.put("right foot", new Foot("right foot"));
-		bodyparts.put("right shoulder", new Shoulder("right shoulder"));
-		bodyparts.put("left shoulder", new Shoulder("left shoulder"));
+		this.bodyparts = bodyparts;
 	}
 	
 	public int getHealthDamage(){

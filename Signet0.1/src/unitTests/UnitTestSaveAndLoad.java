@@ -101,9 +101,10 @@ public class UnitTestSaveAndLoad {
 	}
 	
 	@Test
-	public void testPlayerDamageMultipliersLoad() throws FileNotFoundException, NoSuchMethodException,
-			SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchFieldException, InventoryException {
+	public void testPlayerDamageMultipliersLoad() 
+			throws FileNotFoundException, NoSuchMethodException,
+				SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+				NoSuchFieldException, InventoryException {
 		
 		PlayerCharacter saved = CharacterMother.getDickDefenderOfLife();
 		PrintWriter writer = new PrintWriter(filePath);
@@ -152,94 +153,12 @@ public class UnitTestSaveAndLoad {
 			assertEquals(saved.getStat(key), (int) loadedMap.get(key));
 		}
 		assertEquals(Creature.ABILITIES.length, loadedMap.size());
-		
-		
-	}
-
-	@Test
-	public void testBodyBasicSaveLoad() throws InventoryException {
-		try {
-			Body bodSaved = getStartingBody();
-			Body bodLoaded = getLoadedBody(bodSaved);
-			
-			Field field = Body.class.getDeclaredField("healthDamage");
-			field.setAccessible(true);
-			assertEquals(field.getInt(bodSaved), field.getInt(bodLoaded));
-
-			field = Body.class.getDeclaredField("stunDamage");
-			field.setAccessible(true);
-			assertEquals(field.getInt(bodSaved), field.getInt(bodLoaded));
-
-			field = Body.class.getDeclaredField("fatigueActual");
-			field.setAccessible(true);
-			assertEquals(field.getDouble(bodSaved), field.getDouble(bodLoaded), .001);
-
-			field = Body.class.getDeclaredField("painActual");
-			field.setAccessible(true);
-			assertEquals(field.getDouble(bodSaved), field.getDouble(bodLoaded), .001);
-			
-			assertEquals(bodSaved.bodyparts.size(), bodLoaded.bodyparts.size());
-			assertEquals(bodSaved.getStatMods().length, bodLoaded.getStatMods().length);
-			
-			field = Body.class.getDeclaredField("creature");
-			field.setAccessible(true);
-			assertEquals(((Creature) field.get(bodSaved)).name, ((Creature) field.get(bodLoaded)).name);
-		
-		} catch (NoSuchFieldException e) {
-			fail("exception thrown.");
-		} catch (SecurityException e) {
-			fail("exception thrown.");
-		} catch (IllegalArgumentException e) {
-			fail("exception thrown");
-		} catch (IllegalAccessException e) {
-			fail("exception thrown");
-		} catch (FileNotFoundException e) {
-			fail("exception thrown");
-		}
-	}
-	@Test
-	public void testBodyBodypartsSaveLoad() throws InventoryException{
-		try {
-			Body bodSaved = getStartingBody();
-			Body bodLoaded = getLoadedBody(bodSaved);
-			
-			assertEquals(bodSaved.bodyparts.keySet(), bodLoaded.bodyparts.keySet());
-			assertEquals(bodSaved.bodyparts.entrySet(), bodLoaded.bodyparts.entrySet());
-		
-		} catch (NoSuchFieldException e) {
-			fail("exception thrown.");
-		} catch (SecurityException e) {
-			fail("exception thrown.");
-		} catch (IllegalArgumentException e) {
-			fail("exception thrown");
-		} catch (IllegalAccessException e) {
-			fail("exception thrown");
-		} catch (FileNotFoundException e) {
-			fail("exception thrown");
-		}
-	}
-	private Body getStartingBody() throws IllegalArgumentException, NoSuchFieldException,
-			SecurityException, IllegalAccessException, InventoryException {
-		PlayerCharacter dick = CharacterMother.getDickDefenderOfLife();
-		Field field = Creature.class.getDeclaredField("body");
-		field.setAccessible(true);
-		return (Body) field.get(dick);
-	}
-	private Body getLoadedBody(Body bodSaved) throws FileNotFoundException{
-		PrintWriter writer = new PrintWriter(filePath);
-		bodSaved.saveToFile(writer);
-		writer.close();
-	
-		Scanner scanner = new Scanner(new File(filePath));
-		Body bodLoaded = Body.loadAlpha1_0fromFile(scanner);
-		scanner.close();
-		return bodLoaded;
 	}
 
 	
 	@Test
 	public void testBodypartUninjuredSaveLoad() throws FileNotFoundException {
-		BodyPart saved = new BodyPart("limb", 1.5, .75, 1, new double[]{1,1,1,1,1,1,1,1,1,1});
+		BodyPart saved = new BodyPart("limb", 1.5, .75);
 		PrintWriter writer = new PrintWriter(filePath);
 		saved.saveToFile(writer);
 		writer.close();
@@ -253,7 +172,7 @@ public class UnitTestSaveAndLoad {
 
 	@Test
 	public void testWoundSaveLoad() throws FileNotFoundException {
-		BodyPart testBodypart = new BodyPart("_body_", 1, 1, 1, new double[]{});
+		BodyPart testBodypart = new BodyPart("_body_", 1, 1);
 		Wound saved = Injuries.getSlashingWound(3, testBodypart);
 		PrintWriter writer = new PrintWriter(filePath);
 		saved.saveToFile(writer);

@@ -1,6 +1,7 @@
 package creatures;
 
 import health.Body;
+import health.BodyPart;
 import inventory.Inventory;
 
 import java.io.PrintWriter;
@@ -14,8 +15,10 @@ public class PlayerCharacter extends Creature  {
 
 	private static PlayerCharacter instance = null; 
 	
-	public PlayerCharacter(String creatureName, HashMap<String, Integer> baseStats, HashMap<String, Integer> damageMultipliers, HashMap<String, Skill> startingSkills) {
-		super(creatureName, baseStats, damageMultipliers, startingSkills);
+	public PlayerCharacter(String creatureName, HashMap<String, Integer> baseStats,
+			HashMap<String, Integer> damageMultipliers, HashMap<String, Skill> startingSkills,
+			HashMap<String, BodyPart> bodyparts) {
+		super(creatureName, baseStats, damageMultipliers, startingSkills, bodyparts);
 	}
 	public static PlayerCharacter getInstance(){
 		if (instance == null){
@@ -36,7 +39,8 @@ public class PlayerCharacter extends Creature  {
 		HashMap<String, Integer> baseStats = loadAlpha0_1stats(scanner);
 		HashMap<String, Integer> damageMultipliers = loadAlpha0_1damageMultipliers(scanner);
 		HashMap<String, Skill> skills = loadAlpha0_1skills(scanner);
-		PlayerCharacter player = new PlayerCharacter(name, baseStats, damageMultipliers, skills);
+		HashMap<String, BodyPart> bodyparts = null;
+		PlayerCharacter player = new PlayerCharacter(name, baseStats, damageMultipliers, skills, bodyparts);
 		Body body = null;
 		Inventory inv = null;
 		if(Environment.print_debugs){

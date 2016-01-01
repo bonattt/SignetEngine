@@ -128,7 +128,6 @@ public class Wound {
 				(this.severity == wound.severity) &&
 				(this.originalSeverity == wound.originalSeverity) &&
 				(this.damageType == wound.damageType) &&
-				(this.location == wound.location) &&
 				(Arrays.equals(this.healthDamage, (wound.healthDamage))) &&
 				(Arrays.equals(this.stunDamage, (wound.stunDamage))) &&
 				(Arrays.equals(this.fatigueDamage, (wound.fatigueDamage))) &&
@@ -172,7 +171,37 @@ public class Wound {
 		Wound wound = new Wound(randomize, originalSeverity, damageType, names, woundLocation, healthDamage,
 				stunDamage, fatigueDamage, damageRate, instHealthDamage, instStun, instFatigue, healTime,
 				infection, pain, cripple);
+		wound.loadOintmentAlpha0_1(scanner);
+		wound.loadBandageAlpha0_1(scanner);
+		wound.loadInfectionAlpha0_1(scanner);
 		return wound;
+	}
+	
+	private void loadOintmentAlpha0_1(Scanner scanner) {
+		String line = scanner.nextLine();
+		if (line.equals("no ointment")) {
+			this.ointment = null;
+		} else {
+			this.ointment = (Ointment) Ointment.loadOintmentAlpha0_1(scanner);
+		}
+	}
+
+	private void loadBandageAlpha0_1(Scanner scanner) {
+		String line = scanner.nextLine();
+		if (line.equals("no bandage")) {
+			this.bandage = null;
+		} else {
+			this.bandage = (Bandage) Bandage.loadBandageAlpha0_1(scanner);
+		}
+	}
+	
+	private void loadInfectionAlpha0_1(Scanner scanner) {
+		String line = scanner.nextLine();
+		if (line.equals("no infection")) {
+			this.infection = null;
+		} else {
+			this.infection = Infection.loadAlpha0_1(scanner);
+		}
 	}
 	
 	private static String[] loadStrArray(Scanner scanner) {
@@ -224,21 +253,25 @@ public class Wound {
 		writer.println(bleedingClock);
 		writer.println(infectionClock);
 		
+		
 		if(ointment == null){
 			writer.println("no ointment");
 		} else {
+			writer.println("ointment");
 			ointment.saveToFile(writer);
 		}
 		
 		if (bandage == null){
 			writer.println("no bandage");
 		} else {
+			writer.println("bandage");
 			bandage.saveToFile(writer);
 		}
 		
 		if (infection == null){
 			writer.println("no infection");
 		} else {
+			writer.println("infection");
 			infection.saveToFile(writer);
 		}
 	}

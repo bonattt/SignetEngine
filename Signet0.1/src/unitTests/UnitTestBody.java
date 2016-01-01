@@ -1,5 +1,7 @@
 package unitTests;
 
+import java.lang.reflect.Field;
+
 import inventory.InventoryException;
 import health.Body;
 import health.BodyPart;
@@ -12,6 +14,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import creatures.Creature;
 import testingMothers.CharacterMother;
 
 
@@ -20,8 +23,13 @@ public class UnitTestBody {
 	private Body body;
 	
 	@Before
-	public void setup() throws InventoryException{
-		body = new Body(CharacterMother.getDickDefenderOfLife());
+	public void setup()
+			throws InventoryException, NoSuchFieldException, SecurityException, IllegalArgumentException,
+				IllegalAccessException {
+		Creature dick = CharacterMother.getDickDefenderOfLife();
+		Field f = Creature.class.getDeclaredField("body");
+		f.setAccessible(true);
+		body = (Body) f.get(dick);
 	}
 	
 	@Test

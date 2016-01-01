@@ -1,6 +1,7 @@
 package health;
 
 import java.io.PrintWriter;
+import java.util.Scanner;
 
 import misc.DiceRoller;
 /**
@@ -52,6 +53,10 @@ public class Infection {
 		dicePool = strength;
 		timeIncrement = DEFAULT_TIME_INCREMENT;
 		timePassed = 0;
+	}
+	
+	public static Infection loadAlpha0_1(Scanner scanner) {
+		return null;
 	}
 	
 	public void saveToFile(PrintWriter writer){

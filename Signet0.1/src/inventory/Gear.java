@@ -23,11 +23,11 @@ public class Gear {
 	private HashMap<String, Armor> armorEquipped;		// body slot (str) --> armor (armor)
 	private HashMap<String, Weapon> weaponsCarried;	// slot name (str) --> item slot (ItemSlot)
 	
-	public Gear(HashMap<String, Weapon> weaponsSlots, HashMap<String, WornItem> clothingSlots,
+	public Gear(HashMap<String, Weapon> weaponSlots, HashMap<String, WornItem> clothingSlots,
 			HashMap<String, Armor> armorSlots) {
 		clothingWorn = clothingSlots;
 		armorEquipped = armorSlots;
-		weaponsCarried = weaponsSlots;
+		weaponsCarried = weaponSlots;
 		stats = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		totalWeight = 0;
 	}

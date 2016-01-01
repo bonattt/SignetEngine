@@ -12,20 +12,17 @@ import java.util.Scanner;
 public class BodyPart {
 	
 	protected ArrayList<Wound> injuries = new ArrayList<Wound>();
-	protected double damageMultiplier, painMultiplier, cripplingMultiplier;
-	protected double[] statMultipliers;
+	protected double damageMultiplier, painMultiplier;
 	public String name;
 	private Armor naturalArmor;
 	
-	public BodyPart(String name, double damageRate, double painRate, double cripplingRate, double[]statMultipliers){
-		this(name, damageRate, painRate, cripplingRate, statMultipliers, null);
+	public BodyPart(String name, double damageRate, double painRate){
+		this(name, damageRate, painRate, null);
 	}
-	public BodyPart(String name, double damage, double pain, double crippling, double[]statMultipliers, Armor naturalArmor){
+	public BodyPart(String name, double damage, double pain, Armor naturalArmor){
 		this.name = name;
 		this.damageMultiplier = damage;
 		this.painMultiplier = pain;
-		this.statMultipliers = statMultipliers;
-		this.cripplingMultiplier = crippling;
 		this.naturalArmor = naturalArmor;
 	}
 	public int getWoundCount(){
@@ -35,17 +32,14 @@ public class BodyPart {
 		return injuries;
 	}
 	public static BodyPart loadAlpha0_1(Scanner scanner){
-		double damageMultiplier, painMultiplier, cripplingMultiplier;
-		double[] statMultipliers;
+		double damageMultiplier, painMultiplier;
 		String name = scanner.nextLine();
 		damageMultiplier = scanner.nextDouble();
 		painMultiplier = scanner.nextDouble();
-		cripplingMultiplier = scanner.nextDouble();
-		statMultipliers = loadStatMultipliersAlpha0_1(scanner);
+		scanner.nextLine();
 		Armor naturalArmor = loadNaturalArmorAlpha0_1(scanner);
 		
-		BodyPart bodypart = new BodyPart(name, damageMultiplier, painMultiplier, cripplingMultiplier, statMultipliers,
-				naturalArmor);
+		BodyPart bodypart = new BodyPart(name, damageMultiplier, painMultiplier, naturalArmor);
 		bodypart.loadInjuriesAlpha0_1(scanner);
 		return bodypart;
 	}
@@ -80,8 +74,6 @@ public class BodyPart {
 		writer.println(name);
 		writer.println(damageMultiplier);
 		writer.println(painMultiplier);
-		writer.println(cripplingMultiplier);
-		saveStatMultiplier(writer);
 		if (naturalArmor == null){
 			writer.println("no natural armor");
 		} else {
@@ -89,13 +81,6 @@ public class BodyPart {
 			naturalArmor.saveToFile(writer);
 		}
 		saveInjuriesAlpha0_1(writer);
-	}
-	private void saveStatMultiplier(PrintWriter writer) {
-		writer.print(statMultipliers.length);
-		for (int i = 0; i < statMultipliers.length; i++) {
-			writer.print(" " + statMultipliers[i]);
-		}
-		writer.println();
 	}
 	
 	private void saveInjuriesAlpha0_1(PrintWriter writer){
@@ -117,9 +102,6 @@ public class BodyPart {
 	}
 	protected double getDamageMultiplier(){
 		return damageMultiplier;
-	}
-	protected double getCripplingMultiplier(){
-		return cripplingMultiplier;
 	}
 
 	public double[] passTime(int timePassed, double healingFactor, boolean resting) {
@@ -206,8 +188,6 @@ public class BodyPart {
 		return (bodypart.name.equals(this.name)) &&
 				(bodypart.damageMultiplier == this.damageMultiplier) &&
 				(bodypart.painMultiplier == this.painMultiplier) &&
-				(Arrays.equals(bodypart.statMultipliers, this.statMultipliers)) &&
-				(bodypart.cripplingMultiplier == this.cripplingMultiplier) &&
 				(this.equalWounds(bodypart));
 	}
 	
@@ -218,7 +198,8 @@ public class BodyPart {
 		}
 		for(int i = 0; i < this.injuries.size(); i++) {
 			Wound current = this.injuries.get(i);
-			if (! bodypart.injuries.contains(current)) {
+			Wound other = bodypart.injuries.get(i);
+			if (! current.equals(other)) {
 				return false;
 			}
 		}

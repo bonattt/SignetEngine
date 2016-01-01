@@ -1,5 +1,6 @@
 package testingMothers;
 
+import health.BodyPart;
 import health.DamageType;
 import health.Wound;
 import inventory.InventoryException;
@@ -25,11 +26,32 @@ public class CharacterMother {
 		HashMap<String, Integer> baseStats = getJarredStatMap();
 		HashMap<String, Integer> damageMultipliers = getJarredDamageMultipliers();
 		HashMap<String, Skill> skills = getJarredSkills();
-		PlayerCharacter dickDefenderOfLife = new PlayerCharacter(creatureName, baseStats, damageMultipliers, skills);
+		PlayerCharacter dickDefenderOfLife = new PlayerCharacter(creatureName, baseStats,
+				damageMultipliers, skills, getBodyParts());
 		woundDick(dickDefenderOfLife);
 		equipDick(dickDefenderOfLife);
 		return dickDefenderOfLife;
 	}
+	private static HashMap<String, BodyPart> getBodyParts() {
+
+		HashMap<String,BodyPart> bodyparts = new HashMap<String, BodyPart>();
+		bodyparts.put("head", SampleBodyparts.head("head"));
+		bodyparts.put("back", SampleBodyparts.upperBody("back"));
+		bodyparts.put("chest", SampleBodyparts.upperBody("chest"));
+		bodyparts.put("belly", SampleBodyparts.upperBody("belly"));
+		bodyparts.put("left arm", SampleBodyparts.arm("left arm"));
+		bodyparts.put("right arm", SampleBodyparts.arm("right arm"));
+		bodyparts.put("left leg", SampleBodyparts.leg("left leg"));
+		bodyparts.put("right leg", SampleBodyparts.leg("right leg"));
+		bodyparts.put("left hand", SampleBodyparts.hand("left hand"));
+		bodyparts.put("right hand", SampleBodyparts.hand("right hand"));
+		bodyparts.put("left foot", SampleBodyparts.foot("left foot"));
+		bodyparts.put("right foot", SampleBodyparts.foot("right foot"));
+		bodyparts.put("right shoulder", SampleBodyparts.shoulder("right shoulder"));
+		bodyparts.put("left shoulder", SampleBodyparts.shoulder("left shoulder"));
+		return bodyparts;
+	}
+	
 	private static void woundDick(PlayerCharacter dickDefenderOfLife){
 		try {
 			dickDefenderOfLife.recieveWound(4, DamageType.SLASHING, "left arm");

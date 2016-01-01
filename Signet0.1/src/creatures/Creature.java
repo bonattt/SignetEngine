@@ -31,14 +31,15 @@ public abstract class Creature {
 	private HashMap<String,Integer> damageMultipliers;
 	private HashMap<String, Skill> skills;
 	
-	public Creature(String creatureName, HashMap<String,Integer> baseStats, HashMap<String,Integer> damageMultipliers, HashMap<String, Skill> startingSkills){
+	public Creature(String creatureName, HashMap<String,Integer> baseStats, HashMap<String,Integer> damageMultipliers,
+			HashMap<String, Skill> startingSkills, HashMap<String, BodyPart> bodyparts){
 		this.name = creatureName;
 		this.damageMultipliers = damageMultipliers;
 		stats_base = baseStats;
 		stats_adjusted = stats_base; // TODO make this a deep copy, then make it actually modify stats.
 		skills = startingSkills;
 		inv = new Inventory();
-		body = new Body(this);
+		body = new Body(this, bodyparts);
 	}
 	
 	// Selects the combat action that will be used in a fight. PC's prompt for user input, NPC's (Monster) use algorithms.

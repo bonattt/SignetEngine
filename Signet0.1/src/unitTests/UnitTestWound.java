@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import testingMothers.SampleBodyparts;
 import health.BodyPart;
 import health.Injuries;
 import health.Wound;
 import health.DamageType;
-import bodyparts.*;
 
 public class UnitTestWound {
 	
@@ -23,7 +23,7 @@ public class UnitTestWound {
 	
 	@Before
 	public void setup(){
-		testBodypart = new Arm("generic arm");
+		testBodypart = SampleBodyparts.arm("arm");
 		wound = Injuries.getSlashingWound(3, testBodypart, false);
 	}
 	

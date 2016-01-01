@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import testingMothers.SampleArmor;
-import bodyparts.Arm;
 
 public class UnitTestBodyPart {
 	
@@ -18,7 +17,7 @@ public class UnitTestBodyPart {
 	
 	@Before
 	public void setUp(){
-		testBodypart = new Arm("arm");
+		testBodypart = new BodyPart("arm", 1, 1);
 	}
 	
 	@Test
@@ -65,7 +64,7 @@ public class UnitTestBodyPart {
 	
 	@Test
 	public void notEqual() {
-		BodyPart example = new BodyPart("naiownd", 100, 100, 100, new double[]{1, 2, 3});
+		BodyPart example = new BodyPart("naiownd", 100, 100);
 		assertNotEquals(testBodypart, example);
 	}
 	

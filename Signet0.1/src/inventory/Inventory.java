@@ -25,14 +25,15 @@ public class Inventory {
 		equipment = initializeGear();
 		backpack = getStartingBackpack();
 		equippedWeapon = null;
+		updateCarriedWeight();
 	}
 	
-	public Inventory(LightSource lightCarried, Weapon weaponCarried, Gear equipment, ItemContainer backpack, int weight) {
+	public Inventory(LightSource lightCarried, Weapon weaponCarried, Gear equipment, ItemContainer backpack) {
 		this.equipment = equipment;
 		this.equippedWeapon = weaponCarried;
 		this.lightSource = lightCarried;
 		this.backpack = backpack;
-		carriedWeight = weight;
+		updateCarriedWeight();
 	}
 	
 	private static Gear initializeGear() {
@@ -118,7 +119,7 @@ public class Inventory {
 		}
 		return false;
 	}
-	public static Inventory loadAlpha1_0fromFile(Scanner scanner) throws GameLoadException {
+	public static Inventory loadAlpha1_0(Scanner scanner) throws GameLoadException {
 		int weight = scanner.nextInt();
 		scanner.nextLine();
 		ItemContainer pack = ItemContainer.loadAlpha0_1(scanner);
@@ -143,7 +144,7 @@ public class Inventory {
 			weapon = (Weapon) Item.loadAlpha0_1(scanner, line);
 		}
 		
-		return new Inventory(light, weapon, gear, pack, weight);
+		return new Inventory(light, weapon, gear, pack);
 	}
 	
 	public void saveToFile(PrintWriter writer){

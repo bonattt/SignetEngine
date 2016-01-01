@@ -1,5 +1,7 @@
 package testingMothers;
 
+import health.BodyPart;
+
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -10,9 +12,15 @@ import creatures.Skill;
 public class TestMonster extends Creature {
 	
 	public TestMonster() {
-		super("generic-saurace-rex", getGenericMonsterStats(), new HashMap<String, Integer>(), getStartingSkills());
+		super("generic-saurace-rex", getGenericMonsterStats(), new HashMap<String,
+				Integer>(), getStartingSkills(), getBodyParts());
 	}
 
+	public static HashMap<String, BodyPart> getBodyParts() {
+		HashMap<String, BodyPart> bodyparts = new HashMap<String, BodyPart>();
+		return bodyparts;
+	}
+	
 	@Override
 	public void die() throws DeathException {
 		throw new DeathException("You killed the generic-saurace-rex!!", false);

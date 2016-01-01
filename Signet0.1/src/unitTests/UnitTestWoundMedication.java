@@ -13,7 +13,6 @@ import health.Wound;
 import org.junit.Before;
 import org.junit.Test;
 
-import bodyparts.Arm;
 
 public class UnitTestWoundMedication {
 
@@ -21,7 +20,7 @@ public class UnitTestWoundMedication {
 	
 	@Before
 	public void setup(){
-		genericBodypart = new Arm("arm");
+		genericBodypart = new BodyPart("limb", 1, 1);
 	}
 	@Test
 	public void testWoundDealsLessDamageIfBandaged(){
