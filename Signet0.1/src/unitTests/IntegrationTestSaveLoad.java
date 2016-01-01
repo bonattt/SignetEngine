@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -26,6 +27,7 @@ import misc.GameLoadException;
 
 import org.junit.Test;
 
+import creatures.Creature;
 import creatures.PlayerCharacter;
 import testingMothers.CharacterMother;
 import testingMothers.SampleArmor;
@@ -120,8 +122,22 @@ public class IntegrationTestSaveLoad {
 	}
 	
 	@Test
-	public void bodySaveLoad() throws InventoryException {
-		PlayerCharacter dick = CharacterMother.getDickDefenderOfLife();
+	public void bodySaveLoad()
+			throws InventoryException, NoSuchFieldException, SecurityException,
+				IllegalArgumentException, IllegalAccessException, FileNotFoundException {
+		Creature dick = CharacterMother.getDickDefenderOfLife();
+		Field f = Creature.class.getDeclaredField("body");
+		f.setAccessible(true);
+		Body saved = (Body) f.get(dick);
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveToFile(writer);
+		writer.close();
+		
+		Scanner scanner = new Scanner(new File(filePath));
+		Body loaded = Body.loadAlpha1_0fromFile(scanner, dick);
+		scanner.close();
+		
+		assertEquals(saved, loaded);
 	}
 	
 }

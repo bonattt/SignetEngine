@@ -1,6 +1,7 @@
 package health;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Scanner;
@@ -19,7 +20,7 @@ public class Body {
 	private int[] statMods;
 	private boolean painUpToDate, statModsUpToDate;
 	
-	public HashMap<String, BodyPart> bodyparts;
+	private HashMap<String, BodyPart> bodyparts;
 	
 	public Body(Creature c, HashMap<String, BodyPart> bodyparts){
 		creature = c;
@@ -35,12 +36,36 @@ public class Body {
 	public int getHealthDamage(){
 		return healthDamage;
 	}
-	public static Body loadAlpha1_0fromFile(Scanner scanner){
-		return null;
+	public static Body loadAlpha1_0fromFile(Scanner scanner, Creature c){
+		double fatigueActual, painActual;
+		int healthDamage, stunDamage;
+		fatigueActual = scanner.nextDouble();
+		painActual = scanner.nextDouble();
+		healthDamage = scanner.nextInt();
+		stunDamage = scanner.nextInt();
+		scanner.nextLine();
+		HashMap<String, BodyPart> bodyparts = loadBodyPartsAlpha0_1(scanner);
+		
+		Body bod = new Body(c, bodyparts);
+		bod.fatigueActual = fatigueActual;
+		bod.painActual = painActual;
+		bod.healthDamage = healthDamage;
+		bod.stunDamage = stunDamage;
+		return bod;
+	}
+	
+	private static HashMap<String, BodyPart> loadBodyPartsAlpha0_1(Scanner scanner) {
+		HashMap<String, BodyPart> bodyparts = new HashMap<String, BodyPart>();
+		String line = scanner.nextLine();
+		while(! line.equals("end bodyparts")) {
+			BodyPart current = BodyPart.loadAlpha0_1(scanner);
+			bodyparts.put(line, current);
+			line = scanner.nextLine();
+		}
+		return bodyparts;
 	}
 	
 	public void saveToFile(PrintWriter writer){
-		writer.println("body");
 		writer.println(fatigueActual);
 		writer.println(painActual);
 		writer.println(healthDamage);
@@ -48,8 +73,8 @@ public class Body {
 		saveBodyPartsToFile(writer);
 	}
 	private void saveBodyPartsToFile(PrintWriter writer){
-		writer.println("bodyparts");
 		for(String key : bodyparts.keySet()){
+			writer.println(key);
 			bodyparts.get(key).saveToFile(writer);
 		}
 		writer.println("end bodyparts");
@@ -286,4 +311,40 @@ public class Body {
 		}
 		return count;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof Body)) {
+			return false;
+		}
+		Body bod = (Body) o;
+		
+		if (bod.bodyparts.size() != this.bodyparts.size()) {
+			return false;
+		}
+		for (String key : this.bodyparts.keySet()) {
+			if (! bod.bodyparts.containsKey(key)) {
+				return false;
+			}
+			if (! this.bodyparts.get(key).equals(bod.bodyparts.get(key))) {
+				return false;
+			}
+		}
+		
+		return (bod.healthDamage == this.healthDamage) &&
+				(bod.stunDamage == this.stunDamage) &&
+				(bod.fatigueActual == this.fatigueActual) &&
+				(bod.fatigueEffective == this.fatigueEffective) &&
+				(bod.painActual == this.painActual) &&
+				(bod.painEffective == this.painEffective) &&
+				(Arrays.equals(bod.statMods, this.statMods));
+	}
+//	private Creature creature;
+//	private int healthDamage, stunDamage;
+//	private double fatigueActual, fatigueEffective, painActual, painEffective;
+//	private int[] statMods;
+//	private boolean painUpToDate, statModsUpToDate;
+//	
+//	public HashMap<String, BodyPart> bodyparts;
+	
 }

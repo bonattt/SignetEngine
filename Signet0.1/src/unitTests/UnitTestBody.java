@@ -1,6 +1,7 @@
 package unitTests;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 
 import inventory.InventoryException;
 import health.Body;
@@ -30,6 +31,34 @@ public class UnitTestBody {
 		Field f = Creature.class.getDeclaredField("body");
 		f.setAccessible(true);
 		body = (Body) f.get(dick);
+	}
+	
+	@Test
+	public void equalSelf() {
+		assertEquals(body, body);
+	}
+	
+	@Test
+	public void notEqualWhenDamaged()
+			throws DeathException, NoSuchFieldException, SecurityException,
+				IllegalArgumentException, IllegalAccessException, InventoryException {
+		Body other = body;
+		other.recieveWound(1, DamageType.SLASHING, "head");
+		setup();
+		assertNotEquals(body, other);
+	}
+	
+	@Test
+	public void notEqualWithExtraBodyPart()
+			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, InventoryException {
+		Body other = body;
+		Field f = Body.class.getDeclaredField("bodyparts");
+		f.setAccessible(true);
+		@SuppressWarnings("unchecked")
+		HashMap<String, BodyPart> bp = (HashMap<String,BodyPart>) f.get(other);
+		bp.put("extra limb", new BodyPart("???", 1, 1));
+		setup();
+		assertNotEquals(body, other);
 	}
 	
 	@Test
