@@ -1,6 +1,7 @@
 package health;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -51,6 +52,14 @@ public class Wound {
 	 */	
 	public Wound(int severity, int dt, String[] names, BodyPart woundLocation, int[] health, int[] stun, int[] fatigue, int[] rate,
 			int[] instHealth, int[] instStun, int[] instFatigue, int[] healTime, int[] infection, double[] pain, int[] cripple){
+		this(true, severity, dt, names, woundLocation, health, stun, fatigue, rate, instHealth, instStun, instFatigue,
+				healTime, infection, pain, cripple);
+	}
+	public Wound(boolean randomize, int severity, int dt, String[] names, BodyPart woundLocation, int[] health,
+			int[] stun, int[] fatigue, int[] rate, int[] instHealth, int[] instStun, int[] instFatigue, int[] healTime,
+			int[] infection, double[] pain, int[] cripple){
+	
+		
 		if (severity > 7){
 			throw new IllegalArgumentException("you cannot have a wound severity higher than 7");
 		}
@@ -73,11 +82,121 @@ public class Wound {
 		chanceOfInfection = infection;
 		this.pain = pain;
 		crippling = cripple;
-		randomizeHealingTimes();
+		if (randomize) {
+			randomizeHealingTimes();
+		}
 	}
 	
-	public static Wound loadAlpha1_0fromFile(Scanner scanner){
-		return null;
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof Wound)) {
+			return false;
+		} 
+		Wound wound = (Wound) o;
+		
+		if(this.ointment == null) {
+			if (wound.ointment != null) {
+				return false;
+			}
+		} else {
+			if (! this.ointment.equals(wound.ointment)) {
+				return false;
+			}
+		}
+		
+		if(this.bandage == null) {
+			if (wound.bandage != null) {
+				return false;
+			}
+		} else {
+			if (! this.bandage.equals(wound.bandage)) {
+				return false;
+			}
+		}
+		
+		if(this.infection == null) {
+			if (wound.infection != null) {
+				return false;
+			}
+		} else {
+			if (! this.infection.equals(wound.infection)) {
+				return false;
+			}
+		}
+		
+		return (Arrays.equals(this.names, (wound.names))) &&
+				(this.severity == wound.severity) &&
+				(this.originalSeverity == wound.originalSeverity) &&
+				(this.damageType == wound.damageType) &&
+				(this.location == wound.location) &&
+				(Arrays.equals(this.healthDamage, (wound.healthDamage))) &&
+				(Arrays.equals(this.stunDamage, (wound.stunDamage))) &&
+				(Arrays.equals(this.fatigueDamage, (wound.fatigueDamage))) &&
+				(Arrays.equals(this.damageRate, (wound.damageRate))) &&
+				(Arrays.equals(this.instantHealthDamage, wound.instantHealthDamage)) &&
+				(Arrays.equals(this.instantStun, wound.instantStun)) &&
+				(Arrays.equals(this.instantFatigue, wound.instantFatigue)) &&
+				(Arrays.equals(this.recoveryTime, wound.recoveryTime)) &&
+				(Arrays.equals(this.chanceOfInfection, wound.chanceOfInfection)) &&
+				(Arrays.equals(this.pain, wound.pain)) &&
+				(Arrays.equals(this.crippling, wound.crippling));
+				
+	}
+	
+	public static Wound loadAlpha1_0fromFile(Scanner scanner, BodyPart woundLocation){
+		String[] names = loadStrArray(scanner);
+		int severity = scanner.nextInt();
+		int originalSeverity = scanner.nextInt();
+		int damageType = scanner.nextInt();
+		int[] healthDamage, stunDamage, fatigueDamage, damageRate, instHealthDamage, instStun,
+			instFatigue, healTime, infection, cripple;
+		double[] pain;
+		healthDamage = loadIntArray(scanner);
+		stunDamage = loadIntArray(scanner);
+		fatigueDamage = loadIntArray(scanner);
+		damageRate = loadIntArray(scanner);
+		instHealthDamage = loadIntArray(scanner);
+		instStun = loadIntArray(scanner);
+		instFatigue = loadIntArray(scanner);
+		healTime = loadIntArray(scanner);
+		infection = loadIntArray(scanner);
+		cripple = loadIntArray(scanner);
+		pain = loadDoubleArray(scanner);
+		
+		int recoveryClock, bleedingClock, infectionClock;
+		recoveryClock = scanner.nextInt();
+		bleedingClock = scanner.nextInt();
+		infectionClock = scanner.nextInt();
+		scanner.nextLine();
+		boolean randomize = false;
+		Wound wound = new Wound(randomize, originalSeverity, damageType, names, woundLocation, healthDamage,
+				stunDamage, fatigueDamage, damageRate, instHealthDamage, instStun, instFatigue, healTime,
+				infection, pain, cripple);
+		return wound;
+	}
+	
+	private static String[] loadStrArray(Scanner scanner) {
+		String[] array = new String[scanner.nextInt()];
+		scanner.nextLine();
+		for (int i = 0; i < array.length; i++) {
+			array[i] = scanner.nextLine();
+		}
+		return array;
+	}
+	
+	private static int[] loadIntArray(Scanner scanner) {
+		int[] array = new int[scanner.nextInt()];
+		for (int i = 0; i < array.length; i++) {
+			array[i] = scanner.nextInt();
+		}
+		return array;
+	}
+	private static double[] loadDoubleArray(Scanner scanner) {
+		double[] array = new double[scanner.nextInt()];
+		for (int i = 0; i < array.length; i++) {
+			array[i] = scanner.nextDouble();
+		}
+		return array;
 	}
 	
 	public String name() {
@@ -85,20 +204,21 @@ public class Wound {
 	}
 	
 	public void saveToFile(PrintWriter writer){
-		writer.println(names);
+		saveStrArray(writer, names);
 		writer.println(severity);
 		writer.println(originalSeverity);
 		writer.println(damageType);
-		writer.println(healthDamage);
-		writer.println(stunDamage);
-		writer.println(fatigueDamage);
-		writer.println(damageRate);
-		writer.println(instantHealthDamage);
-		writer.println(instantStun);
-		writer.println(instantFatigue);
-		writer.println(recoveryTime);
-		writer.println(chanceOfInfection);
-		writer.println(pain);
+		saveIntArray(writer, healthDamage);
+		saveIntArray(writer, stunDamage);
+		saveIntArray(writer, fatigueDamage);
+		saveIntArray(writer, damageRate);
+		saveIntArray(writer, instantHealthDamage);
+		saveIntArray(writer, instantStun);
+		saveIntArray(writer, instantFatigue);
+		saveIntArray(writer, recoveryTime);
+		saveIntArray(writer, chanceOfInfection);
+		saveIntArray(writer, crippling);
+		saveDoubleArray(writer, pain);
 		
 		writer.println(recoveryClock);
 		writer.println(bleedingClock);
@@ -121,6 +241,27 @@ public class Wound {
 		} else {
 			infection.saveToFile(writer);
 		}
+	}
+	private static void saveStrArray(PrintWriter writer, String[] array) {
+		writer.println(array.length);
+		for (int i = 0; i < array.length; i++) {
+			writer.println(array[i]);
+		}
+	}
+	
+	private static void saveIntArray(PrintWriter writer, int[] array) {
+		writer.print(array.length);
+		for (int i = 0; i < array.length; i++) {
+			writer.print(" " + array[i]);
+		}
+		writer.println();
+	}
+	private static void saveDoubleArray(PrintWriter writer, double[] array) {
+		writer.print(array.length);
+		for (int i = 0; i < array.length; i++) {
+			writer.print(" " + array[i]);
+		}
+		writer.println();
 	}
 	
 	public boolean isBandaged(){

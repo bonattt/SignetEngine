@@ -1,6 +1,9 @@
 package sampleEvents;
 
-import sampleItems.*;
+import testingMothers.SampleArmor;
+import testingMothers.SampleClothing;
+import testingMothers.SampleThingy;
+import testingMothers.SampleWeapons;
 import inventory.ItemContainer;
 
 public class SampleGenericChest extends ItemContainer {

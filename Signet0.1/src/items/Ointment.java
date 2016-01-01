@@ -42,12 +42,16 @@ public class Ointment extends FirstAidItem {
 		// TODO implement passTime		
 		return false;
 	}
-	public boolean equals(Bandage item) {
-		return false;
-	}
-	public boolean equals(Ointment item) {
+
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof Ointment)) {
+			return false;
+		}
+		Ointment item = (Ointment) o;
 		return firstAidEquals(item);
 	}
+	
 	@Override
 	public void itemBreaks() {
 		// TODO Auto-generated method stub

@@ -24,13 +24,13 @@ public class UnitTestFirstAid {
 	public void ointmentEquals() {
 		Ointment arg1 = new Ointment("ointment", "an ointment", 2.5, 2.5, 2.5);
 		Ointment arg2 = new Ointment("ointment", "an ointment", 2.5, 2.5, 2.5);
-		assertTrue(arg1.equals(arg2));
+		assertEquals(arg1, arg2);
 	}
 	@Test
 	public void bandageEquals() {
 		Bandage arg1 = new Bandage("bandage", "", 2.5, 2.5, 2.5);
 		Bandage arg2 = new Bandage("bandage", "", 2.5, 2.5, 2.5);
-		assertTrue(arg1.equals(arg2));
+		assertEquals(arg1, arg2);
 	}
 
 }

@@ -9,6 +9,7 @@ import health.Injuries;
 import org.junit.Before;
 import org.junit.Test;
 
+import testingMothers.SampleArmor;
 import bodyparts.Arm;
 
 public class UnitTestBodyPart {
@@ -19,6 +20,55 @@ public class UnitTestBodyPart {
 	public void setUp(){
 		testBodypart = new Arm("arm");
 	}
+	
+	@Test
+	public void bodyPartEqualsSelfIfInjuered() {
+		testBodypart.addNewWound(Injuries.getBluntWound(2, testBodypart));
+		testBodypart.addNewWound(Injuries.getBurnWound(3, testBodypart));
+		assertEquals(testBodypart, testBodypart);
+	}
+	
+	@Test
+	public void equalsSelfHasNatArmor()
+			throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+		Field f = BodyPart.class.getDeclaredField("naturalArmor");
+		f.setAccessible(true);
+		f.set(testBodypart, SampleArmor.getSampleArmorJacket());
+		assertEquals(testBodypart, testBodypart);
+	}
+	
+	@Test
+	public void notEqualWithInjury() {
+		BodyPart bp = testBodypart;
+		bp.addNewWound(Injuries.getBluntWound(2, testBodypart));
+		bp.addNewWound(Injuries.getBurnWound(3, testBodypart));
+		setUp();
+		assertNotEquals(bp, testBodypart);
+	}
+	
+	@Test
+	public void notEqualWithNaturalArmor()
+			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		
+		Field f = BodyPart.class.getDeclaredField("naturalArmor");
+		f.setAccessible(true);
+		f.set(testBodypart, SampleArmor.getSampleArmorJacket());
+		BodyPart bp = testBodypart;
+		setUp();
+		assertNotEquals(bp, testBodypart);
+	}
+	
+	@Test
+	public void equalsSelf() {
+		assertEquals(testBodypart, testBodypart);
+	}
+	
+	@Test
+	public void notEqual() {
+		BodyPart example = new BodyPart("naiownd", 100, 100, 100, new double[]{1, 2, 3});
+		assertNotEquals(testBodypart, example);
+	}
+	
 	@Test
 	public void testWoundDisappearWhenHealed(){
 		testBodypart.addNewWound(Injuries.getSlashingWound(2, testBodypart));

@@ -51,11 +51,13 @@ public class Bandage extends FirstAidItem{
 		return true;
 	}
 	
-	public boolean equals(Bandage item) {
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof Bandage)) {
+			return false;
+		}
+		Bandage item = (Bandage) o;
 		return firstAidEquals(item);
-	}
-	public boolean equals(Ointment item) {
-		return false;
 	}
 	
 	@Override

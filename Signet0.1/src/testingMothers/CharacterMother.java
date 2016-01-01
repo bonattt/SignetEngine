@@ -2,6 +2,7 @@ package testingMothers;
 
 import health.DamageType;
 import health.Wound;
+import inventory.InventoryException;
 import items.Bandage;
 import items.Ointment;
 
@@ -9,7 +10,6 @@ import java.util.HashMap;
 
 import misc.DeathException;
 import misc.TextTools;
-import sampleItems.*;
 import creatures.PlayerCharacter;
 import creatures.SampleSkills;
 import creatures.Skill;
@@ -19,14 +19,12 @@ import creatures.Skill;
  */
 public class CharacterMother {
 	
-	public static PlayerCharacter getDickDefenderOfLife(){
+	public static PlayerCharacter getDickDefenderOfLife() throws InventoryException{
 		// TODO implement Jarred
 		String creatureName = "Jarred";
 		HashMap<String, Integer> baseStats = getJarredStatMap();
 		HashMap<String, Integer> damageMultipliers = getJarredDamageMultipliers();
-		HashMap<String, Skill> skills = new HashMap<String, Skill>();
-		skills.put("knives", SampleSkills.knives(2));
-		skills.put("electronics", SampleSkills.electronics(3));
+		HashMap<String, Skill> skills = getJarredSkills();
 		PlayerCharacter dickDefenderOfLife = new PlayerCharacter(creatureName, baseStats, damageMultipliers, skills);
 		woundDick(dickDefenderOfLife);
 		equipDick(dickDefenderOfLife);
@@ -40,7 +38,7 @@ public class CharacterMother {
 			e.printStackTrace();
 		}
 	}
-	private static void equipDick(PlayerCharacter dickDefenderOfLife){
+	private static void equipDick(PlayerCharacter dickDefenderOfLife) throws InventoryException {
 		dickDefenderOfLife.getInventory().equipWeapon("boot-holster", SampleWeapons.getSamplePistol());
 		dickDefenderOfLife.getInventory().getEquipment().equipClothing(SampleClothing.getSampleShirt());
 		dickDefenderOfLife.getInventory().getEquipment().equipArmor(SampleArmor.getSampleArmorJacket());
@@ -51,6 +49,13 @@ public class CharacterMother {
 		dickDefenderOfLife.getInventory().store(SampleClothing.getSamplePants());
 		dickDefenderOfLife.getInventory().store(new Bandage());
 		dickDefenderOfLife.getInventory().store(new Ointment());
+	}
+	
+	private static HashMap<String, Skill> getJarredSkills() {
+		HashMap<String, Skill> skills = new HashMap<String, Skill>();
+		skills.put("knives", SampleSkills.knives(2));
+		skills.put("electronics", SampleSkills.electronics(3));
+		return skills;
 	}
 	
 	private static HashMap<String,Integer> getJarredStatMap(){

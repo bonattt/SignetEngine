@@ -1,7 +1,7 @@
 package inventory;
 
 import items.Armor;
-import items.MeleeWeapon;
+import items.Item;
 import items.Weapon;
 import items.WornItem;
 
@@ -120,34 +120,108 @@ public class Gear {
 	}
 	
 	public static Gear loadAlpha0_1(Scanner scanner){
-		return null;
+		
+		int totalWeight = scanner.nextInt();
+		scanner.nextLine();
+		HashMap<String, WornItem> clothing = loadClothingAlpha0_1(scanner);
+		HashMap<String, Armor> armor = loadArmorAlpha0_1(scanner);
+		HashMap<String, Weapon> weapons = loadWeaponAlpha0_1(scanner);
+		Gear gear = new Gear(weapons, clothing, armor);
+		return gear;
+	}
+
+	private static HashMap<String, WornItem> loadClothingAlpha0_1(Scanner scanner) {
+		HashMap<String, WornItem> clothing = new HashMap<String, WornItem>();
+		String line = scanner.nextLine();
+		while(! line.equals("end clothing")) {
+			String itemType = scanner.nextLine();
+			WornItem current;
+			if (itemType.equals("null")){
+				current = null;
+			} else {
+				current = (WornItem) Item.loadAlpha0_1(scanner, itemType);
+			}
+			clothing.put(line, current);
+			line = scanner.nextLine();
+		}
+		return clothing;
+	}
+
+	private static HashMap<String, Armor> loadArmorAlpha0_1(Scanner scanner) {
+		HashMap<String, Armor> armor = new HashMap<String, Armor>();
+		String line = scanner.nextLine();
+		while(! line.equals("end armor")) {
+			Armor current;
+			String itemType = scanner.nextLine();
+			if (itemType.equals("null")) {
+				current = null;
+			} else {
+				current = (Armor) Item.loadAlpha0_1(scanner, itemType);
+			}
+			armor.put(line, current);
+			line = scanner.nextLine();
+		}
+		return armor;
+	}
+	
+	private static HashMap<String, Weapon> loadWeaponAlpha0_1(Scanner scanner) {
+		HashMap<String, Weapon> armor = new HashMap<String, Weapon>();
+		String line = scanner.nextLine();
+		while(! line.equals("end weapons")) {
+			Weapon current;
+			String itemType = scanner.nextLine();
+			if (itemType.equals("null")) {
+				current = null;
+			} else {
+				current = (Weapon) Item.loadAlpha0_1(scanner, itemType);
+			}
+			armor.put(line, current);
+			line = scanner.nextLine();
+		}
+		return armor;
 	}
 	
 	public void saveToFile(PrintWriter writer){
-		writer.println("equipment");
 		writer.println(totalWeight);
-		writer.println("clothingWorn");
 		saveClothingWornToFile(writer);
 		saveArmorToFile(writer);
 		saveEquippedWeaponsToFile(writer);
-		writer.println("end equipment");
 	}
 	private void saveClothingWornToFile(PrintWriter writer){
-		writer.println("clothing");
-		
-		
+		for(String key : clothingWorn.keySet()) {
+			writer.println(key);
+			WornItem item = clothingWorn.get(key);
+			if (item == null) {
+				writer.println("null");
+			} else {
+				item.saveToFile(writer);
+			}
+		}
 		writer.println("end clothing");
 	}
 	private void saveArmorToFile(PrintWriter writer){
-		writer.println("armor");
-		
-		
+		for(String key : armorEquipped.keySet()) {
+			writer.println(key);
+			Armor item = armorEquipped.get(key);
+			if (item == null) { 
+				writer.println("null");
+			} else {
+				item.saveToFile(writer);
+			}
+		}
 		writer.println("end armor");
 	}
 	private void saveEquippedWeaponsToFile(PrintWriter writer){
-		writer.println("equipped weapons");
-		
-		writer.println("end equipped weapons");
+		for(String key : weaponsCarried.keySet()) {
+			writer.println(key);
+			Weapon item = weaponsCarried.get(key);
+			if (item == null) {
+				writer.println("null");
+			} else {
+				item.saveToFile(writer);
+			}
+		}
+		writer.println("end weapons");
 	}
 	
 	public int getWeight(){
@@ -196,8 +270,10 @@ public class Gear {
 		return slots;
 	}
 	
-	public boolean equipClothing(WornItem clothing){
-		if (clothingWorn.get(clothing.getSlot()) != null){
+	public boolean equipClothing(WornItem clothing) throws InventoryException {
+		if (!clothingWorn.containsKey(clothing.getSlot())) {
+			throw new InventoryException("ERROR in gear.equipClothing: clothing slot does not exist");
+		} else if (clothingWorn.get(clothing.getSlot()) != null){
 			TextTools.display("You are already wearing something in the " + clothing.getSlot() + " slot.");
 			return false;
 		}
@@ -205,8 +281,10 @@ public class Gear {
 		return true;
 	}
 	
-	public WornItem removeClothing(String slot){
-		if(clothingWorn.get(slot) == null){
+	public WornItem removeClothing(String slot) throws InventoryException {
+		if(!clothingWorn.containsKey(slot)) {
+			throw new InventoryException("ERROR in Gear.removeClothing: clothing slot does not exist");
+		} else if (clothingWorn.get(slot) == null){
 			TextTools.display("Your " + slot + " slot is already empty");
 			return null;
 		}
@@ -232,8 +310,10 @@ public class Gear {
 		return slots;
 	}
 	
-	public boolean equipArmor(Armor armor){
-		if (armorEquipped.get(armor.getSlot()) == null){
+	public boolean equipArmor(Armor armor) throws InventoryException {
+		if (!armorEquipped.containsKey(armor.getSlot())) {
+			throw new InventoryException("ERROR in Gear.equipArmor: armor slot does not exist.");
+		} else if (armorEquipped.get(armor.getSlot()) == null){
 			armorEquipped.put(armor.getSlot(), armor);
 			return true;
 		} else {
@@ -242,10 +322,9 @@ public class Gear {
 		}
 	}
 	
-	public Armor removeArmor(String slot){
+	public Armor removeArmor(String slot) throws InventoryException{
 		if (!armorEquipped.containsKey(slot)){
-			TextTools.display("ERROR That body slot does not exist.");
-			return null;
+			throw new InventoryException("ERROR in Gear.removeArmor: armor slot does not exist");
 		}
 		else if (armorEquipped.get(slot) == null){
 			TextTools.display("You are not wearing any armor there.");
@@ -278,10 +357,9 @@ public class Gear {
 		return weaponsCarried.get(slot);
 	}
 	
-	public boolean addWeapon(String slot, Weapon weapon){
-		if (!weaponsCarried.containsKey(slot)){
-			TextTools.display("ERROR weapon slot does not exist");
-			return false;
+	public boolean addWeapon(String slot, Weapon weapon) throws InventoryException {
+		if (!weaponsCarried.containsKey(slot)){ 
+			throw new InventoryException("ERROR in Gear.addWeapon: weapon slot does not exist");
 		} else if ((weaponsCarried.get(slot) != null)) {
 			TextTools.display(weapon.name() + " cannot be equipped because that slot is occupied");
 			return false;
@@ -293,10 +371,11 @@ public class Gear {
 	
 	public Weapon removeWeapon(String slot){
 		Weapon removed = weaponsCarried.get(slot);
+		weaponsCarried.put(slot, null);
 		return removed;
 	}
 	
-	protected boolean selectLocationToEquip(Weapon newWeapon){
+	protected boolean selectLocationToEquip(Weapon newWeapon) throws InventoryException {
 		String question = "Where would you like to equip the weapon";
 		String[] weaponSlots = new String[weaponsCarried.size()];
 		String[] answers = new String[weaponsCarried.size() + 1];

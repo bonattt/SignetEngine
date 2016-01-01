@@ -1,4 +1,4 @@
-package sampleItems;
+package testingMothers;
 
 import java.util.HashMap;
 
@@ -8,7 +8,7 @@ public class SampleArmor {
 
 	public static Armor getSampleArmorJacket() {
 		Armor armor = new Armor(200, 100, 100, 100, 1, "main-armor", "sample armor jacket", "this is an armored jacket");
-		armor.initializeArmorStats("armor", getDamageResistanceTableArmorJacket(), getTypeConversionTableArmorJacket());
+		armor.initializeArmorStats("main-armor", getDamageResistanceTableArmorJacket(), getTypeConversionTableArmorJacket());
 		return armor;
 	}
 	private static HashMap<Integer, Integer> getDamageResistanceTableArmorJacket(){

@@ -1,6 +1,7 @@
 package items;
 
 import inventory.Inventory;
+import inventory.InventoryException;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public abstract class Weapon extends Item {
 	}
 
 	@Override
-	public void useFromInventory(Inventory inv, Creature player) {
+	public void useFromInventory(Inventory inv, Creature player)  throws InventoryException {
 		String question = "What will you do with your " + this.name();
 		String[] answers = new String[]{"carry", "equip", "discard", "inspect", "cancel"};
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
@@ -75,7 +76,7 @@ public abstract class Weapon extends Item {
 			System.out.println("ERROR");
 		}
 	}
-	private void tryToCarry(Inventory inv, Creature player){
+	private void tryToCarry(Inventory inv, Creature player) throws InventoryException  {
 		if(inv.getWeapon() == null){
 			if(inv.tryToCarryWeapon(inv, this)){
 				inv.discardItem(this);

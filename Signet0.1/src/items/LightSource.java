@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 import inventory.Inventory;
+import inventory.InventoryException;
 import creatures.Creature;
 
 public class LightSource extends Item {
@@ -22,8 +23,8 @@ public class LightSource extends Item {
 	}
 
 	@Override
-	public void useFromInventory(Inventory inv, Creature character) throws Exception {
-		throw new Exception("use while exploring unimplemented for this class");
+	public void useFromInventory(Inventory inv, Creature character)  throws InventoryException {
+		throw new InventoryException("use while exploring unimplemented for this class");
 	}
 	@Override
 	public void handleUseWhileEquipped(Inventory inv, Creature player, int choice){

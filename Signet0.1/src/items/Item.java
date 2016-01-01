@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import creatures.Creature;
 import inventory.Inventory;
+import inventory.InventoryException;
 import inventory.ItemContainer;
 import misc.DiceRoller;
 import misc.TextTools;
@@ -55,8 +56,10 @@ public abstract class Item {
 		TextTools.display(description);
 		// TODO add a pause in text reading here.
 	}
-	public abstract void useFromInventory(Inventory inv, Creature player) throws Exception;
-	public abstract void handleUseWhileEquipped(Inventory inv, Creature player, int choice);
+	public abstract void useFromInventory(Inventory inv, Creature player)
+			throws InventoryException ;
+	public abstract void handleUseWhileEquipped(Inventory inv, Creature player, int choice) 
+			throws InventoryException;
 	public abstract void saveToFile(PrintWriter writer);
 	public static Item loadAlpha0_1(Scanner scanner) {
 		String itemType = scanner.nextLine();
@@ -121,7 +124,7 @@ public abstract class Item {
 		return "Item: " + name;
 	}
 	
-	public void useWhileEquipped(Inventory inv, Creature player){
+	public void useWhileEquipped(Inventory inv, Creature player) throws InventoryException {
 		String question = "What would you like to do withj the " + name + " you have equipped?";
 		String[] answers = new String[]{"stow", "discard", "cancel"};
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);

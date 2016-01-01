@@ -2,6 +2,7 @@ package unitTests;
 
 import static org.junit.Assert.*;
 import health.Body;
+import inventory.InventoryException;
 
 import java.lang.reflect.Field;
 
@@ -11,15 +12,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import creatures.Creature;
-import sampleItems.*;
 import testingMothers.CharacterMother;
+import testingMothers.SampleArmor;
+import testingMothers.SampleClothing;
+import testingMothers.SampleThingy;
 
 public class UnitTestCreature {
 
 	private Creature player;
 	
 	@Before
-	public void setup(){
+	public void setup() throws InventoryException{
 		player = CharacterMother.getDickDefenderOfLife();
 	}
 	

@@ -1,5 +1,6 @@
 package unitTests;
 
+import inventory.InventoryException;
 import health.Body;
 import health.BodyPart;
 import health.DamageType;
@@ -19,7 +20,7 @@ public class UnitTestBody {
 	private Body body;
 	
 	@Before
-	public void setup(){
+	public void setup() throws InventoryException{
 		body = new Body(CharacterMother.getDickDefenderOfLife());
 	}
 	
@@ -154,6 +155,4 @@ public class UnitTestBody {
 		body.healStun(damage);
 		assertEquals(damageInitial, body.getStunDamage());
 	}
-	
-	
 }

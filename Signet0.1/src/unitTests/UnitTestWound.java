@@ -1,9 +1,10 @@
 package unitTests;
 
 import static org.junit.Assert.*;
+import items.Bandage;
+import items.Ointment;
 
 import java.lang.reflect.*;
-
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -21,9 +22,34 @@ public class UnitTestWound {
 	private Wound wound;
 	
 	@Before
-	public void setUp(){
+	public void setup(){
 		testBodypart = new Arm("generic arm");
-		wound = Injuries.getSlashingWound(3, testBodypart);
+		wound = Injuries.getSlashingWound(3, testBodypart, false);
+	}
+	
+	@Test
+	public void equalsSelf() {
+		assertEquals(wound, wound);
+	}
+	
+	@Test
+	public void notEqualsWithoutBandage() {
+		wound.setBandage(new Bandage());
+		Wound wound1 = Injuries.getSlashingWound(3, testBodypart, false);
+		assertNotEquals(wound, wound1);
+	}
+	
+	@Test
+	public void notEqualsWithoutOintment() {
+		wound.setTreatment(new Ointment());
+		Wound wound1 = Injuries.getSlashingWound(3, testBodypart, false);
+		assertNotEquals(wound, wound1);
+	}
+
+	@Test
+	public void notEquals() {
+		Wound newWound = Injuries.getBluntWound(3, testBodypart);
+		assertNotEquals(wound, newWound);
 	}
 	
 	@Test

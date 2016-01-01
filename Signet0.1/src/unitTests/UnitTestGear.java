@@ -5,8 +5,9 @@ import static org.junit.Assert.*;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-import sampleItems.*;
+import testingMothers.SampleWeapons;
 import inventory.Gear;
+import inventory.InventoryException;
 import items.Armor;
 import items.Weapon;
 import items.WornItem;
@@ -18,24 +19,24 @@ public class UnitTestGear {
 
 	private Gear gear;
 	
-	private static final String WEAPON1 = "slot-1";	
-	private static final String WEAPON2 = "slot-2";
-	private static final String ARMOR1 = "armor";
+	private static final String WEAPON1 = "hip-holster";	
+	private static final String WEAPON2 = "boot-holster";
+	private static final String ARMOR1 = "main-armor";
+	private static final String ARMOR2 = "helmet";
 	private static final String CLOTHING1 = "shirt";
 	private static final String CLOTHING2 = "pants";
 	
 	@Before
-	public void setup() {
+	public void setup() throws InventoryException {
 		HashMap<String, Weapon> weaponSlots = new HashMap<String, Weapon>();
 		HashMap<String, WornItem> clothingSlots = new HashMap<String, WornItem>();
 		HashMap<String, Armor> armorSlots = new HashMap<String, Armor>();
-		weaponSlots.put("boot-holster", null);
-		weaponSlots.put("hip-holster", null);
-		clothingSlots.put("shirt", null);
-		clothingSlots.put("pants", null);
-		clothingSlots.put("hat", null);
-		armorSlots.put("main armor", null);
-		armorSlots.put("helmet", null);
+		weaponSlots.put(WEAPON1, null);
+		weaponSlots.put(WEAPON2, null);
+		clothingSlots.put(CLOTHING1, null);
+		clothingSlots.put(CLOTHING2, null);
+		armorSlots.put(ARMOR1, null);
+		armorSlots.put(ARMOR2, null);
 
 		gear = new Gear(weaponSlots, clothingSlots, armorSlots);
 		gear.addWeapon(WEAPON1, SampleWeapons.getSampleCombatKnife());
@@ -44,39 +45,40 @@ public class UnitTestGear {
 		gear.equipClothing(new WornItem(125, 35, 15, 0, 0, CLOTHING2, "cotton pants", "2DO"));
 		gear.equipArmor(new Armor(200, 100, 50, 5, 0, ARMOR1, "armor", "this will protect you from yourself"));
 	}
-	@Test
-	public void addWeaponToNonexistantSlot() {
-		boolean result = gear.addWeapon("aeoifnse;oinf;oiesnf", SampleWeapons.getSampleSword());
-		assertFalse(result);
+	@Test(expected=InventoryException.class)
+	public void addWeaponToNonexistantSlot() throws InventoryException {
+		gear.addWeapon("aeoifnse;oinf;oiesnf", SampleWeapons.getSampleSword());
 	}
 
-	@Test
-	public void addArmorToNonexistantSlot() {
-		boolean result = gear.equipArmor(new Armor(1, 1, 1, 1, 1, "powiejfosienjfo;", "whatever", "none"));
-		assertFalse(result);
+	@Test(expected=InventoryException.class)
+	public void addArmorToNonexistantSlot() throws InventoryException {
+		gear.equipArmor(new Armor(1, 1, 1, 1, 1, "powiejfosienjfo;", "whatever", "none"));
+	}
+	
+	@Test(expected=InventoryException.class)
+	public void addClothingToNonexistantSlot() throws InventoryException {
+		gear.equipClothing(new WornItem(1, 1, 1, 1, 1, "powiejfosienjfo;", "whatever", "none"));
+//		assertFalse(result);
 	}
 	
 	@Test
-	public void addClothingToNonexistantSlot() {
-		boolean result = gear.equipClothing(new WornItem(1, 1, 1, 1, 1, "powiejfosienjfo;", "whatever", "none"));
-		assertFalse(result);
-	}
-	
-	@Test
-	public void removeWeaponReturnsEquippedWeapon() {
+	public void removeWeaponReturnsEquippedWeapon() throws InventoryException  {
+		gear.removeWeapon(WEAPON1);
 		Weapon weapon = SampleWeapons.getSamplePistol();
 		gear.addWeapon(WEAPON1, weapon);
 		assertTrue(gear.removeWeapon(WEAPON1) == weapon);
 	}
 	@Test
-	public void removeWeaponSetsToNull() {
+	public void removeWeaponSetsToNull()  throws InventoryException {
 		Weapon weapon = SampleWeapons.getSamplePistol();
 		gear.addWeapon(WEAPON1, weapon);
-		assertTrue(gear.getWeapon(WEAPON1) == null);
+		gear.removeWeapon(WEAPON1);
+		Weapon result = gear.getWeapon(WEAPON1);
+		assertTrue(result == null);
 	}
 	
 	@Test
-	public void removeClothingReturnsEquippedClothing() {
+	public void removeClothingReturnsEquippedClothing() throws InventoryException {
 		WornItem item = new WornItem(1, 1, 1, 1, 1, CLOTHING1, "_name_", "desc");
 		gear.equipClothing(item);
 		gear.removeClothing(CLOTHING1);
@@ -84,13 +86,15 @@ public class UnitTestGear {
 	}
 	
 	@Test
-	public void removeArmorReturnsEquippedArmor() {
+	public void removeArmorReturnsEquippedArmor() throws InventoryException {
+		gear.removeArmor(ARMOR1);
 		Armor item = new Armor(1, 1, 1, 1, 1, ARMOR1, "_name_", "desc");
 		gear.equipArmor(item);
-		assertTrue(gear.removeArmor(ARMOR1) == item);
+		Armor result = gear.removeArmor(ARMOR1);
+		assertTrue(result == item);
 	}
 	@Test
-	public void removeArmorSetsToNull() {
+	public void removeArmorSetsToNull() throws InventoryException {
 		Armor item = new Armor(1, 1, 1, 1, 1, ARMOR1, "_name_", "desc");
 		gear.equipArmor(item);
 		gear.removeArmor(ARMOR1);
@@ -99,7 +103,7 @@ public class UnitTestGear {
 	
 	@Test
 	public void addWeaponEquipsWeapon() throws NoSuchFieldException, SecurityException,
-			IllegalArgumentException, IllegalAccessException {
+			IllegalArgumentException, IllegalAccessException, InventoryException {
 		boolean result;
 		
 		Field f = Gear.class.getDeclaredField("weaponsCarried");
@@ -107,8 +111,7 @@ public class UnitTestGear {
 		@SuppressWarnings("unchecked")
 		HashMap<String, Weapon> obj = (HashMap<String, Weapon>) f.get(gear);
 		
-		result = gear.addWeapon(WEAPON1, null);
-		assertTrue(result);
+		gear.removeWeapon(WEAPON1);
 		assertTrue(obj.get(WEAPON1) == null);
 		result = gear.addWeapon(WEAPON1, SampleWeapons.getSamplePistol());
 		assertTrue(result);
@@ -117,7 +120,7 @@ public class UnitTestGear {
 
 	@Test
 	public void addClothingEquipsClothing() throws NoSuchFieldException, SecurityException,
-			IllegalArgumentException, IllegalAccessException {
+			IllegalArgumentException, IllegalAccessException, InventoryException {
 		boolean result;
 		
 		Field f = Gear.class.getDeclaredField("clothingWorn");
@@ -134,7 +137,7 @@ public class UnitTestGear {
 	
 	@Test
 	public void addArmorEquipsArmor() throws NoSuchFieldException, SecurityException,
-			IllegalArgumentException, IllegalAccessException {
+			IllegalArgumentException, IllegalAccessException, InventoryException {
 		boolean result;
 		
 		Field f = Gear.class.getDeclaredField("armorEquipped");
@@ -150,30 +153,33 @@ public class UnitTestGear {
 	}
 	
 	@Test
-	public void gearEqualsItself() {
+	public void gearEqualsItself()  throws InventoryException {
 		Gear gear1 = gear;
 		setup(); // sets gear field to a new, identical Gear object
 		assertEquals(gear, gear1);
 	}
 	@Test
-	public void notEqualWithDifferentArmor() {
+	public void notEqualWithDifferentArmor()  throws InventoryException {
 		Gear gear1 = gear;
-		setup(); // sets gear field to a new, identical Gear object
+		gear1.removeArmor(ARMOR1);
 		gear1.equipArmor(new Armor(1, 1, 1, 1, 1, ARMOR1, "new armor", "doesn't look too sturdy"));
+		setup(); // sets gear field to a new, identical Gear object
 		assertNotEquals(gear, gear1);
 	}
 	@Test
-	public void notEqualWithDifferentWeapon() {
+	public void notEqualWithDifferentWeapon()  throws InventoryException {
 		Gear gear1 = gear;
-		setup(); // sets gear field to a new, identical Gear object
+		gear1.removeWeapon(WEAPON1);
 		gear1.addWeapon(WEAPON2, SampleWeapons.getSamplePistol());
+		setup(); // sets gear field to a new, identical Gear object
 		assertNotEquals(gear, gear1);
 	}
 	@Test
-	public void notEqualWithDifferentClothing() {
+	public void notEqualWithDifferentClothing()  throws InventoryException {
 		Gear gear1 = gear;
-		setup(); // sets gear field to a new, identical Gear object
+		gear1.removeClothing(CLOTHING2);
 		gear1.equipClothing(new WornItem(1, 1, 1, 1, 1, CLOTHING2, "anything", "whatever"));
+		setup(); // sets gear field to a new, identical Gear object
 		assertNotEquals(gear, gear1);
 	}
 	

@@ -3,9 +3,11 @@ package unitTests;
 import static org.junit.Assert.*;
 import health.Body;
 import health.BodyPart;
+import health.Injuries;
 import health.Wound;
 import inventory.Gear;
 import inventory.Inventory;
+import inventory.InventoryException;
 import inventory.ItemContainer;
 import items.Armor;
 import items.Bandage;
@@ -29,10 +31,10 @@ import java.util.Scanner;
 
 import org.junit.Test;
 
-import sampleItems.SampleArmor;
-import sampleItems.SampleClothing;
-import sampleItems.SampleWeapons;
 import testingMothers.CharacterMother;
+import testingMothers.SampleArmor;
+import testingMothers.SampleClothing;
+import testingMothers.SampleWeapons;
 import creatures.Creature;
 import creatures.PlayerCharacter;
 import creatures.Skill;
@@ -73,7 +75,7 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testPlayerSkillsSaveLoad() throws FileNotFoundException, NoSuchMethodException,
 			SecurityException, IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException, NoSuchFieldException {
+			InvocationTargetException, NoSuchFieldException, InventoryException {
 		
 		PlayerCharacter saved = CharacterMother.getDickDefenderOfLife();
 		PrintWriter writer = new PrintWriter(filePath);
@@ -101,7 +103,7 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testPlayerDamageMultipliersLoad() throws FileNotFoundException, NoSuchMethodException,
 			SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchFieldException {
+			NoSuchFieldException, InventoryException {
 		
 		PlayerCharacter saved = CharacterMother.getDickDefenderOfLife();
 		PrintWriter writer = new PrintWriter(filePath);
@@ -132,7 +134,7 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testPlayerStatsSaveLoad() throws FileNotFoundException, NoSuchMethodException,
 			SecurityException, IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException {
+			InvocationTargetException, InventoryException {
 		PlayerCharacter saved = CharacterMother.getDickDefenderOfLife();
 		PrintWriter writer = new PrintWriter(filePath);
 		saved.saveStats(writer);
@@ -154,8 +156,8 @@ public class UnitTestSaveAndLoad {
 		
 	}
 
-//	@Test
-	public void testBodyBasicSaveLoad() {
+	@Test
+	public void testBodyBasicSaveLoad() throws InventoryException {
 		try {
 			Body bodSaved = getStartingBody();
 			Body bodLoaded = getLoadedBody(bodSaved);
@@ -195,8 +197,8 @@ public class UnitTestSaveAndLoad {
 			fail("exception thrown");
 		}
 	}
-//	@Test
-	public void testBodyBodypartsSaveLoad(){
+	@Test
+	public void testBodyBodypartsSaveLoad() throws InventoryException{
 		try {
 			Body bodSaved = getStartingBody();
 			Body bodLoaded = getLoadedBody(bodSaved);
@@ -216,7 +218,8 @@ public class UnitTestSaveAndLoad {
 			fail("exception thrown");
 		}
 	}
-	private Body getStartingBody() throws IllegalArgumentException, NoSuchFieldException, SecurityException, IllegalAccessException {
+	private Body getStartingBody() throws IllegalArgumentException, NoSuchFieldException,
+			SecurityException, IllegalAccessException, InventoryException {
 		PlayerCharacter dick = CharacterMother.getDickDefenderOfLife();
 		Field field = Creature.class.getDeclaredField("body");
 		field.setAccessible(true);
@@ -233,167 +236,34 @@ public class UnitTestSaveAndLoad {
 		return bodLoaded;
 	}
 
-//	@Test
-	public void testInventorySaveLoad(){
-		try {
-			Inventory saved = new Inventory();
-			PrintWriter writer = new PrintWriter(filePath);
-			saved.saveToFile(writer);
-			writer.close();
-			
-			Scanner scanner = new Scanner(new File(filePath));
-			Inventory loaded = Inventory.loadAlpha1_0fromFile(scanner);
-			scanner.close();
-			
-			assertEquals(saved.getLightSource(), loaded.getLightSource());
-			assertEquals(saved.getWeapon(), loaded.getWeapon());
-			assertEquals(saved.getCarriedWeight(), loaded.getCarriedWeight());
-			
-		} catch (FileNotFoundException e) {
-			fail("exception thrown");
-		}
-	}
 	
-//	@Test
-	public void testBodypartSaveLoad(){
-		try {
-			BodyPart saved = new BodyPart("limb", 1.5, .75, 1, new double[]{1,1,1,1,1,1,1,1,1,1});
-			PrintWriter writer = new PrintWriter(filePath);
-			saved.saveToFile(writer);
-			writer.close();
+	@Test
+	public void testBodypartUninjuredSaveLoad() throws FileNotFoundException {
+		BodyPart saved = new BodyPart("limb", 1.5, .75, 1, new double[]{1,1,1,1,1,1,1,1,1,1});
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveToFile(writer);
+		writer.close();
 
-			Scanner scanner = new Scanner(new File(filePath));
-			BodyPart loaded = BodyPart.loadAlpha1_0fromFile(scanner);
-			scanner.close();
-			
-			assertEquals(saved.name, loaded.name);
-			
-			Field field = BodyPart.class.getDeclaredField("damageMultiplier");
-			field.setAccessible(true);
-			assertEquals(field.getDouble(saved), field.getDouble(loaded), .001);
-			
-			field = BodyPart.class.getDeclaredField("painMultipl");
-			field.setAccessible(true);
-			assertEquals(field.getDouble(saved), field.getDouble(loaded), .001);
-			
-			field = BodyPart.class.getDeclaredField("cripplingMultiplier");
-			field.setAccessible(true);
-			assertEquals(field.getDouble(saved), field.getDouble(loaded), .001);
-			
-			field = BodyPart.class.getDeclaredField("statMultipliers");
-			field.setAccessible(true);
-			assertArrayEquals(((double[]) field.get(saved)), ((double[]) field.get(loaded)), .001);
-			
-			field = BodyPart.class.getDeclaredField("naturalArmor");
-			field.setAccessible(true);
-			assertEquals(null, field.get(loaded));
-			
-		} catch (FileNotFoundException e) {
-			fail("exception thrown");
-		} catch (NoSuchFieldException e) {
-			fail("exception thrown");
-		} catch (SecurityException e) {
-			fail("exception thrown");
-		} catch (IllegalArgumentException e) {
-			fail("exception thrown");
-		} catch (IllegalAccessException e) {
-			fail("exception thrown");
-		}
-	}
+		Scanner scanner = new Scanner(new File(filePath));
+		BodyPart loaded = BodyPart.loadAlpha0_1(scanner);
+		scanner.close();
+		
+		assertEquals(saved, loaded);
+	}	
 
-//	@Test
-	public void testWoundSaveLoad() {
-		try {
-			BodyPart woundLocation = new BodyPart("limb", 1, 1, 1, new double[]{1, 1, 1, 1, 1, 1, 1, 1, 1});
-			int severity = 3;
-			int dt = 3;
-			String[] names = new String[]{"wound1", "wound2", "wound3", "wound4", "wound5", "wound6", "wound7"};
-			int[] health = new int[]{1, 2, 3, 5, 4, 6, 7};
-			int[] stun = new int[]{2, 3, 4, 5, 7, 6, 8};
-			int[] fatigue = new int[]{2, 0, 1, 3, 4, 5, 6};
-			int[] rate = new int[]{1, 4, 5, 7, 2, 6, 3};
-			int[] instHealth = new int[]{ 3, 1, 2,6, 4, 5, 7};
-			int[] instStun = new int[]{1, 2, 4, 6, 5, 3, 7};
-			int[] instFatigue = new int[]{1, 4, 5, 2, 3, 6, 7};
-			int[] healTime = new int[]{1, 2, 3, 4, 6, 7, 5};
-			int[] infection = new int[]{1, 2, 6, 4, 3, 5, 7};
-			double[] pain = new double[]{1, 4, 2, 3, 5, 6, 7};
-			int[] cripple = new int[]{5, 1, 4, 6, 2, 3, 7};
-			Wound saved = new Wound(severity, dt, names, woundLocation, health, stun, fatigue, rate,
-					instHealth,	instStun, instFatigue, healTime, infection, pain, cripple);
-			PrintWriter writer = new PrintWriter(filePath);
-			saved.saveToFile(writer);
-			writer.close();
-			Scanner scanner = new Scanner(new File(filePath));
-			Wound loaded = Wound.loadAlpha1_0fromFile(scanner);
-			scanner.close();
-			
-			assertEquals(severity, loaded.getSeverity());
-			
-			Field field = Wound.class.getDeclaredField("dt");
-			field.setAccessible(true);
-			assertEquals(dt, field.getInt(loaded));
-			
-			field = Wound.class.getDeclaredField("health");
-			field.setAccessible(true);
-			assertArrayEquals(health, (int[]) field.get(loaded));
-			
-			field = Wound.class.getDeclaredField("stun");
-			field.setAccessible(true);
-			assertArrayEquals(stun, (int[]) field.get(loaded));
-			
-			field = Wound.class.getDeclaredField("fatigue");
-			field.setAccessible(true);
-			assertArrayEquals(fatigue, (int[]) field.get(loaded));
-			
-			field = Wound.class.getDeclaredField("rate");
-			field.setAccessible(true);
-			assertArrayEquals(rate, (int[]) field.get(loaded));
-			
-			field = Wound.class.getDeclaredField("instHealth");
-			field.setAccessible(true);
-			assertArrayEquals(instHealth, (int[]) field.get(loaded));
-			
-			field = Wound.class.getDeclaredField("instStun");
-			field.setAccessible(true);
-			assertArrayEquals(instStun, (int[]) field.get(loaded));
-			
-			field = Wound.class.getDeclaredField("instFatigue");
-			field.setAccessible(true);
-			assertArrayEquals(instFatigue, (int[]) field.get(loaded));
-			
-			field = Wound.class.getDeclaredField("healthTime");
-			field.setAccessible(true);
-			assertArrayEquals(healTime, (int[]) field.get(loaded));
-			
-			field = Wound.class.getDeclaredField("infection");
-			field.setAccessible(true);
-			assertArrayEquals(infection, (int[]) field.get(loaded));
-			
-			field = Wound.class.getDeclaredField("pain");
-			field.setAccessible(true);
-			double[] painLoaded = (double[]) field.get(loaded);
-			assertEquals(pain.length, painLoaded.length);
-			for (int i = 0; i < pain.length; i++){
-				assertEquals(pain[i], painLoaded[i], .001);
-			}
-			
-			field = Wound.class.getDeclaredField("cripple");
-			field.setAccessible(true);
-			assertArrayEquals(cripple, (int[]) field.get(loaded));
-						
-			
-		} catch (FileNotFoundException e) {
-			fail("exception thrown");
-		} catch (IllegalArgumentException e) {
-			fail("exception thrown");
-		} catch (IllegalAccessException e) {
-			fail("exception thrown");
-		} catch (NoSuchFieldException e) {
-			fail("exception thrown");
-		} catch (SecurityException e) {
-			fail("exception thrown");
-		}
+	@Test
+	public void testWoundSaveLoad() throws FileNotFoundException {
+		BodyPart testBodypart = new BodyPart("_body_", 1, 1, 1, new double[]{});
+		Wound saved = Injuries.getSlashingWound(3, testBodypart);
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveToFile(writer);
+		writer.close();
+		
+		Scanner scanner = new Scanner(new File(filePath));
+		Wound loaded = Wound.loadAlpha1_0fromFile(scanner, testBodypart);
+		scanner.close();
+		
+		assertEquals(saved, loaded);
 	}
 	@Test
 	public void testItem_WornItemSaveLoad() {
@@ -498,10 +368,6 @@ public class UnitTestSaveAndLoad {
 		} catch (ClassCastException e) {
 			fail("threw exception");
 		}
-	}
-//	@Test
-	public void testItem_defaultSaveLoad() {
-		fail();
 	}
 	@Test
 	public void testItem_ArmorSaveLoad() {
@@ -647,8 +513,8 @@ public class UnitTestSaveAndLoad {
 	}
 	
 	
-//	@Test
-	public void testGearSaveLoad() throws FileNotFoundException{
+	@Test
+	public void testGearSaveLoad() throws FileNotFoundException, InventoryException {
 
 		HashMap<String, Weapon> weapons = new HashMap<String, Weapon>();
 		HashMap<String, WornItem> clothing = new HashMap<String, WornItem>();
@@ -658,6 +524,8 @@ public class UnitTestSaveAndLoad {
 		clothing.put("shirt", null);
 		clothing.put("pants", null);
 		armor.put("main-armor", null);
+		armor.put("helmet", null);
+		
 		
 		Gear saved = new Gear(weapons, clothing, armor);
 //		System.out.println(saved.getArmorSlots());

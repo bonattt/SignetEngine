@@ -1,6 +1,7 @@
 package environment;
 
 import indices.*;
+import inventory.InventoryException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Scanner;
+
 import sampleEvents.LootGenericChest;
 import misc.DeathException;
 import misc.GameEvent;
@@ -56,7 +58,7 @@ public class Environment {
 		return instance;
 	}
 	
-	public void choseAction() throws DeathException {
+	public void choseAction() throws DeathException, InventoryException {
 		TextTools.display("\n\n\n\n\n\n\n\n\nwelcome to signet!\n");
 		while (true) {
 			String question = "You are in " + location.name + " what will you do?";

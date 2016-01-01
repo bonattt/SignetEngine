@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import creatures.Creature;
+import misc.GameLoadException;
 import misc.TextTools;
 import items.*;
 
@@ -20,14 +21,26 @@ public class Inventory {
 	private Weapon equippedWeapon;
 	private int carriedWeight;
 	
-	public Inventory(){
+	public Inventory() {
+		equipment = initializeGear();
+		backpack = getStartingBackpack();
+		equippedWeapon = null;
+	}
+	
+	public Inventory(LightSource lightCarried, Weapon weaponCarried, Gear equipment, ItemContainer backpack, int weight) {
+		this.equipment = equipment;
+		this.equippedWeapon = weaponCarried;
+		this.lightSource = lightCarried;
+		this.backpack = backpack;
+		carriedWeight = weight;
+	}
+	
+	private static Gear initializeGear() {
 		HashMap<String, Weapon> weaponSlots = new HashMap<String, Weapon>();
 		HashMap<String, WornItem> clothingSlots = new HashMap<String, WornItem>();
 		HashMap<String, Armor> armorSlots = new HashMap<String, Armor>();
 		initializeEquipmentSlots(weaponSlots, clothingSlots, armorSlots);
-		equipment = new Gear(weaponSlots, clothingSlots, armorSlots);
-		backpack = getStartingBackpack();
-		equippedWeapon = null;
+		return new Gear(weaponSlots, clothingSlots, armorSlots);
 	}
 	
 	private static void initializeEquipmentSlots(HashMap<String, Weapon> weaponSlots,
@@ -37,7 +50,7 @@ public class Inventory {
 		clothingSlots.put("shirt", null);
 		clothingSlots.put("pants", null);
 		clothingSlots.put("hat", null);
-		armorSlots.put("main armor", null);
+		armorSlots.put("main-armor", null);
 		armorSlots.put("helmet", null);
 	}
 
@@ -88,7 +101,7 @@ public class Inventory {
 		return new ItemContainer(STARTING_BAG_WEIGHT, STARTING_BAG_SIZE, "backpack");
 	}
 	
-	public boolean tryToCarryWeapon(Inventory inv, Weapon weapon){
+	public boolean tryToCarryWeapon(Inventory inv, Weapon weapon) throws InventoryException {
 		if(equippedWeapon == null){
 			equippedWeapon = weapon;
 			return true;
@@ -105,18 +118,41 @@ public class Inventory {
 		}
 		return false;
 	}
-	public static Inventory loadAlpha1_0fromFile (Scanner scanner){
-		return null;
+	public static Inventory loadAlpha1_0fromFile(Scanner scanner) throws GameLoadException {
+		int weight = scanner.nextInt();
+		scanner.nextLine();
+		ItemContainer pack = ItemContainer.loadAlpha0_1(scanner);
+		Gear gear = Gear.loadAlpha0_1(scanner);
+		
+		LightSource light;
+		String line = scanner.nextLine();
+		if (line.equals("null")) {
+			light = null;
+		} else if (!line.equals("light source")) {
+			throw new GameLoadException(String.format(
+					"incorrect item type stored for equipped light source '%s'", line));
+		} else {
+			light = (LightSource) Item.loadAlpha0_1(scanner, line);
+		}
+		
+		Weapon weapon;
+		line = scanner.nextLine();
+		if (line.equals("null")) {
+			weapon = null;
+		} else {
+			weapon = (Weapon) Item.loadAlpha0_1(scanner, line);
+		}
+		
+		return new Inventory(light, weapon, gear, pack, weight);
 	}
 	
 	public void saveToFile(PrintWriter writer){
-		writer.println("inventory");
 		writer.println(carriedWeight);
 		backpack.saveToFile(writer);
 		equipment.saveToFile(writer);
 		
 		if(lightSource == null){
-			writer.println("no light source");
+			writer.println("null");
 		} else {
 			lightSource.saveToFile(writer);
 		}
@@ -129,7 +165,8 @@ public class Inventory {
 		
 		writer.println("end inventory");
 	}
-	private boolean tryToEquipCarriedWeaponToEquipNewWeapon(Inventory inv, Weapon weapon){
+	private boolean tryToEquipCarriedWeaponToEquipNewWeapon(Inventory inv, Weapon weapon)
+			throws InventoryException {
 		if(inv.getEquipment().selectLocationToEquip(weapon)){
 			inv.discardItem(weapon);
 			return true;
@@ -204,7 +241,7 @@ public class Inventory {
 	 * This method starts off by prompting the player to select what part of the inventory they would
 	 *  like to access (armor, weapons, 
 	 */
-	public void accessInventoryDuringExplore(Creature player){
+	public void accessInventoryDuringExplore(Creature player) throws InventoryException {
 		String question = "What part of the inventory would you like to access?";
 		String[] answers = new String[]{"backpack", "equipment", "exit inventory"};
 		while(true) {
@@ -253,7 +290,7 @@ public class Inventory {
 //	private void accessClothingInBackpackDuringExplore(){
 //		
 //	}
-	private void accessEquipmentDuringExplore(Creature player){
+	private void accessEquipmentDuringExplore(Creature player) throws InventoryException {
 		String question = "What kind of equipment would you like you access?";
 		String[] answers = new String[]{"weapons", "armor", "clothing", "exit equipment"};
 		while(true) {
@@ -275,23 +312,24 @@ public class Inventory {
 			}
 		}
 	}
-	private void accessEquippedWeaponsDuringExplore(Creature player){
+	private void accessEquippedWeaponsDuringExplore(Creature player) throws InventoryException {
 		String question = "Which equipped weapon would you like to";
 		HashMap<String, Weapon> weapons = equipment.getEquippedWeapons();
 		accessGenericEquipmentDuringExplore(player, convertHashMapWeaponsToItems(weapons), question);
 	}
-	private void accessEquippedArmorDuringExplore(Creature player){
+	private void accessEquippedArmorDuringExplore(Creature player) throws InventoryException {
 		String question = "Which equipped armor would you like to";
 		HashMap<String, Armor> armor = equipment.getArmorEquipped();
 		accessGenericEquipmentDuringExplore(player, convertHashMapArmorToItems(armor), question);
 	}
-	private void accessEquippedClothingDuringExplore(Creature player){
+	private void accessEquippedClothingDuringExplore(Creature player) throws InventoryException {
 		String question = "Which equipped clothing would you like to use?";
 		HashMap<String, WornItem> clothingWorn = equipment.getClothingWorn();
 		accessGenericEquipmentDuringExplore(player, convertHashMapClothingToItems(clothingWorn), question);
 	}
 		
-	private void accessGenericEquipmentDuringExplore(Creature player, HashMap<String, Item> equippedItems, String question) {
+	private void accessGenericEquipmentDuringExplore(Creature player,
+			HashMap<String, Item> equippedItems, String question) throws InventoryException{
 		String[] clothingSlots = new String[equippedItems.size()];
 		String[] answers = new String [clothingSlots.length + 1];
 		int i = 0;
@@ -348,7 +386,7 @@ public class Inventory {
 	 * @param backEnabled
 	 * @return
 	 */
-	public void switchWeapons(){
+	public void switchWeapons()  throws InventoryException  {
 		
 		String weaponSlot;
 		Weapon newWeapon;
@@ -372,7 +410,8 @@ public class Inventory {
 			
 		}
 	}	
-	private void equipNewWeaponWhileCarryingSmallWeapon(String weaponSlot, Weapon newWeapon){
+	private void equipNewWeaponWhileCarryingSmallWeapon(String weaponSlot, Weapon newWeapon)
+			throws InventoryException {
 		String question = "You are alrady carrying a " + equippedWeapon.name() + " what would you like to do with it?";
 		String[] answers = new String[]{"swap " + equippedWeapon.name() + " with " + newWeapon.name(),
 											"drop " + equippedWeapon.name(),
@@ -426,11 +465,11 @@ public class Inventory {
 			}
 		}
 	}
-	private void switchWeaponsDropOld(String weaponSlot, Weapon newWeapon){
+	private void switchWeaponsDropOld(String weaponSlot, Weapon newWeapon) {
 		equippedWeapon = newWeapon;
 		equipment.removeWeapon(weaponSlot);
 	}
-	private void switchWeaponSwapOld(String weaponSlot, Weapon newWeapon){
+	private void switchWeaponSwapOld(String weaponSlot, Weapon newWeapon)  throws InventoryException {
 		equipment.removeWeapon(weaponSlot);
 		equipment.addWeapon(weaponSlot, equippedWeapon);
 		equippedWeapon = newWeapon;
@@ -485,7 +524,7 @@ public class Inventory {
 		}
 		return selection;
 	}
-	public void tryToEquipClothing(WornItem newClothing){
+	public void tryToEquipClothing(WornItem newClothing) throws InventoryException {
 		WornItem oldClothing = equipment.getClothing(newClothing.getSlot());
 		if(oldClothing == null){
 			equipment.equipClothing(newClothing);
@@ -505,7 +544,7 @@ public class Inventory {
 		}
 	}
 	
-	private void equipClothingStowOld(WornItem newClothing){
+	private void equipClothingStowOld(WornItem newClothing) throws InventoryException {
 		Armor oldArmor = equipment.getArmor(newClothing.getSlot());
 		if((equipment.getClothing(newClothing.getSlot()).getSize() - newClothing.getSize()) <= spaceRemaining()){
 			backpack.addItem(equipment.getArmor(newClothing.getSlot()));
@@ -523,14 +562,14 @@ public class Inventory {
 			}
 		}
 	}
-	private void equipClothingDropOld(WornItem newClothing){
+	private void equipClothingDropOld(WornItem newClothing)throws InventoryException {
 		equipment.removeClothing(newClothing.getSlot());
 		equipment.equipClothing(newClothing);
 		if(backpack.contains(newClothing)){
 			backpack.removeItem(newClothing);
 		}
 	}
-	public void tryToEquipArmor(Armor newArmor){
+	public void tryToEquipArmor(Armor newArmor) throws InventoryException {
 		Armor oldArmor = equipment.getArmor(newArmor.getSlot());
 		if(oldArmor == null){
 			equipment.equipArmor(newArmor);
@@ -553,7 +592,7 @@ public class Inventory {
 		}
 	}
 	
-	private void equipArmorStowOld(Armor newArmor){
+	private void equipArmorStowOld(Armor newArmor) throws InventoryException {
 		Armor oldArmor = equipment.getArmor(newArmor.getSlot());
 		if((equipment.getArmor(newArmor.getSlot()).getSize() - newArmor.getSize()) <= spaceRemaining()){
 			backpack.addItem(equipment.getArmor(newArmor.getSlot()));
@@ -581,7 +620,7 @@ public class Inventory {
 			return str.toString();
 	}
 	
-	private void equipArmorDropOld(Armor newArmor){
+	private void equipArmorDropOld(Armor newArmor) throws InventoryException {
 		equipment.removeArmor(newArmor.getSlot());
 		equipment.equipArmor(newArmor);
 		if(backpack.contains(newArmor)){
@@ -602,7 +641,7 @@ public class Inventory {
 		}
 	}
 	
-	public boolean equipWeapon(String slot, Weapon weapon){
+	public boolean equipWeapon(String slot, Weapon weapon)  throws InventoryException {
 		return equipment.addWeapon(slot, weapon);
 	}
 	

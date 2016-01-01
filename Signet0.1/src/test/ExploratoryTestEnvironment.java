@@ -1,12 +1,13 @@
 package test;
 
+import inventory.InventoryException;
 import testingMothers.CharacterMother;
 import misc.DeathException;
 import environment.Environment;
 
 public class ExploratoryTestEnvironment {
 
-	public static void main(String[] arg){
+	public static void main(String[] arg) throws InventoryException {
 //		exploreLocationIndex1();
 		testRun();
 	}
@@ -21,7 +22,7 @@ public class ExploratoryTestEnvironment {
 	}
 	
 //	@SuppressWarnings("unused")
-	private static void testRun(){
+	private static void testRun() throws InventoryException {
 		Environment ev = new Environment("src/testLocations/sampleStartLocation");
 		ev.setPlayer(CharacterMother.getDickDefenderOfLife());
 		try {

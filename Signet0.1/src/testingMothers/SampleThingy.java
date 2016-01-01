@@ -1,10 +1,11 @@
-package sampleItems;
+package testingMothers;
 
 import java.io.PrintWriter;
 
 import misc.TextTools;
 import creatures.Creature;
 import inventory.Inventory;
+import inventory.InventoryException;
 import items.Item;
 
 public class SampleThingy extends Item {
@@ -21,7 +22,7 @@ public class SampleThingy extends Item {
 
 	@Override
 	public void useFromInventory(Inventory inv, Creature player)
-			throws Exception {
+			throws InventoryException {
 		TextTools.display("Using this item does nothing.");
 	}
 

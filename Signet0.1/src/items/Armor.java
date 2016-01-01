@@ -1,6 +1,7 @@
 package items;
 
 import inventory.Inventory;
+import inventory.InventoryException;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -148,7 +149,8 @@ public class Armor extends Item {
 	}
 
 	@Override
-	public void handleUseWhileEquipped(Inventory inv, Creature player, int choice){
+	public void handleUseWhileEquipped(Inventory inv, Creature player, int choice)
+			throws InventoryException {
 		if(choice == 1) {				// Stow
 			if(inv.spaceRemaining() >= getSize()){
 				inv.getEquipment().removeArmor(slot);
@@ -164,7 +166,7 @@ public class Armor extends Item {
 	}
 	
 	@Override
-	public void useFromInventory(Inventory inv, Creature character) throws Exception {
+	public void useFromInventory(Inventory inv, Creature character) throws InventoryException  {
 		String question = "What would you like to do with the " + this.name();
 		String[] answers = new String[]{"equip", "discard", "inspect", "cancel"};
 		int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);

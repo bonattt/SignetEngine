@@ -1,9 +1,11 @@
 package health;
 
 import items.Armor;
+import items.Item;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 
@@ -32,28 +34,73 @@ public class BodyPart {
 	public ArrayList<Wound> getInjuries(){
 		return injuries;
 	}
-	public static BodyPart loadAlpha1_0fromFile(Scanner scanner){
-		return null;
+	public static BodyPart loadAlpha0_1(Scanner scanner){
+		double damageMultiplier, painMultiplier, cripplingMultiplier;
+		double[] statMultipliers;
+		String name = scanner.nextLine();
+		damageMultiplier = scanner.nextDouble();
+		painMultiplier = scanner.nextDouble();
+		cripplingMultiplier = scanner.nextDouble();
+		statMultipliers = loadStatMultipliersAlpha0_1(scanner);
+		Armor naturalArmor = loadNaturalArmorAlpha0_1(scanner);
+		
+		BodyPart bodypart = new BodyPart(name, damageMultiplier, painMultiplier, cripplingMultiplier, statMultipliers,
+				naturalArmor);
+		bodypart.loadInjuriesAlpha0_1(scanner);
+		return bodypart;
+	}
+	
+	private static Armor loadNaturalArmorAlpha0_1(Scanner scanner) {
+		String line = scanner.nextLine();
+		if(line.equals("no natural armor")) {
+			return null;
+		} else {
+			return (Armor) Item.loadAlpha0_1(scanner, line);
+		}
+	}
+	
+	private void loadInjuriesAlpha0_1(Scanner scanner) {
+		String line = scanner.nextLine();
+		while(!line.equals("end injuries")) {
+			Wound injury = Wound.loadAlpha1_0fromFile(scanner, this);
+			this.injuries.add(injury);
+			line = scanner.nextLine();
+		}
+	}
+	
+	private static double[] loadStatMultipliersAlpha0_1(Scanner scanner) {
+		double[] statMult = new double[scanner.nextInt()];
+		for (int i = 0; i < statMult.length; i++) {
+			statMult[i] = scanner.nextDouble();
+		}
+		scanner.nextLine();
+		return statMult;
 	}
 	public void saveToFile(PrintWriter writer){
 		writer.println(name);
 		writer.println(damageMultiplier);
 		writer.println(painMultiplier);
 		writer.println(cripplingMultiplier);
-		for (int i = 0; i < statMultipliers.length; i++){
-			writer.println(statMultipliers[i]);
-		}
+		saveStatMultiplier(writer);
 		if (naturalArmor == null){
 			writer.println("no natural armor");
 		} else {
 			writer.println("natural armor");
 			naturalArmor.saveToFile(writer);
 		}
-		saveInjuriesToFile(writer);
+		saveInjuriesAlpha0_1(writer);
 	}
-	private void saveInjuriesToFile(PrintWriter writer){
-		writer.println("injuries");
+	private void saveStatMultiplier(PrintWriter writer) {
+		writer.print(statMultipliers.length);
+		for (int i = 0; i < statMultipliers.length; i++) {
+			writer.print(" " + statMultipliers[i]);
+		}
+		writer.println();
+	}
+	
+	private void saveInjuriesAlpha0_1(PrintWriter writer){
 		for(int i = 0; i < injuries.size(); i++){
+			writer.println("injury");
 			injuries.get(i).saveToFile(writer);
 		}
 		writer.println("end injuries");
@@ -142,16 +189,39 @@ public class BodyPart {
 	}
 	@Override
 	public boolean equals(Object arg){
-		return false;
-	}
-	public boolean equals(BodyPart bp){
-		if (bp.name.equals(this.name)){
-			return true;
+		if (! (arg instanceof BodyPart)) {
+			return false;
 		}
-		return false;
+		BodyPart bodypart = (BodyPart) arg;
+		if (bodypart.naturalArmor == null) {
+			if (this.naturalArmor != null) {
+				return false;
+			}
+		} else {
+			if (! bodypart.naturalArmor.equals(this.naturalArmor)) {
+				return false;
+			}
+		}
+		
+		return (bodypart.name.equals(this.name)) &&
+				(bodypart.damageMultiplier == this.damageMultiplier) &&
+				(bodypart.painMultiplier == this.painMultiplier) &&
+				(Arrays.equals(bodypart.statMultipliers, this.statMultipliers)) &&
+				(bodypart.cripplingMultiplier == this.cripplingMultiplier) &&
+				(this.equalWounds(bodypart));
 	}
-	@Override
-	public int hashCode(){
-		return name.hashCode();
+	
+	private boolean equalWounds(BodyPart bodypart) {
+		int size = this.injuries.size();
+		if (size != bodypart.injuries.size()) {
+			return false;
+		}
+		for(int i = 0; i < this.injuries.size(); i++) {
+			Wound current = this.injuries.get(i);
+			if (! bodypart.injuries.contains(current)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

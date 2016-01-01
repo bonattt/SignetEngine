@@ -12,7 +12,10 @@ import items.Item;
 import org.junit.Before;
 import org.junit.Test;
 
-import sampleItems.*;
+import testingMothers.SampleArmor;
+import testingMothers.SampleClothing;
+import testingMothers.SampleThingy;
+import testingMothers.SampleWeapons;
 
 public class UnitTestInventory {
 
@@ -26,6 +29,18 @@ public class UnitTestInventory {
 	@Test
 	public void invEqualsSelf() {
 		Inventory clone = new Inventory();
+		assertEquals(inv, clone);
+	}
+	
+	@Test
+	public void invEqualsSelfWhenPopulated() {
+		inv.store(SampleWeapons.getSampleAssaultRifle());
+		inv.store(SampleArmor.getSampleArmorJacket());
+		inv.store(SampleClothing.getSamplePants());
+		Inventory clone = new Inventory();
+		clone.store(SampleWeapons.getSampleAssaultRifle());
+		clone.store(SampleArmor.getSampleArmorJacket());
+		clone.store(SampleClothing.getSamplePants());
 		assertEquals(inv, clone);
 	}
 	

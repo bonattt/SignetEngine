@@ -1,4 +1,4 @@
-package sampleItems;
+package testingMothers;
 
 import items.RangedWeapon;
 import items.MeleeWeapon;

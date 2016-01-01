@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import inventory.Inventory;
+import inventory.InventoryException;
 import inventory.ItemContainer;
 import items.Armor;
 import items.Item;
@@ -117,7 +118,7 @@ class ItemMock extends Item {
 
 	@Override
 	public void useFromInventory(Inventory inv, Creature player)
-			throws Exception {
+			throws InventoryException {
 		// do nothing
 	}
 

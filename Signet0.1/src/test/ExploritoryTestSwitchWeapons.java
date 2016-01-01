@@ -1,17 +1,18 @@
 package test;
 
 import testingMothers.CharacterMother;
+import inventory.InventoryException;
 import items.Weapon;
 import misc.TextTools;
 import creatures.PlayerCharacter;
 
 public class ExploritoryTestSwitchWeapons {
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws InventoryException {
 		runTest();
 	}
 	
-	private static void runTest(){
+	private static void runTest() throws InventoryException {
 	
 		PlayerCharacter player = CharacterMother.getDickDefenderOfLife();
 		int keepTesting = 0;
