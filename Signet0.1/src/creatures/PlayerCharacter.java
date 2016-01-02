@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import environment.Environment;
 import misc.DeathException;
+import misc.GameLoadException;
 
 public class PlayerCharacter extends Creature  {
 
@@ -34,64 +35,15 @@ public class PlayerCharacter extends Creature  {
 	public void saveToFile(PrintWriter writer){
 		super.saveToFile(writer);
 	}
-	public static PlayerCharacter loadAlpha0_1(Scanner scanner){
+	public static PlayerCharacter loadAlpha0_1(Scanner scanner) throws GameLoadException{
 		String name = scanner.nextLine();
 		HashMap<String, Integer> baseStats = loadAlpha0_1stats(scanner);
 		HashMap<String, Integer> damageMultipliers = loadAlpha0_1damageMultipliers(scanner);
 		HashMap<String, Skill> skills = loadAlpha0_1skills(scanner);
 		HashMap<String, BodyPart> bodyparts = null;
 		PlayerCharacter player = new PlayerCharacter(name, baseStats, damageMultipliers, skills, bodyparts);
-		Body body = null;
-		Inventory inv = null;
-		if(Environment.print_debugs){
-			System.out.print("base stats: ");
-			System.out.println(baseStats);
-			System.out.println();
-		}
-		
-		
+		player.loadInvAndBodyAlpha0_1(scanner);
 		return player;
-	}
-	private static HashMap<String, Integer> loadAlpha0_1stats(Scanner scanner){
-		HashMap<String, Integer> stats = new HashMap<String, Integer>();
-		String[] statsInOrder = new String[]{"str", "agl", "end", "dex", "cha", "anl", "per", "wil", "int", "rec"};
-		for (String stat : statsInOrder){
-			String strVal = scanner.nextLine();
-			int intVal = Integer.parseInt(strVal);
-			stats.put(stat, intVal);
-		}
-//		stats.put("str", Integer.getInteger(scanner.nextLine()));
-//		stats.put("agl", Integer.getInteger(scanner.nextLine()));
-//		stats.put("end", Integer.getInteger(scanner.nextLine()));
-//		stats.put("dex", Integer.getInteger(scanner.nextLine()));
-//		stats.put("cha", Integer.getInteger(scanner.nextLine()));
-//		stats.put("anl", Integer.getInteger(scanner.nextLine()));
-//		stats.put("per", Integer.getInteger(scanner.nextLine()));
-//		stats.put("wil", Integer.getInteger(scanner.nextLine()));
-//		stats.put("int", Integer.getInteger(scanner.nextLine()));
-//		stats.put("rec", Integer.getInteger(scanner.nextLine()));
-		return stats;
-	}
-	private static HashMap<String, Integer> loadAlpha0_1damageMultipliers(Scanner scanner){
-		HashMap<String, Integer> damageMultipliers = new HashMap<String, Integer>();
-		String currentLine = scanner.nextLine();
-		while(! currentLine.equals("end damage characteristics")){
-			String key = currentLine;
-			Integer multiplier = Integer.getInteger(scanner.nextLine());
-			currentLine = scanner.nextLine();
-			damageMultipliers.put(key, multiplier);
-		}
-		return damageMultipliers;
-	}
-	private static HashMap<String, Skill> loadAlpha0_1skills(Scanner scanner){
-		HashMap<String, Skill> skills = new HashMap<String, Skill>();
-		String line = scanner.nextLine();
-		while(! line.equals("end skills")) {
-			Skill current = Skill.loadFromFile(scanner);
-			skills.put(line, current);
-			line = scanner.nextLine();
-		}
-		return skills;
 	}
 	
 	@Override

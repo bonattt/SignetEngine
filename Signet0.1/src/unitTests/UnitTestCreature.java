@@ -2,6 +2,7 @@ package unitTests;
 
 import static org.junit.Assert.*;
 import health.Body;
+import inventory.Inventory;
 import inventory.InventoryException;
 
 import java.lang.reflect.Field;
@@ -25,6 +26,25 @@ public class UnitTestCreature {
 	public void setup() throws InventoryException{
 		player = CharacterMother.getDickDefenderOfLife();
 	}
+	
+	@Test
+	public void equalsSelf() {
+		assertEquals(player, player);
+	}
+	
+	@Test
+	public void notEqualWithExtraItem() 
+			throws NoSuchFieldException, SecurityException, InventoryException,
+				IllegalArgumentException, IllegalAccessException {
+		Creature other = player;
+		Field f = Creature.class.getDeclaredField("inv");
+		f.setAccessible(true);
+		Inventory inv = (Inventory) f.get(other);
+		inv.store(new SampleThingy());
+		setup();
+		assertNotEquals(other, player);
+	}
+	
 	
 	@Test
 	public void testTravelingCreatesMoreFatigueWhenMoreWeightIsCarried() {

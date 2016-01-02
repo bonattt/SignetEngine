@@ -40,6 +40,21 @@ public class IntegrationTestSaveLoad {
 	private static final String filePath = "src/unitTests/unitTestSaveFile.txt";
 	
 	@Test
+	public void creatureSaveLoad()
+			throws InventoryException, FileNotFoundException, GameLoadException {
+		Creature saved = CharacterMother.getDickDefenderOfLife();
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveToFile(writer);
+		writer.close();
+		Scanner scanner = new Scanner(new File(filePath));
+		Creature loaded = PlayerCharacter.loadAlpha0_1(scanner);
+		scanner.close();
+		
+		assertEquals(saved, loaded);
+	}
+	
+	
+	@Test
 	public void inventoryEmptySaveLoad() throws FileNotFoundException, GameLoadException {
 		Inventory saved = new Inventory();
 		PrintWriter writer = new PrintWriter(filePath);

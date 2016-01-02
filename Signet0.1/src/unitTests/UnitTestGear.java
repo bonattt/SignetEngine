@@ -40,11 +40,129 @@ public class UnitTestGear {
 
 		gear = new Gear(weaponSlots, clothingSlots, armorSlots);
 		gear.addWeapon(WEAPON1, SampleWeapons.getSampleCombatKnife());
-		gear.addWeapon(WEAPON2, SampleWeapons.getSamplePistol());
 		gear.equipClothing(new WornItem(100, 25, 10, 0, 0, CLOTHING1, "cotton shirt", "TODO"));
-		gear.equipClothing(new WornItem(125, 35, 15, 0, 0, CLOTHING2, "cotton pants", "2DO"));
 		gear.equipArmor(new Armor(200, 100, 50, 5, 0, ARMOR1, "armor", "this will protect you from yourself"));
 	}
+	@Test
+	public void addWeaponToOccupiedSlotReturnsFalse() throws InventoryException {
+		boolean result = gear.addWeapon(WEAPON1, SampleWeapons.getSamplePistol());
+		assertFalse(result);
+	}
+	@Test
+	public void addWeaponToOccupiedSlotDoesNotChangeWeight() throws InventoryException {
+		int initialWeight = gear.getWeight();
+		gear.addWeapon(WEAPON1, SampleWeapons.getSamplePistol());
+		assertEquals(initialWeight, gear.getWeight());
+	}
+	@Test
+	public void addWeaponToOccupiedSlotDoesNotEquip() throws InventoryException {
+		Weapon originalWeapon = gear.getWeapon(WEAPON1);
+		gear.addWeapon(WEAPON1, SampleWeapons.getSamplePistol());
+		assertEquals(originalWeapon, gear.getWeapon(WEAPON1));
+	}
+	@Test
+	public void addArmorToOccupiedSlotReturnsFalse() throws InventoryException {
+		boolean result = gear.equipArmor(new Armor(1, 10, 100, 10, 0, ARMOR1, "whatever", "someouainwdoin"));
+		assertFalse(result);
+	}
+	@Test
+	public void addArmorToOccupiedSlotDoesNotIncreaseWeight() throws InventoryException {
+		int initialWeight = gear.getWeight();
+		gear.equipArmor(new Armor(1, 10, 100, 10, 0, ARMOR1, "whatever", "someouainwdoin"));
+		assertEquals(initialWeight, gear.getWeight());
+	}
+	@Test
+	public void addArmorToOccupiedSlotDoesNotEquip() throws InventoryException {
+		Armor originalArmor = gear.getArmor(ARMOR1);
+		gear.equipArmor(new Armor(1, 10, 100, 10, 0, ARMOR1, "whatever", "someouainwdoin"));
+		assertEquals(originalArmor, gear.getArmor(ARMOR1));
+	}
+	@Test
+	public void addClothingToOccupiedSlotReturnsFalse() throws InventoryException  {
+		WornItem clothing = new WornItem(1, 10, 100, 10, 0, CLOTHING1, "whatever", "someouainwdoin");
+		boolean result = gear.equipClothing(clothing);
+		assertFalse(result);
+	}
+	@Test
+	public void addClothingToOccupiedSlotDoesNotEquip() throws InventoryException  {
+		WornItem originalClothing = gear.getClothing(CLOTHING1);
+		WornItem clothing = new WornItem(1, 10, 100, 10, 0, CLOTHING1, "whatever", "someouainwdoin");
+		gear.equipClothing(clothing);
+		assertEquals(originalClothing, gear.getClothing(CLOTHING1));
+	}
+	@Test
+	public void addClothingToOccupiedSlotDoesNotIncreaseWeight() throws InventoryException  {
+		int initialWeight = gear.getWeight();
+		WornItem clothing = new WornItem(1, 10, 100, 10, 0, CLOTHING1, "whatever", "someouainwdoin");
+		gear.equipClothing(clothing);
+		assertEquals(initialWeight, gear.getWeight());
+	}
+	
+	@Test
+	public void addWeaponReturnsTrue() throws InventoryException  {
+		Weapon weapon = SampleWeapons.getSampleAssaultRifle();
+		boolean result = gear.addWeapon(WEAPON2, weapon);
+		assertTrue(result);
+	}
+	@Test
+	public void addWeaponIncreasesWeight() throws InventoryException  {
+		int initialWeight = gear.getWeight();
+		Weapon weapon = SampleWeapons.getSampleAssaultRifle();
+		gear.addWeapon(WEAPON2, weapon);
+		int expectedWeight = initialWeight + weapon.getWeight();
+		assertEquals(expectedWeight, gear.getWeight());
+	}
+	
+	@Test
+	public void addArmorReturnsTrue() throws InventoryException  {
+		Armor armor = new Armor(10, 10, 100, 10, 0, ARMOR2, "_whatever_", "_blah blah_");
+		assertTrue(gear.equipArmor(armor));
+	}
+	@Test
+	public void addArmorIncreasesWeight() throws InventoryException  {
+		int initialWeight = gear.getWeight();
+		Armor armor = new Armor(10, 10, 100, 10, 0, ARMOR2, "_whatever_", "_blah blah_");
+		gear.equipArmor(armor);
+		int expectedWeight = initialWeight + armor.getWeight();
+		assertEquals(expectedWeight, gear.getWeight());
+	}
+	
+	@Test
+	public void addClothingReturnsTrue() throws InventoryException  {
+		WornItem clothing = new WornItem(10, 10, 100, 10, 0, CLOTHING2, "_whatever_", "_blah blah_");
+		assertTrue(gear.equipClothing(clothing));
+	}
+	@Test
+	public void addClothingIncreasesWeight() throws InventoryException  {
+		int initialWeight = gear.getWeight();
+		WornItem clothing = new WornItem(10, 10, 100, 10, 0, CLOTHING2, "_whatever_", "_blah blah_");
+		gear.equipClothing(clothing);
+		int expectedWeight = initialWeight + clothing.getWeight();
+		assertEquals(expectedWeight, gear.getWeight());
+	}
+	
+	@Test
+	public void removeWeaponDecreasesWeight() throws InventoryException  {
+		int initialWeight = gear.getWeight();
+		Weapon returned = gear.removeWeapon(WEAPON1);
+		int expectedWeight = initialWeight - returned.getWeight();
+		assertEquals(expectedWeight, gear.getWeight());
+	}
+	@Test
+	public void removeArmorDecreasesWeight() throws InventoryException  {
+		int initialWeight = gear.getWeight();
+		Armor returned = gear.removeArmor(ARMOR1);
+		int expectedWeight = initialWeight - returned.getWeight();
+		assertEquals(expectedWeight, gear.getWeight());
+	}
+	@Test
+	public void removeClothingDecreasesWeight() throws InventoryException  {
+		int initialWeight = gear.getWeight();
+		WornItem returned = gear.removeClothing(CLOTHING1);
+		int expectedWeight = initialWeight - returned.getWeight();
+		assertEquals(expectedWeight, gear.getWeight());
+	}
+	
 	@Test(expected=InventoryException.class)
 	public void addWeaponToNonexistantSlot() throws InventoryException {
 		gear.addWeapon("aeoifnse;oinf;oiesnf", SampleWeapons.getSampleSword());

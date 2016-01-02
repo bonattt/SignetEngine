@@ -32,6 +32,19 @@ public class Gear {
 		totalWeight = 0;
 	}
 	
+	private void updateWeight() {
+		totalWeight = 0;
+		for (String key : clothingWorn.keySet()) {
+			totalWeight += clothingWorn.get(key).getWeight();
+		}
+		for (String key : armorEquipped.keySet()) {
+			totalWeight += armorEquipped.get(key).getWeight();
+		}
+		for (String key : weaponsCarried.keySet()) {
+			totalWeight += weaponsCarried.get(key).getWeight();
+		}
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		// mainly used for testing, so perfomance of "instanceof" is not critical.
@@ -224,22 +237,10 @@ public class Gear {
 		writer.println("end weapons");
 	}
 	
-	public int getWeight(){
+	public int getWeight() {
 		return totalWeight;
 	}
 	
-	public void refreshWeight(){
-		totalWeight = 0;
-		for (String key : clothingWorn.keySet()){
-			totalWeight += clothingWorn.get(key).getWeight();
-		}
-		for (String key : armorEquipped.keySet()){
-			totalWeight += armorEquipped.get(key).getWeight();
-		}
-		for (String key : weaponsCarried.keySet()){
-			totalWeight += weaponsCarried.get(key).getWeight();
-		}
-	}
 	
 	public int[] getStatMods(){
 		if(!statsUpToDate){
@@ -278,6 +279,7 @@ public class Gear {
 			return false;
 		}
 		clothingWorn.put(clothing.getSlot(), clothing);
+		totalWeight += clothing.getWeight();
 		return true;
 	}
 	
@@ -290,6 +292,7 @@ public class Gear {
 		}
 		
 		WornItem removedClothing = clothingWorn.get(slot);
+		totalWeight -= removedClothing.getWeight();
 		clothingWorn.put(slot, null);
 		return removedClothing;
 	}
@@ -315,6 +318,7 @@ public class Gear {
 			throw new InventoryException("ERROR in Gear.equipArmor: armor slot does not exist.");
 		} else if (armorEquipped.get(armor.getSlot()) == null){
 			armorEquipped.put(armor.getSlot(), armor);
+			totalWeight += armor.getWeight();
 			return true;
 		} else {
 			TextTools.display("you already have armor equipped there");
@@ -332,6 +336,7 @@ public class Gear {
 		}
 		Armor armorRemoved = armorEquipped.get(slot);
 		armorEquipped.put(slot, null);
+		totalWeight -= armorRemoved.getWeight();
 		return armorRemoved;
 	}
 	
@@ -365,12 +370,16 @@ public class Gear {
 			return false;
 		} else {
 			weaponsCarried.put(slot, weapon);
+			totalWeight += weapon.getWeight();
 			return true;
 		}
 	}
 	
 	public Weapon removeWeapon(String slot){
 		Weapon removed = weaponsCarried.get(slot);
+		if (removed != null) {
+			totalWeight -= removed.getWeight();
+		}
 		weaponsCarried.put(slot, null);
 		return removed;
 	}

@@ -84,7 +84,7 @@ public class Inventory {
 		
 		return (inv.backpack.equals(this.backpack)) &&
 				(inv.equipment.equals(this.equipment)) &&
-				(inv.carriedWeight == this.carriedWeight);
+				(inv.getCarriedWeight() == this.getCarriedWeight());
 	}
 	
 	public LightSource getLightSource(){
@@ -164,7 +164,7 @@ public class Inventory {
 			equippedWeapon.saveToFile(writer);
 		}
 		
-		writer.println("end inventory");
+//		writer.println("end inventory");
 	}
 	private boolean tryToEquipCarriedWeaponToEquipNewWeapon(Inventory inv, Weapon weapon)
 			throws InventoryException {
@@ -208,7 +208,11 @@ public class Inventory {
 		return items;
 	}
 	public boolean store(Item item){
-		return backpack.addItem(item);
+		boolean success = backpack.addItem(item);
+		if(success) {
+			carriedWeight += item.getWeight();
+		}
+		return success;
 	}
 	
 	public void displayBackpack(){
@@ -370,7 +374,11 @@ public class Inventory {
 		return equippedWeapon;
 	}
 	public boolean discardItem(Item item){
-		return backpack.removeItem(item);
+		boolean result = backpack.removeItem(item);
+		if (result) {
+			carriedWeight -= item.getWeight();
+		}
+		return result;
 	}
 	public boolean pickUpWeapon(Weapon newWeapon){
 		// TODO add player input

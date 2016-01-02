@@ -13,6 +13,7 @@ import java.util.Scanner;
 import sampleEvents.LootGenericChest;
 import misc.DeathException;
 import misc.GameEvent;
+import misc.GameLoadException;
 import misc.TextTools;
 import creatures.PlayerCharacter;
 
@@ -102,9 +103,11 @@ public class Environment {
 		} catch (FileNotFoundException e) {
 			System.out.println("ERROR laoding file - file not found");
 			e.printStackTrace();
+		} catch (GameLoadException e) {
+			TextTools.display("Error in loading save data, save data corrupted.");
 		}
 	}
-	public static void loadAlpha0_1fromFile(Scanner scanner){
+	public static void loadAlpha0_1fromFile(Scanner scanner) throws GameLoadException{
 //		weather; 
 //		location;
 //		terrain;

@@ -8,9 +8,11 @@ import inventory.Inventory;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import misc.DeathException;
 import misc.DiceRoller;
+import misc.GameLoadException;
 import misc.TextTools;
 
 public abstract class Creature {
@@ -48,13 +50,50 @@ public abstract class Creature {
 	public abstract String handleDeath(DeathException e);
 	public abstract String handleKills(DeathException e);
 	
+	public void loadInvAndBodyAlpha0_1(Scanner scanner) throws GameLoadException {
+		this.inv = Inventory.loadAlpha1_0(scanner);
+		this.body = Body.loadAlpha1_0fromFile(scanner, this);
+	}
+	public static HashMap<String, Integer> loadAlpha0_1stats(Scanner scanner){
+		HashMap<String, Integer> stats = new HashMap<String, Integer>();
+		String[] statsInOrder = new String[]{"str", "agl", "end", "dex", "cha", "anl", "per", "wil", "int", "rec"};
+		for (String stat : statsInOrder){
+			String strVal = scanner.nextLine();
+			int intVal = Integer.parseInt(strVal);
+			stats.put(stat, intVal);
+		}
+		return stats;
+	}
+	public static HashMap<String, Integer> loadAlpha0_1damageMultipliers(Scanner scanner){
+		HashMap<String, Integer> damageMultipliers = new HashMap<String, Integer>();
+		String currentLine = scanner.nextLine();
+		while(! currentLine.equals("end damage characteristics")){
+			String key = currentLine;
+			Integer multiplier = Integer.getInteger(scanner.nextLine());
+			currentLine = scanner.nextLine();
+			damageMultipliers.put(key, multiplier);
+		}
+		return damageMultipliers;
+	}
+	public static HashMap<String, Skill> loadAlpha0_1skills(Scanner scanner){
+		HashMap<String, Skill> skills = new HashMap<String, Skill>();
+		String line = scanner.nextLine();
+		while(! line.equals("end skills")) {
+			Skill current = Skill.loadFromFile(scanner);
+			skills.put(line, current);
+			line = scanner.nextLine();
+		}
+		return skills;
+	}
+	
+	
 	public void saveToFile(PrintWriter writer){
 		writer.println(name);
 		saveStats(writer);
 		saveDamageMultipliers(writer);
+		saveSkills(writer);
 		inv.saveToFile(writer);
 		body.saveToFile(writer);
-		saveSkills(writer);
 	}
 	public void saveStats(PrintWriter writer){
 		for (int i = 0; i < ABILITIES.length; i++){
@@ -165,4 +204,65 @@ public abstract class Creature {
 		}
 		return skills.get(testName).makeSkillTest(this, threshold);
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(! (o instanceof Creature)) {
+			return false;
+		}
+		
+		Creature creature = (Creature) o;
+		
+		return (creature.name.equals(this.name)) &&
+				(creature.body.equals(this.body)) &&
+				(creature.inv.equals(this.inv)) &&
+				(statsEqual(creature)) &&
+				(damageMultipliersEqual(creature)) &&
+				(skillsEqual(creature));
+		
+	}
+	
+	private boolean statsEqual(Creature arg) {
+		if (arg.stats_base.size() != this.stats_base.size()) {
+			return false;
+		}
+		for (String key : this.stats_base.keySet()) {
+			if (! arg.stats_base.containsKey(key)) {
+				return false;
+			}
+			if (! arg.stats_base.get(key).equals(this.stats_base.get(key))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	private boolean damageMultipliersEqual(Creature arg) {
+		if (arg.damageMultipliers.size() != this.damageMultipliers.size()) {
+			return false;
+		}
+		for (String key : this.damageMultipliers.keySet()) {
+			if (! arg.damageMultipliers.containsKey(key)) {
+				return false;
+			}
+			if (! arg.damageMultipliers.get(key).equals(this.damageMultipliers.get(key))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	private boolean skillsEqual(Creature arg) {
+		if (arg.skills.size() != this.skills.size()) {
+			return false;
+		}
+		for (String key : this.skills.keySet()) {
+			if (! arg.skills.containsKey(key)) {
+				return false;
+			}
+			if (! arg.skills.get(key).equals(this.skills.get(key))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 }

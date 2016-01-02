@@ -4,10 +4,16 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import inventory.Gear;
 import inventory.Inventory;
+import inventory.InventoryException;
 import inventory.ItemContainer;
+import items.Armor;
 import items.Item;
+import items.Weapon;
+import items.WornItem;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +36,50 @@ public class UnitTestInventory {
 	public void invEqualsSelf() {
 		Inventory clone = new Inventory();
 		assertEquals(inv, clone);
+	}
+	
+	@Test
+	public void carriedWeightCalculatedCorrectly()
+			throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+				IllegalAccessException, InventoryException {
+		int expectedWeight = 0;
+		HashMap<String, Armor> armorSlots = new HashMap<String, Armor>();
+		HashMap<String, Weapon> weaponSlots = new HashMap<String, Weapon>();
+		HashMap<String, WornItem> clothingSlots = new HashMap<String, WornItem>();
+		Gear gear = new Gear(weaponSlots, clothingSlots, armorSlots);
+		
+		Armor armor = SampleArmor.getSampleArmorJacket();
+		armorSlots.put("main-armor", null);
+		expectedWeight += armor.getWeight();
+		
+		Weapon weapon = SampleWeapons.getSampleAssaultRifle();
+		weaponSlots.put("weapon slot", null);
+		expectedWeight += weapon.getWeight();
+		
+		WornItem clothing = SampleClothing.getSamplePants();
+		clothingSlots.put("pants", null);
+		expectedWeight += clothing.getWeight();	
+		
+		gear.addWeapon("weapon slot", weapon);
+		gear.equipArmor(armor);
+		gear.equipClothing(clothing);
+		
+		int bagWeight = 1000;
+		expectedWeight += bagWeight;
+		ItemContainer pack = new ItemContainer(bagWeight, 1000, "whatever");
+		Item itm = new SampleThingy();
+		assertTrue(pack.addItem(itm));
+		expectedWeight += itm.getWeight();
+		
+		Weapon carriedWeapon = SampleWeapons.getSampleCombatKnife();
+		expectedWeight += carriedWeapon.getWeight();
+		
+		Inventory inv = new Inventory(null, carriedWeapon, gear, pack);
+		Field f = Inventory.class.getDeclaredField("carriedWeight");
+		f.setAccessible(true);
+		f.setInt(inv, 0);
+		
+		assertEquals(expectedWeight, inv.getCarriedWeight());
 	}
 	
 	@Test
