@@ -12,17 +12,17 @@ public class MeleeWeapon extends Weapon {
 	
 	private int parry;		// stat used as a bonus to active defense test while using this weapon.
 	
-	public MeleeWeapon(int might, int accuracy, int parry, int weaponType, String name, String descrip) {
+	public MeleeWeapon(int might, int accuracy, int parry, int weaponType, int damageType, String name, String descrip) {
 		super(getWeaponSize(weaponType), getWeaponWeight(weaponType), getWeaponDurability(weaponType),
 				getWeaponHardness(weaponType), 0, name, descrip, 
-				might, accuracy, weaponType);
+				might, accuracy, weaponType, damageType);
 		this.parry = parry;
 	}
 	public MeleeWeapon(int size, int weight, int durability, int hardness, int damage,
 			String name, String descrip, 
-			int weaponType, int parry, int accuracy, int might) {
+			int weaponType, int parry, int accuracy, int might, int damageType) {
 		super(size, weight, durability, hardness, damage, name, descrip,
-				might, accuracy, weaponType);
+				might, accuracy, weaponType, damageType);
 		this.parry = parry;
 	}
 	
@@ -34,7 +34,7 @@ public class MeleeWeapon extends Weapon {
 		writer.println(parry);
 	}
 	public static MeleeWeapon loadMeleeWeaponAlpha0_1(Scanner scanner) {
-		int size, weight, durability, hardness, damage, weaponType, parry, accuracy, might;
+		int size, weight, durability, hardness, damage, weaponType, parry, accuracy, might, damageType;
 		String name = scanner.nextLine();
 		String description = Item.loadItemDescriptionAlpha0_1(scanner);
 		size = scanner.nextInt();
@@ -45,10 +45,11 @@ public class MeleeWeapon extends Weapon {
 		might = scanner.nextInt();
 		accuracy = scanner.nextInt();
 		weaponType = scanner.nextInt();
+		damageType = scanner.nextInt();
 		parry = scanner.nextInt();
 		scanner.nextLine(); // realign the scanner to read lines after performing nextInt()
 		MeleeWeapon weapon =  new MeleeWeapon(size, weight, durability, hardness, damage, name, description,
-				weaponType, parry, accuracy, might);
+				weaponType, parry, accuracy, might, damageType);
 		return weapon;
 	}
 
@@ -133,6 +134,7 @@ public class MeleeWeapon extends Weapon {
 				(weapon.name().equals(this.name())) &&
 				((weapon.getAccuracy() == getAccuracy())) &&
 				((weapon.getMight() == getMight())) &&
+				(weapon.damageTypesEqual(this)) &&
 				((weapon.getParry() == weapon.getParry())) &&
 				((weapon.getSize() == weapon.getSize())) && 
 				((weapon.getWeaponType() == getWeaponType())) &&

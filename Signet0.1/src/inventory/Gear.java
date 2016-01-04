@@ -29,19 +29,29 @@ public class Gear {
 		armorEquipped = armorSlots;
 		weaponsCarried = weaponSlots;
 		stats = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		totalWeight = 0;
+		updateWeight();
 	}
 	
 	private void updateWeight() {
 		totalWeight = 0;
 		for (String key : clothingWorn.keySet()) {
-			totalWeight += clothingWorn.get(key).getWeight();
+			WornItem item = clothingWorn.get(key);
+			if (item != null) {
+				totalWeight += item.getWeight();
+			}
 		}
 		for (String key : armorEquipped.keySet()) {
-			totalWeight += armorEquipped.get(key).getWeight();
+			Armor item = armorEquipped.get(key);
+			if (item != null) {
+				totalWeight += item.getWeight();
+			}
 		}
 		for (String key : weaponsCarried.keySet()) {
-			totalWeight += weaponsCarried.get(key).getWeight();
+			Weapon item = weaponsCarried.get(key);
+			if (item != null) {
+				totalWeight += item.getWeight();
+
+			}
 		}
 	}
 	

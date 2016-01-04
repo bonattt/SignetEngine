@@ -5,8 +5,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Set;
 
 import misc.DeathException;
+import misc.DiceRoller;
+import misc.HealthException;
 import creatures.Creature;
 import environment.GameClock;
 
@@ -219,9 +222,19 @@ public class Body {
 		}
 		return painEffective;
 	}
-	public HashMap<String, BodyPart> getBodyParts() {
-		return bodyparts;
+	public BodyPart getBodyPart(String key) {
+		return bodyparts.get(key);
 	}
+	
+	public String[] getBodyParts() {
+		String[] bodypartStrings = new String[bodyparts.size()];
+		int i = 0;
+		for (String key : bodyparts.keySet()) {
+			bodypartStrings[i] = key;
+			i++;
+		}
+		return bodypartStrings;
+	} 
 	public double getFatigue(){
 		return fatigueEffective;
 	}
@@ -295,6 +308,19 @@ public class Body {
 		if (painEffective < 1){
 			painEffective = 1;
 		}
+	}
+	
+	public String getTotalRandomBodyPart() throws HealthException {
+		int val = bodyparts.size();
+		val = DiceRoller.getRandInt(val);
+		int i = 0;
+		for (String key : bodyparts.keySet()) {
+			if(i == val) {
+				return key;
+			}
+			i++;
+		}
+		throw new HealthException("Body.getTotalRandomBodyPart failed to obtain a random bodypart");
 	}
 	
 	private void calculateEffectiveFatigue(){

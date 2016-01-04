@@ -8,11 +8,13 @@ import inventory.Inventory;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 import misc.DeathException;
 import misc.DiceRoller;
 import misc.GameLoadException;
+import misc.HealthException;
 import misc.TextTools;
 
 public abstract class Creature {
@@ -64,6 +66,23 @@ public abstract class Creature {
 		}
 		return stats;
 	}
+	
+	public ArrayList<Wound> listAllWounds() {
+		ArrayList<Wound> list = new ArrayList<Wound>();
+		String[] bodyparts = body.getBodyParts();
+		for (int i = 0; i < bodyparts.length; i++) {
+			addWoundsToList(list, bodyparts[i]);
+		}
+		return list;
+	}
+	private void addWoundsToList(ArrayList<Wound> list, String bodypart) {
+		BodyPart limb = body.getBodyPart(bodypart);
+		List<Wound> wounds = limb.getInjuries();
+		for (int i = 0; i < wounds.size(); i++) {
+			list.add(wounds.get(i));
+		}
+	}
+	
 	public static HashMap<String, Integer> loadAlpha0_1damageMultipliers(Scanner scanner){
 		HashMap<String, Integer> damageMultipliers = new HashMap<String, Integer>();
 		String currentLine = scanner.nextLine();
@@ -121,18 +140,18 @@ public abstract class Creature {
 	public int getStat(String stat) {
 		return stats_adjusted.get(stat);
 	}
-	
-	public ArrayList<Wound> listAllWounds(){
-		HashMap<String, BodyPart> bodyparts = body.getBodyParts();
-		ArrayList<Wound> injuries = new ArrayList<Wound>();
-		for (String key : bodyparts.keySet()){
-			BodyPart current = bodyparts.get(key);
-			for (int i = 0; i < current.getInjuries().size(); i++){
-				injuries.add(current.getInjuries().get(i));
-			}
-		}
-		return injuries;
-	}
+//	
+//	public ArrayList<Wound> listAllWounds(){
+//		HashMap<String, BodyPart> bodyparts = body.getBodyParts();
+//		ArrayList<Wound> injuries = new ArrayList<Wound>();
+//		for (String key : bodyparts.keySet()){
+//			BodyPart current = bodyparts.get(key);
+//			for (int i = 0; i < current.getInjuries().size(); i++){
+//				injuries.add(current.getInjuries().get(i));
+//			}
+//		}
+//		return injuries;
+//	}
 	
 	public HashMap<String, Skill> getSkills(){
 		return skills;
@@ -152,9 +171,18 @@ public abstract class Creature {
 	public void recieveWound(int damage, int damageType, String bodypart) throws DeathException{
 		body.recieveWound(damage, damageType, bodypart);
 	}
-	public void recieveWound(int damage, int damageType, BodyPart bodypart) throws DeathException{
+	public void recieveWound(int damage, int damageType, int netHits) throws DeathException{
+		String bodypart = getRandomWoundLocation(netHits);
 		body.recieveWound(damage, damageType, bodypart);
 	}
+	private String getRandomWoundLocation(int netHits) {
+		try {
+			return body.getTotalRandomBodyPart();
+		} catch (HealthException e) {
+			return body.getBodyParts()[0];
+		}
+	}
+	
 	public HashMap<String, Integer> getStats(){
 		return stats_adjusted;
 	}

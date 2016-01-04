@@ -83,7 +83,7 @@ public class UnitTestSaveAndLoad {
 		writer.close();
 		
 		Scanner scanner = new Scanner(new File(filePath));
-		Method method = PlayerCharacter.class.getDeclaredMethod("loadAlpha0_1skills", scanner.getClass());
+		Method method = Creature.class.getDeclaredMethod("loadAlpha0_1skills", scanner.getClass());
 		method.setAccessible(true);
 		@SuppressWarnings("unchecked")
 		HashMap<String, Skill> loadedMap = (HashMap<String, Skill>) method.invoke(null, scanner);
@@ -112,7 +112,7 @@ public class UnitTestSaveAndLoad {
 		writer.close();
 		Scanner scanner = new Scanner(new File(filePath));
 		
-		Method method = PlayerCharacter.class.getDeclaredMethod("loadAlpha0_1damageMultipliers", scanner.getClass());
+		Method method = Creature.class.getDeclaredMethod("loadAlpha0_1damageMultipliers", scanner.getClass());
 		method.setAccessible(true);
 		Object loadedObj = method.invoke(null, scanner);
 		@SuppressWarnings("unchecked")
@@ -142,7 +142,7 @@ public class UnitTestSaveAndLoad {
 		writer.close();
 		
 		Scanner scanner = new Scanner(new File(filePath));
-		Method method = PlayerCharacter.class.getDeclaredMethod("loadAlpha0_1stats", scanner.getClass());
+		Method method = Creature.class.getDeclaredMethod("loadAlpha0_1stats", scanner.getClass());
 		method.setAccessible(true);
 		Object loadedObj = method.invoke(null, scanner);
 		@SuppressWarnings("unchecked")
@@ -212,8 +212,8 @@ public class UnitTestSaveAndLoad {
 	public void testItemContainerSaveLoad() {
 		try {
 			ItemContainer saved = Inventory.getStartingBackpack();
-			MeleeWeapon wpn1 = new MeleeWeapon(1, 1, 1, 1, "item_name", "item_description");
-			MeleeWeapon wpn2 = new MeleeWeapon(2, 2, 2, 2, "item_name", "item_description");
+			MeleeWeapon wpn1 = new MeleeWeapon(1, 1, 1, 1, 1, "item_name", "item_description");
+			MeleeWeapon wpn2 = new MeleeWeapon(2, 2, 2, 2, 2, "item_name", "item_description");
 			WornItem clothing = new WornItem(10, 10, 10, 2, 0, "_slot_", "item_name", "item_description");
 			
 			saved.addItem(wpn1);
@@ -245,8 +245,8 @@ public class UnitTestSaveAndLoad {
 		try {
 
 			ItemContainer saved = Inventory.getStartingBackpack();
-			MeleeWeapon wpn1 = new MeleeWeapon(1, 1, 1, 1, "item_name", "item_description");
-			MeleeWeapon wpn2 = new MeleeWeapon(2, 2, 2, 2, "item_name", "item_description");
+			MeleeWeapon wpn1 = new MeleeWeapon(1, 1, 1, 1, 1, "item_name", "item_description");
+			MeleeWeapon wpn2 = new MeleeWeapon(2, 2, 2, 2, 2, "item_name", "item_description");
 			WornItem clothing = new WornItem(10, 10, 10, 2, 0, "_slot_", "item_name", "item_description");
 			
 			saved.addItem(wpn1);
@@ -367,7 +367,7 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testItem_RangedWeaponSaveLoad() throws FileNotFoundException {
 		RangedWeapon saved = new RangedWeapon("weapon","this shoots bullets",
-				100, 100, 100, 10, 0, 5, 5, 20, RangedWeapon.ONE_HANDED, 10, 10);
+				100, 100, 100, 10, 0, 5, 5, 20, 3, RangedWeapon.ONE_HANDED, 10, 10);
 		
 		PrintWriter writer = new PrintWriter(filePath);
 		saved.saveToFile(writer);
@@ -382,7 +382,7 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testItem_WeaponSaveLoad() {
 		try {
-			MeleeWeapon saved = new MeleeWeapon(4, 3, 2, 1, "weapon_name", "item_description");
+			MeleeWeapon saved = new MeleeWeapon(4, 3, 2, 1, 2, "weapon_name", "item_description");
 			PrintWriter writer = new PrintWriter(filePath);
 			saved.saveToFile(writer);
 			writer.close();
@@ -399,7 +399,7 @@ public class UnitTestSaveAndLoad {
 	@Test
 	public void testWeaponDescriptionSaveLoad() {
 		try {
-			MeleeWeapon saved = new MeleeWeapon(4, 3, 2, 1, "item_name", "item_description");
+			MeleeWeapon saved = new MeleeWeapon(4, 3, 2, 1, 1, "item_name", "item_description");
 			PrintWriter writer = new PrintWriter(filePath);
 			saved.saveToFile(writer);
 			writer.close();
@@ -433,27 +433,19 @@ public class UnitTestSaveAndLoad {
 	
 	
 	@Test
-	public void testGearSaveLoad() throws FileNotFoundException, InventoryException {
+	public void emptyGearSaveLoad() throws FileNotFoundException, InventoryException {
 
-		HashMap<String, Weapon> weapons = new HashMap<String, Weapon>();
-		HashMap<String, WornItem> clothing = new HashMap<String, WornItem>();
-		HashMap<String, Armor> armor = new HashMap<String, Armor>();
-		weapons.put("test_slot", null);
-		weapons.put("empty_slot", null);
-		clothing.put("shirt", null);
-		clothing.put("pants", null);
-		armor.put("main-armor", null);
-		armor.put("helmet", null);
-		
-		
-		Gear saved = new Gear(weapons, clothing, armor);
-//		System.out.println(saved.getArmorSlots());
-//		System.out.println(saved.getWeaponSlots());
-//		System.out.println(saved.getClothingSlots());
-		saved.addWeapon("test_slot", SampleWeapons.getSampleSword());
-		saved.equipArmor(SampleArmor.getSampleHelmet());
-		saved.equipClothing(SampleClothing.getSampleShirt());
-		
+		HashMap<String, Weapon> weaponSlots = new HashMap<String, Weapon>();
+		HashMap<String, WornItem> clothingSlots = new HashMap<String, WornItem>();
+		HashMap<String, Armor> armorSlots = new HashMap<String, Armor>();
+		weaponSlots.put("test_slot", null);
+		weaponSlots.put("empty_slot", null);
+		clothingSlots.put("shirt", null);
+		clothingSlots.put("pants", null);
+		armorSlots.put("main-armor", null);
+		armorSlots.put("helmet", null);
+		Gear saved = new Gear(weaponSlots, clothingSlots, armorSlots);
+
 		PrintWriter writer = new PrintWriter(filePath);
 		saved.saveToFile(writer);
 		writer.close();

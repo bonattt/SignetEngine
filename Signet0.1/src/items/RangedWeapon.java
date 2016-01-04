@@ -24,9 +24,9 @@ public class RangedWeapon extends Weapon {
 	
 	public RangedWeapon(String name, String description,
 			int size, int wt, int dur, int hard, int dam,
-			int might, int accuracy, int range, int weaponType, int ammoCap, int ammoRem) {
+			int might, int accuracy, int range, int weaponType, int damageType, int ammoCap, int ammoRem) {
 		super(size, wt, dur, hard, dam, name, description,
-				might, accuracy, weaponType);
+				might, accuracy, weaponType, damageType);
 		this.range = range;
 		ammoCapacity = ammoCap;
 		ammoRemaining = ammoRem;
@@ -93,7 +93,7 @@ public class RangedWeapon extends Weapon {
 	}
 	
 	public static RangedWeapon loadRangedWeaponAlpha0_1(Scanner scanner) {
-		int size, weight, durability, hardness, damage, weaponType, accuracy, might, range, ammoCap, ammoRem;
+		int size, weight, durability, hardness, damage, weaponType, damageType, accuracy, might, range, ammoCap, ammoRem;
 		String name = scanner.nextLine();
 		String description = Item.loadItemDescriptionAlpha0_1(scanner);
 		size = scanner.nextInt();
@@ -104,13 +104,14 @@ public class RangedWeapon extends Weapon {
 		might = scanner.nextInt();
 		accuracy = scanner.nextInt();
 		weaponType = scanner.nextInt();
+		damageType = scanner.nextInt();
 		range = scanner.nextInt();
 		ammoCap = scanner.nextInt();
 		ammoRem = scanner.nextInt();
 		scanner.nextLine(); // realign the scanner to read lines after performing nextInt()
 		RangedWeapon weapon = new RangedWeapon(name, description,
 				size, weight, durability, hardness, damage, might, accuracy,
-				range, weaponType, ammoCap, ammoRem);
+				range, weaponType, damageType, ammoCap, ammoRem);
 		return weapon;
 	}
 	
@@ -123,6 +124,7 @@ public class RangedWeapon extends Weapon {
 		return ((weapon.name().equals(this.name()) &&
 				(weapon.getAccuracy() == this.getAccuracy()) &&
 				(weapon.getMight() == this.getMight()) &&
+				(weapon.damageTypesEqual(this)) &&
 				(weapon.getSize() == this.getSize()) && 
 				(weapon.getRange() == this.getRange()) && 
 				(weapon.getAmmoCapacity() == this.getAmmoCapacity()) &&

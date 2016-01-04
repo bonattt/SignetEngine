@@ -3,6 +3,8 @@ package unitTests;
 import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import testingMothers.SampleWeapons;
@@ -193,6 +195,16 @@ public class UnitTestGear {
 		gear.removeWeapon(WEAPON1);
 		Weapon result = gear.getWeapon(WEAPON1);
 		assertTrue(result == null);
+	}
+	
+	@Test
+	public void gearInitializesToCorrectWeight()
+			throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		int initialWeight = gear.getWeight();
+		Method method = Gear.class.getDeclaredMethod("updateWeight");
+		method.setAccessible(true);
+		method.invoke(gear);
+		assertEquals(initialWeight, gear.getWeight());
 	}
 	
 	@Test

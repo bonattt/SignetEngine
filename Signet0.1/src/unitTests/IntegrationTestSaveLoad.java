@@ -52,7 +52,34 @@ public class IntegrationTestSaveLoad {
 		
 		assertEquals(saved, loaded);
 	}
-	
+
+	@Test
+	public void itemsAndGearSaveLoad() throws FileNotFoundException, InventoryException {
+
+		HashMap<String, Weapon> weapons = new HashMap<String, Weapon>();
+		HashMap<String, WornItem> clothing = new HashMap<String, WornItem>();
+		HashMap<String, Armor> armor = new HashMap<String, Armor>();
+		weapons.put("test_slot", null);
+		weapons.put("empty_slot", null);
+		clothing.put("shirt", null);
+		clothing.put("pants", null);
+		armor.put("main-armor", null);
+		armor.put("helmet", null);
+		
+		Gear saved = new Gear(weapons, clothing, armor);
+		saved.addWeapon("test_slot", SampleWeapons.getSampleSword());
+		saved.equipArmor(SampleArmor.getSampleHelmet());
+		saved.equipClothing(SampleClothing.getSampleShirt());
+		
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveToFile(writer);
+		writer.close();
+		Scanner scanner = new Scanner(new File(filePath));
+		Gear loaded = Gear.loadAlpha0_1(scanner);
+		scanner.close();
+		
+		assertEquals(saved, loaded);
+	}
 	
 	@Test
 	public void inventoryEmptySaveLoad() throws FileNotFoundException, GameLoadException {

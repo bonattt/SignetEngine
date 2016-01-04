@@ -15,8 +15,8 @@ public class UnitTestItem {
 	public void testWeaponEquals() {
 		String name = "name";
 		String desc = "this is a weapon";
-		MeleeWeapon weapon1 = new MeleeWeapon(4, 3, 2, 1, name, desc);
-		MeleeWeapon weapon2 = new MeleeWeapon(4, 3, 2, 1, name, desc);
+		MeleeWeapon weapon1 = new MeleeWeapon(4, 3, 2, 1, 5, name, desc);
+		MeleeWeapon weapon2 = new MeleeWeapon(4, 3, 2, 1, 5, name, desc);
 		assertTrue(weapon1.equals(weapon2));
 		assertTrue(weapon2.equals(weapon1));
 		assertTrue(weapon1.equals(weapon1));
@@ -25,18 +25,18 @@ public class UnitTestItem {
 	public void testWeaponNotEqual() {
 		String desc = "this is a weapon";
 		String name = "name";
-		MeleeWeapon weapon1 = new MeleeWeapon(4, 3, 2, 1, "different", desc);
-		MeleeWeapon weapon2 = new MeleeWeapon(4, 3, 2, 1, name, desc);
+		MeleeWeapon weapon1 = new MeleeWeapon(4, 3, 2, 1, 5, "different", desc);
+		MeleeWeapon weapon2 = new MeleeWeapon(4, 3, 2, 1, 5, name, desc);
 		assertFalse(weapon1.equals(weapon2));
 		assertFalse(weapon2.equals(weapon1));
 		
-		weapon1 = new MeleeWeapon(4, 3, 2, 1, name, desc);
-		weapon2 = new MeleeWeapon(1, 1, 1, 1, name, desc);
+		weapon1 = new MeleeWeapon(4, 3, 2, 1, 10, name, desc);
+		weapon2 = new MeleeWeapon(1, 1, 1, 1, 1, name, desc);
 		assertFalse(weapon1.equals(weapon2));
 		assertFalse(weapon2.equals(weapon1));
 		
-		weapon1 = new MeleeWeapon(4, 3, 2, 1, name, desc);
-		weapon2 = new MeleeWeapon(4, 3, 2, 1, name, "different");
+		weapon1 = new MeleeWeapon(4, 3, 2, 1, 2, name, desc);
+		weapon2 = new MeleeWeapon(4, 3, 2, 1, 2, name, "different");
 		assertFalse(weapon1.equals(weapon2));
 		assertFalse(weapon2.equals(weapon1));
 	}

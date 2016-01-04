@@ -6,22 +6,28 @@ import inventory.InventoryException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import misc.DeathException;
+import misc.DiceRoller;
 import misc.TextTools;
 import creatures.Creature;
 
 public abstract class Weapon extends Item {
 	
-	private int might, accuracy, weaponType;
+	private int might, accuracy, weaponType, damageType;
 	
 	public Weapon(int size, int wt, int dur, int hard, int dam,
 			String name, String description,
-			int might, int accuracy, int weaponType) {
+			int might, int accuracy, int weaponType, int damageType) {
 		super(size, wt, dur, hard, dam, name, description);
 		this.might = might;
 		this.accuracy = accuracy;
 		this.weaponType = weaponType;
+		this.damageType = damageType;
 	}
-
+	public int getDamageType(int damageDealt) {
+		return damageType;
+	}
+	
 	@Override
 	public boolean isEquipment(){
 		return true;
@@ -39,10 +45,31 @@ public abstract class Weapon extends Item {
 		return true;
 	}
 	
+	public void makeAttack(Creature attacker, Creature target) throws DeathException {
+		int netHits = checkIfAttackHits(attacker, target);
+		dealDamage(attacker, target, netHits);
+	}
+	
+	public void dealDamage(Creature attacker, Creature target, int netHits)
+			throws DeathException {
+		if (netHits <= 0) {
+			return;
+		}
+		int damage = DiceRoller.makeRoll(netHits)[0];
+		target.recieveWound(damage, damageType, netHits);
+	}
+	public int checkIfAttackHits(Creature attacker, Creature target) {
+		
+		
+		
+		return -1;
+	}
+	
 	public void saveBaseWeaponStats(PrintWriter writer) {
 		writer.println(might);
 		writer.println(accuracy);
 		writer.println(weaponType);
+		writer.println(damageType);
 	}
 	
 	public int getWeaponType() {
@@ -76,6 +103,10 @@ public abstract class Weapon extends Item {
 			System.out.println("ERROR");
 		}
 	}
+	public boolean damageTypesEqual(Weapon wep) {
+		return wep.damageType == this.damageType;
+	}
+	
 	private void tryToCarry(Inventory inv, Creature player) throws InventoryException  {
 		if(inv.getWeapon() == null){
 			if(inv.tryToCarryWeapon(inv, this)){

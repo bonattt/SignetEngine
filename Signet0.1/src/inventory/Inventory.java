@@ -25,6 +25,7 @@ public class Inventory {
 		equipment = initializeGear();
 		backpack = getStartingBackpack();
 		equippedWeapon = null;
+		lightSource = null;
 		updateCarriedWeight();
 	}
 	
@@ -148,6 +149,8 @@ public class Inventory {
 	}
 	
 	public void saveToFile(PrintWriter writer){
+		updateCarriedWeight();
+		updateCarriedWeight();
 		writer.println(carriedWeight);
 		backpack.saveToFile(writer);
 		equipment.saveToFile(writer);

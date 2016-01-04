@@ -32,9 +32,18 @@ public class ItemContainer {
 		baseSpace = size;
 		baseWeight = weight;
 		this.name = name;
+		updateWeight();
 	}
 	public String name() {
 		return name;
+	}
+	
+	public void updateWeight() {
+		weightContained = 0;
+		int length = items.size();
+		for (int i = 0; i < length; i++) {
+			weightContained += items.get(i).getWeight();
+		}
 	}
 	
 	public void saveToFile(PrintWriter writer){
@@ -73,13 +82,20 @@ public class ItemContainer {
 		}
 		return items;
 	}
-	public boolean equals(ItemContainer obj) {
+	
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof ItemContainer)) {
+			return false;
+		}
+		ItemContainer obj = (ItemContainer) o;
 		return (obj.concealability == this.concealability)
 				&& (obj.name.equals(this.name))
 				&& (obj.baseWeight == this.baseWeight)
 				&& (obj.baseSpace == this.baseSpace);
+		
 	}
-	
+
 	public boolean contentsEqual(ItemContainer obj) {
 		if(this.items.size() != obj.items.size()) {
 			return false;

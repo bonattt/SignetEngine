@@ -84,7 +84,7 @@ public class UnitTestBody {
 	public void testGettingWoundedAddsOneWound(){
 		int initialWoundCount = body.countWounds();
 		try {
-			body.recieveWound(3, DamageType.BLUNT, body.getBodyParts().get("chest"));
+			body.recieveWound(3, DamageType.BLUNT, body.getBodyPart("chest"));
 		} catch (DeathException e) {
 			// do nothing 
 		}
@@ -93,16 +93,16 @@ public class UnitTestBody {
 	@Test
 	public void testGettingWoundedIncreasesPain(){
 		try {
-			body.recieveWound(4, DamageType.SLASHING, body.getBodyParts().get("chest"));
-			body.recieveWound(4, DamageType.SLASHING, body.getBodyParts().get("chest"));
-			body.recieveWound(4, DamageType.SLASHING, body.getBodyParts().get("chest"));
-			body.recieveWound(4, DamageType.SLASHING, body.getBodyParts().get("chest"));
+			body.recieveWound(4, DamageType.SLASHING, body.getBodyPart("chest"));
+			body.recieveWound(4, DamageType.SLASHING, body.getBodyPart("chest"));
+			body.recieveWound(4, DamageType.SLASHING, body.getBodyPart("chest"));
+			body.recieveWound(4, DamageType.SLASHING, body.getBodyPart("chest"));
 		} catch (DeathException e) {
 			fail("Player died");
 		}
 		double initialPainLevel = body.getPain();
 		try {
-			body.recieveWound(4, DamageType.SLASHING, body.getBodyParts().get("chest"));
+			body.recieveWound(4, DamageType.SLASHING, body.getBodyPart("chest"));
 		} catch (DeathException e) {
 			fail("Player died");
 		}
@@ -111,22 +111,22 @@ public class UnitTestBody {
 	@Test
 	public void testPainIsPartiallyIgnored(){
 		try {
-			body.recieveWound(4, DamageType.SLASHING, body.getBodyParts().get("chest"));
-			body.recieveWound(4, DamageType.SLASHING, body.getBodyParts().get("chest"));
-			body.recieveWound(4, DamageType.SLASHING, body.getBodyParts().get("chest"));
-			body.recieveWound(4, DamageType.SLASHING, body.getBodyParts().get("chest"));
-			body.recieveWound(4, DamageType.SLASHING, body.getBodyParts().get("chest"));
+			body.recieveWound(4, DamageType.SLASHING, body.getBodyPart("chest"));
+			body.recieveWound(4, DamageType.SLASHING, body.getBodyPart("chest"));
+			body.recieveWound(4, DamageType.SLASHING, body.getBodyPart("chest"));
+			body.recieveWound(4, DamageType.SLASHING, body.getBodyPart("chest"));
+			body.recieveWound(4, DamageType.SLASHING, body.getBodyPart("chest"));
 		} catch (DeathException e) {
 			fail("Player died");
 		}
-		Wound testWound = Injuries.getSlashingWound(4, body.getBodyParts().get("chest"));
+		Wound testWound = Injuries.getSlashingWound(4, body.getBodyPart("chest"));
 		double totalPain = testWound.getPain() * body.countWounds();
 		assertTrue(totalPain > body.getPain());
 	}
 	@Test
 	public void testSmallAmountOfPainIgnored(){
 		try {
-			body.recieveWound(3, DamageType.BLUNT, body.getBodyParts().get("chest"));
+			body.recieveWound(3, DamageType.BLUNT, body.getBodyPart("chest"));
 		} catch (DeathException e) {
 			fail("Player died");
 		}
