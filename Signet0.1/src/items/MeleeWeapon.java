@@ -36,7 +36,7 @@ public class MeleeWeapon extends Weapon {
 	public static MeleeWeapon loadMeleeWeaponAlpha0_1(Scanner scanner) {
 		int size, weight, durability, hardness, damage, weaponType, parry, accuracy, might, damageType;
 		String name = scanner.nextLine();
-		String description = Item.loadItemDescriptionAlpha0_1(scanner);
+		String description = Item.loadLongStringAlpha0_1(scanner);
 		size = scanner.nextInt();
 		weight = scanner.nextInt();
 		durability = scanner.nextInt();

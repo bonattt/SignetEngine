@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import testingMothers.SampleArmor;
 import testingMothers.SampleClothing;
-import testingMothers.SampleThingy;
+import testingMothers.SampleItems;
 import testingMothers.SampleWeapons;
 
 public class UnitTestInventory {
@@ -67,7 +67,7 @@ public class UnitTestInventory {
 		int bagWeight = 1000;
 		expectedWeight += bagWeight;
 		ItemContainer pack = new ItemContainer(bagWeight, 1000, "whatever");
-		Item itm = new SampleThingy();
+		Item itm = SampleItems.getMysticThingy();
 		assertTrue(pack.addItem(itm));
 		expectedWeight += itm.getWeight();
 		
@@ -121,7 +121,7 @@ public class UnitTestInventory {
 		} catch (IllegalAccessException e) {
 			fail("threw an excaption");
 		}
-		Item item = new SampleThingy();
+		Item item = SampleItems.getMysticThingy();
 		itemsStored.add(item);
 		inv.discardItem(item);
 		assertFalse(itemsStored.contains(item));
@@ -145,7 +145,7 @@ public class UnitTestInventory {
 		} catch (IllegalAccessException e) {
 			fail("threw an excaption");
 		}
-		Item item = new SampleThingy();
+		Item item = SampleItems.getMysticThingy();
 		itemsStored.add(item);
 		assertTrue(itemsStored.contains(item));
 	}
@@ -168,7 +168,7 @@ public class UnitTestInventory {
 		} catch (IllegalAccessException e) {
 			fail("threw an excaption");
 		}
-		Item item = new SampleThingy();
+		Item item = SampleItems.getMysticThingy();
 		itemsStored.add(item);
 		int initialCount = itemsStored.size();
 		inv.discardItem(item);
@@ -193,14 +193,14 @@ public class UnitTestInventory {
 		} catch (IllegalAccessException e) {
 			fail("threw an excaption");
 		}
-		Item item = new SampleThingy();
+		Item item = SampleItems.getMysticThingy();
 		int initialCount = itemsStored.size();
 		itemsStored.add(item);
 		assertEquals(initialCount + 1,itemsStored.size());
 	}
 	@Test
 	public void discardingItemReducesWeight(){
-		Item item = new SampleThingy();
+		Item item = SampleItems.getMysticThingy();
 		inv.store(item);
 		int initialWeight = inv.getCarriedWeight();
 		inv.discardItem(item);

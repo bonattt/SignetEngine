@@ -78,7 +78,7 @@ public class Ointment extends FirstAidItem {
 		int size, weight, durability, hardness, damage;
 		double infectionRate, damageMultiplier, healingRate;
 		String name = scanner.nextLine();
-		String descrip = Item.loadItemDescriptionAlpha0_1(scanner);
+		String descrip = Item.loadLongStringAlpha0_1(scanner);
 		size = scanner.nextInt();
 		weight = scanner.nextInt();
 		durability = scanner.nextInt();

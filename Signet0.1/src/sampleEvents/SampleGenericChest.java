@@ -2,7 +2,7 @@ package sampleEvents;
 
 import testingMothers.SampleArmor;
 import testingMothers.SampleClothing;
-import testingMothers.SampleThingy;
+import testingMothers.SampleItems;
 import testingMothers.SampleWeapons;
 import inventory.ItemContainer;
 
@@ -18,7 +18,7 @@ public class SampleGenericChest extends ItemContainer {
 		this.addItem(SampleWeapons.getSampleAssaultRifle());
 		this.addItem(SampleWeapons.getSampleCombatKnife());
 		this.addItem(SampleArmor.getSampleHelmet());
-		this.addItem(new SampleThingy());
+		this.addItem(SampleItems.getMysticThingy());
 		this.addItem(SampleWeapons.getSampleSword());
 		this.addItem(SampleWeapons.getSamplePistol());
 	}

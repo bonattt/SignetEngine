@@ -32,7 +32,7 @@ import creatures.PlayerCharacter;
 import testingMothers.CharacterMother;
 import testingMothers.SampleArmor;
 import testingMothers.SampleClothing;
-import testingMothers.SampleThingy;
+import testingMothers.SampleItems;
 import testingMothers.SampleWeapons;
 
 public class IntegrationTestSaveLoad {
@@ -115,7 +115,7 @@ public class IntegrationTestSaveLoad {
 		
 		
 		Inventory saved = new Inventory(light, weapon, equipment, backpack);
-		saved.store(new SampleThingy());
+		saved.store(SampleItems.getMysticThingy());
 		saved.store(SampleWeapons.getSampleSword());
 		
 		PrintWriter writer = new PrintWriter(filePath);

@@ -53,7 +53,7 @@ public class Armor extends Item {
 	
 	public static Armor loadAlpha0_1(Scanner scanner) {
 		String name = scanner.nextLine();
-		String description = Item.loadItemDescriptionAlpha0_1(scanner);
+		String description = Item.loadLongStringAlpha0_1(scanner);
 		int size, weight, durability, hardness, damage;
 		size = scanner.nextInt();
 		weight = scanner.nextInt();

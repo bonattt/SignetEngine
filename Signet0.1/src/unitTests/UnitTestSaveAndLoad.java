@@ -16,6 +16,7 @@ import items.LightSource;
 import items.Ointment;
 import items.MeleeWeapon;
 import items.RangedWeapon;
+import items.StoryItem;
 import items.Weapon;
 import items.WornItem;
 
@@ -34,6 +35,7 @@ import org.junit.Test;
 import testingMothers.CharacterMother;
 import testingMothers.SampleArmor;
 import testingMothers.SampleClothing;
+import testingMothers.SampleItems;
 import testingMothers.SampleWeapons;
 import creatures.Creature;
 import creatures.PlayerCharacter;
@@ -47,6 +49,80 @@ public class UnitTestSaveAndLoad {
 	static {
 		System.out.println("untested classes:\n\thealth.Infection\n\tcreatures.Trait\n\t"
 				+ "creatures.PlayerCharacter\n\tnpc.*\n\tenvironment.*\n");
+	}
+	
+	@Test
+	public void longStringSaveLoad() throws FileNotFoundException {
+		String saved = "hello my fwend.\nI don't even speak good, spare me.";
+		PrintWriter writer = new PrintWriter(filePath);
+		Item.saveLongStringToFile(writer, saved);
+		writer.close();
+		
+		Scanner scanner = new Scanner(new File(filePath));
+		String loaded = Item.loadLongStringAlpha0_1(scanner);
+		scanner.close();
+		
+		assertEquals(saved, loaded);
+	}
+	@Test
+	public void twoLongStringsSaveLoad() throws FileNotFoundException {
+		String saved1 = "hello my fwend.\nI don't even speak good, spare me.";
+		String saved2 = "this is another string";
+		PrintWriter writer = new PrintWriter(filePath);
+		Item.saveLongStringToFile(writer, saved1);
+		Item.saveLongStringToFile(writer, saved2);
+		writer.close();
+		
+		Scanner scanner = new Scanner(new File(filePath));
+		String loaded1 = Item.loadLongStringAlpha0_1(scanner);
+		String loaded2 = Item.loadLongStringAlpha0_1(scanner);
+		scanner.close();
+		
+		assertEquals(saved1, loaded1);
+		assertEquals(saved2, loaded2);
+	}
+	@Test
+	public void emptyLongStringSaveLoad() throws FileNotFoundException {
+		String saved1 = "";
+		String saved2 = "";
+		PrintWriter writer = new PrintWriter(filePath);
+		Item.saveLongStringToFile(writer, saved1);
+		Item.saveLongStringToFile(writer, saved2);
+		writer.close();
+		
+		Scanner scanner = new Scanner(new File(filePath));
+		String loaded1 = Item.loadLongStringAlpha0_1(scanner);
+		String loaded2 = Item.loadLongStringAlpha0_1(scanner);
+		scanner.close();
+		
+		assertEquals(saved1, loaded1);
+		assertEquals(saved2, loaded2);
+	}
+	@Test
+	public void LongStringWithWhiteSpaceSaveLoad() throws FileNotFoundException {
+		String saved1 = "just some stuff";
+		PrintWriter writer = new PrintWriter(filePath);
+		writer.println("\n");
+		Item.saveLongStringToFile(writer, saved1);
+		writer.close();
+		
+		Scanner scanner = new Scanner(new File(filePath));
+		String loaded1 = Item.loadLongStringAlpha0_1(scanner);
+		scanner.close();
+		
+		assertEquals(saved1, loaded1);
+	}
+	
+	@Test
+	public void storyItemSaveLoad() throws FileNotFoundException {
+		StoryItem saved = SampleItems.getMysticThingy();
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveToFile(writer);
+		writer.close();
+		Scanner scanner = new Scanner(new File(filePath));
+		StoryItem loaded = (StoryItem) Item.loadAlpha0_1(scanner);
+		scanner.close();
+		assertEquals(saved, loaded);
 	}
 	
 	@Test

@@ -65,7 +65,7 @@ public class CharacterMother {
 		dickDefenderOfLife.getInventory().getEquipment().equipClothing(SampleClothing.getSampleShirt());
 		dickDefenderOfLife.getInventory().getEquipment().equipArmor(SampleArmor.getSampleArmorJacket());
 		dickDefenderOfLife.getInventory().pickUpWeapon(SampleWeapons.getSampleAssaultRifle());
-		dickDefenderOfLife.getInventory().store(new SampleThingy());
+		dickDefenderOfLife.getInventory().store(SampleItems.getMysticThingy());
 		dickDefenderOfLife.getInventory().store(SampleArmor.getSampleHelmet());
 		dickDefenderOfLife.getInventory().store(SampleWeapons.getSampleCombatKnife());
 		dickDefenderOfLife.getInventory().store(SampleClothing.getSamplePants());

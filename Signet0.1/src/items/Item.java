@@ -81,21 +81,23 @@ public abstract class Item {
 			return MeleeWeapon.loadMeleeWeaponAlpha0_1(scanner);
 		} else if (itemType.equals("worn item")) {
 			return WornItem.loadWornItemAlpha0_1(scanner);
+		} else if (itemType.equals("story item")) {
+			return StoryItem.loadStoryItemAlpha0_1(scanner);
 		} else {
 			System.out.println("Load Alpha 0.1, unrecognized item type '" + itemType + "'\n cannot load item");
 			return null;
 		}
 	}
-	private void saveDescriptionToFile(PrintWriter writer) {
-		String[] desc = description.split("\n");
+	public static void saveLongStringToFile(PrintWriter writer, String str) {
+		String[] desc = str.split("\n");
 		for (int i = 0; i < desc.length; i++) {
 			writer.println(desc[i]);
 		}
-		writer.println("end description");
+		writer.println("end~*~*~string");
 	}
 	public void saveBaseStats(PrintWriter writer) {
 		writer.println(name);
-		saveDescriptionToFile(writer);
+		saveLongStringToFile(writer, description);
 		writer.println(size);
 		writer.println(weight);
 		writer.println(durability);
@@ -103,19 +105,26 @@ public abstract class Item {
 		writer.println(damage);
 	}
 	
-	public static String loadItemDescriptionAlpha0_1(Scanner scanner) {
+	public static String loadLongStringAlpha0_1(Scanner scanner) {
 		StringBuilder desc = new StringBuilder();
 		// BANDAIDE FIX - the phantom blank line has showed up here again.
 		// an extra line "" is being read from the file where one doesn't exist.
 		String current = scanner.nextLine();
 		boolean first = true;
-		while(! current.equals("end description")) {
+		while(! current.equals("end~*~*~string")) {
 			if (!first) {
 				desc.append("\n");
+			} else {
+				first = false;
 			}
-			desc.append(current);
+			
+			if (! current.equals("")) {
+				desc.append(current);
+			} else {
+				first = true;
+			}
+			
 			current = scanner.nextLine();
-			first = false;
 		}
 		return desc.toString();
 	}
@@ -229,7 +238,7 @@ public abstract class Item {
 		}
 		return false;
 	}
-	public boolean baseEqual(Item item) {
+	public boolean baseEquals(Item item) {
 		return (item.getSize() == size) &&
 				(item.getWeight() == weight) &&
 				(item.getDurability() == durability) &&

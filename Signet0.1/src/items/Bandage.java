@@ -77,7 +77,7 @@ public class Bandage extends FirstAidItem{
 	}
 	public static Bandage loadBandageAlpha0_1(Scanner scanner) {
 		String name = scanner.nextLine();
-		String description = Bandage.loadItemDescriptionAlpha0_1(scanner);
+		String description = Bandage.loadLongStringAlpha0_1(scanner);
 		int size, weight, durability, hardness, damage;
 		double infectionRate,damageMultiplier,healingRate;
 		size = scanner.nextInt();

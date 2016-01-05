@@ -5,9 +5,12 @@ import items.Armor;
 import items.Item;
 import items.LightSource;
 import items.MeleeWeapon;
+import items.StoryItem;
 import items.WornItem;
 
 import org.junit.Test;
+
+import testingMothers.SampleItems;
 
 public class UnitTestItem {
 
@@ -21,6 +24,39 @@ public class UnitTestItem {
 		assertTrue(weapon2.equals(weapon1));
 		assertTrue(weapon1.equals(weapon1));
 	}
+	
+	@Test
+	public void storyItemEqualsSelf() {
+		StoryItem item = SampleItems.getMysticThingy();
+		assertEquals(item, item);
+	}
+	
+	@Test
+	public void lightSourceEqualsEquivalentLight() {
+		LightSource light1 = new LightSource(10, 10, 10, 3, 0, "_name_", "_description_");
+		LightSource light2 = new LightSource(10, 10, 10, 3, 0, "_name_", "_description_");
+		assertEquals(light1, light2);
+	}
+	
+	@Test
+	public void lightSourceNotEqualDifferentStats() {
+		LightSource light1 = new LightSource(10, 1, 10, 30, 0, "_name_", "_description_");
+		LightSource light2 = new LightSource(1, 10, 1, 3, 10, "_name_", "_description_");
+		assertNotEquals(light1, light2);
+	}
+	@Test
+	public void lightSourceNotEqualDifferentStrings() {
+		LightSource light1 = new LightSource(10, 10, 10, 3, 0, "_name_", "different");
+		LightSource light2 = new LightSource(10, 10, 10, 3, 0, "different", "_description_");
+		assertNotEquals(light1, light2);
+	}
+	@Test
+	public void storyItemNotEqualWithDifferentString() {
+		StoryItem item1 = new StoryItem(1, 1, 1, 1, 1, "name", "desc", "use");
+		StoryItem item2 = new StoryItem(1, 1, 1, 1, 1, "name", "desc", "DIFFERENT");
+		assertNotEquals(item1, item2);
+	}
+	
 	@Test
 	public void testWeaponNotEqual() {
 		String desc = "this is a weapon";

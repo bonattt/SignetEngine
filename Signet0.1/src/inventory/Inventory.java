@@ -50,6 +50,7 @@ public class Inventory {
 		weaponSlots.put("boot-holster", null);
 		weaponSlots.put("hip-holster", null);
 		clothingSlots.put("shirt", null);
+		
 		clothingSlots.put("pants", null);
 		clothingSlots.put("hat", null);
 		armorSlots.put("main-armor", null);

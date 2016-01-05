@@ -95,7 +95,7 @@ public class RangedWeapon extends Weapon {
 	public static RangedWeapon loadRangedWeaponAlpha0_1(Scanner scanner) {
 		int size, weight, durability, hardness, damage, weaponType, damageType, accuracy, might, range, ammoCap, ammoRem;
 		String name = scanner.nextLine();
-		String description = Item.loadItemDescriptionAlpha0_1(scanner);
+		String description = Item.loadLongStringAlpha0_1(scanner);
 		size = scanner.nextInt();
 		weight = scanner.nextInt();
 		durability = scanner.nextInt();

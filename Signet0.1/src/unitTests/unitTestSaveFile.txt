@@ -1,0 +1,49 @@
+130
+shirt
+worn item
+sample shirt
+this is a normal shirt
+end~*~*~string
+100
+5
+10
+0
+0
+shirt
+pants
+null
+end clothing
+helmet
+armor
+sample helmet
+this is a metal helmet
+end~*~*~string
+200
+100
+100
+100
+0
+helmet
+end damage resistance
+end type conversion
+main-armor
+null
+end armor
+test_slot
+melee weapon
+sample combat knife
+it is long AND pointy
+end~*~*~string
+25
+25
+150
+5
+0
+3
+3
+2
+0
+0
+empty_slot
+null
+end weapons

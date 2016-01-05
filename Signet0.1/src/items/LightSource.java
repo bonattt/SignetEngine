@@ -38,7 +38,7 @@ public class LightSource extends Item {
 	public static LightSource loadLightSourceAlpha0_1(Scanner scanner) {
 		int size, weight, durability, hardness, damage;
 		String name = scanner.nextLine();
-		String description = Item.loadItemDescriptionAlpha0_1(scanner);
+		String description = Item.loadLongStringAlpha0_1(scanner);
 		size = scanner.nextInt();
 		weight = scanner.nextInt();
 		durability = scanner.nextInt();
@@ -49,8 +49,17 @@ public class LightSource extends Item {
 		return item;
 	}
 	
+	@Override
+	public boolean equals(Object arg) {
+		if (! (arg instanceof LightSource)) {
+			return false;
+		}
+		LightSource item = (LightSource) arg;
+		return (item.baseEquals(this));
+	}
+	
 	public boolean equals(LightSource light) {
-		return baseEqual(light);
+		return baseEquals(light);
 	}
 	
 	public static LightSource loadAlpha0_1fromFile(Scanner scanner) {
@@ -61,7 +70,7 @@ public class LightSource extends Item {
 		durability = scanner.nextInt();
 		hardness = scanner.nextInt();
 		damage = scanner.nextInt();
-		String description = Item.loadItemDescriptionAlpha0_1(scanner);
+		String description = Item.loadLongStringAlpha0_1(scanner);
 		LightSource item = new LightSource(size, weight, durability, hardness, damage, name, description);
 		return item;
 	}

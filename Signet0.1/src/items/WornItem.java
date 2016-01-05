@@ -57,7 +57,7 @@ public class WornItem extends Item {
 	public static WornItem loadWornItemAlpha0_1(Scanner scanner) {
 		int size, weight, durability, hardness, damage;
 		String name = scanner.nextLine();
-		String desc = Item.loadItemDescriptionAlpha0_1(scanner);
+		String desc = Item.loadLongStringAlpha0_1(scanner);
 		size = scanner.nextInt();
 		weight = scanner.nextInt();
 		durability = scanner.nextInt();

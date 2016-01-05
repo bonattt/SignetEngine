@@ -16,7 +16,7 @@ import creatures.Creature;
 import testingMothers.CharacterMother;
 import testingMothers.SampleArmor;
 import testingMothers.SampleClothing;
-import testingMothers.SampleThingy;
+import testingMothers.SampleItems;
 
 public class UnitTestCreature {
 
@@ -40,7 +40,7 @@ public class UnitTestCreature {
 		Field f = Creature.class.getDeclaredField("inv");
 		f.setAccessible(true);
 		Inventory inv = (Inventory) f.get(other);
-		inv.store(new SampleThingy());
+		inv.store(SampleItems.getMysticThingy());
 		setup();
 		assertNotEquals(other, player);
 	}
@@ -115,7 +115,7 @@ public class UnitTestCreature {
 			player.getInventory().store(SampleArmor.getSampleHelmet());
 			player.getInventory().store(SampleClothing.getSamplePants());
 			player.getInventory().store(SampleClothing.getSampleShirt());
-			player.getInventory().store(new SampleThingy());
+			player.getInventory().store(SampleItems.getMysticThingy());
 		}
 	}
 }
