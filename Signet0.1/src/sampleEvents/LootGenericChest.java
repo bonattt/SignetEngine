@@ -25,8 +25,17 @@ public class LootGenericChest implements GameEvent {
 	}
 	
 	public void saveToFile(PrintWriter writer) {
-		// TODO Auto-generated method stub
+		writer.println("loot generic chest event");
+		chest.saveToFile(writer);
 		
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (! (obj instanceof LootGenericChest)) {
+			return false;
+		}
+		LootGenericChest event = (LootGenericChest) obj;
+		return event.chest.equals(this.chest);
 	}
 
 }

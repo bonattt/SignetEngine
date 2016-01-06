@@ -30,10 +30,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import location.Location;
+import location.TravelPath;
+import misc.DeathException;
+import misc.GameEvent;
 import misc.GameLoadException;
 
 import org.junit.Test;
 
+import sampleEvents.LootGenericChest;
 import testingMothers.CharacterMother;
 import testingMothers.SampleArmor;
 import testingMothers.SampleClothing;
@@ -52,6 +57,19 @@ public class UnitTestSaveAndLoad {
 		System.out.println("untested classes:\n\thealth.Infection\n\tcreatures.Trait\n\t"
 				+ "creatures.PlayerCharacter\n\tnpc.*\n\tenvironment.*\n");
 	}
+	@Test
+	public void locationSaveLoad() {
+		TravelPath path1 = new TravelPath("_street_", "_location_name_", 1, 1);
+		TravelPath path2 = new TravelPath("_name_", "_location_name_", 2, 2);
+		TravelPath[] paths = new TravelPath[]{path1, path2};
+		GameEvent event = new LootGenericChest(); // = TestEvent();
+		GameEvent[] explorable = new GameEvent[]{event};
+		
+		Location saved = new Location("test_location", paths, explorable);
+		
+	}
+	
+	
 	
 	@Test
 	public void longStringSaveLoad() throws FileNotFoundException {

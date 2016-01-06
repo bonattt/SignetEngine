@@ -13,9 +13,9 @@ public class TravelPath {
 	protected String pathName;
 	protected String locationName;
 	protected int travelTime;
-	protected int exhaustionFactor;
+	protected double exhaustionFactor;
 	
-	public TravelPath(String name, String location, int time, int exhaustion){
+	public TravelPath(String name, String location, int time, double exhaustion){
 		pathName = name;
 		locationName = location;
 		travelTime = time;
@@ -30,7 +30,7 @@ public class TravelPath {
 	public int travelTime() {
 		return travelTime;
 	}
-	public int exhaustion() {
+	public double exhaustion() {
 		return exhaustionFactor;
 	}
 	

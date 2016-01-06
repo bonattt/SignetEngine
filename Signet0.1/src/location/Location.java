@@ -32,17 +32,28 @@ public class Location {
 	 */
 	public void loadAlpha0_1(Scanner scanner){
 		String name = scanner.nextLine();
+		List<TravelPath> paths = loadTravelPathsAlpha0_1(scanner);
+		
 	}
 	private List<TravelPath> loadTravelPathsAlpha0_1(Scanner scanner) {
 		List<TravelPath> paths = new ArrayList<TravelPath>();
 		String line = scanner.nextLine();
 		while (! line.equals("end")) {
-			
+			// TODO
 			line = scanner.nextLine();
 		}
-		
 		return paths;
 	}
+	private List<GameEvent> loadExplorableEventsAlpha0_1(Scanner scanner) {
+		List<GameEvent> explorable = new ArrayList<GameEvent>();
+		String line = scanner.nextLine();
+		while (! line.equals("end")) {
+			// TODO
+			line = scanner.nextLine();
+		}
+		return explorable;
+	}
+	
 	
 	
 	
