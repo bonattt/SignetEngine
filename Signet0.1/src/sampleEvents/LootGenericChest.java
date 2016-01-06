@@ -2,13 +2,11 @@ package sampleEvents;
 
 import inventory.ItemContainer;
 
-import java.util.Random;
+import java.io.PrintWriter;
 
 import creatures.Creature;
 import misc.DeathException;
-import misc.DiceRoller;
 import misc.GameEvent;
-import misc.TextTools;
 
 public class LootGenericChest implements GameEvent {
 	
@@ -24,6 +22,11 @@ public class LootGenericChest implements GameEvent {
 
 	public String getName() {
 		return "Loot Chest Event";
+	}
+	
+	public void saveToFile(PrintWriter writer) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

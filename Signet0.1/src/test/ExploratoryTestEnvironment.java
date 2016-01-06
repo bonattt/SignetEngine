@@ -16,14 +16,14 @@ public class ExploratoryTestEnvironment {
 	private static void exploreLocationIndex1(){
 		// TODO Environment.makeLocationIndex();
 		
-		System.out.println("\nindex object: " + Environment.locationIndex);
-		System.out.println("index size: " + Environment.locationIndex.size());
-		System.out.println("index key set: " + Environment.locationIndex.keySet());
+//		System.out.println("\nindex object: " + Environment.locationIndex);
+//		System.out.println("index size: " + Environment.locationIndex.size());
+//		System.out.println("index key set: " + Environment.locationIndex.keySet());
 	}
 	
 //	@SuppressWarnings("unused")
 	private static void testRun() throws InventoryException {
-		Environment ev = new Environment("src/testLocations/sampleStartLocation");
+		Environment ev = null; // new Environment("src/testLocations/sampleStartLocation");
 		ev.setPlayer(CharacterMother.getDickDefenderOfLife());
 		try {
 			ev.choseAction();

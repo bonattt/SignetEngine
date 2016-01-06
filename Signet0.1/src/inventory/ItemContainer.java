@@ -113,24 +113,8 @@ public class ItemContainer {
 	 * this method retuns a boolean for whether the concealed container was found by a searcher.
 	 * @return
 	 */
-	public boolean avoidDetection(Creature searcher){		
-		if (items.size() == 0){
-			// if there's nothing to find, you can't find it.
-			return false;
-		} else if (concealmentHits == Integer.MIN_VALUE){
-			return true;
-		}
-		int hits = searcher.getSkills().get("perception").makeSkillTest(searcher, concealmentHits, -concealability)[0];
-		return (hits >= 0);
-	}
 	public boolean contains(Item item){
 		return items.contains(item);
-	}
-	public void concealContainer(Creature creature){
-		concealmentHits = creature.makeTest("slightOfHand", 0)[0];
-	}
-	public void unConceal(){
-		concealmentHits = Integer.MIN_VALUE;
 	}
 	
 	/**

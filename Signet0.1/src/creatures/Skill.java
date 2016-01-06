@@ -11,19 +11,11 @@ import misc.*;
 public class Skill {
 	 
 	public String name;
-	public int id;
-	public SkillTags[] tags;
+	public int id, ranks, exp;
+	public SkillTag[] tags;
 	public String[] linkedAttributes;
-	public int ranks;
-	private int exp;
 	
-	public static final HashMap<String, Integer> skillIndex = getSkillIndex();
-	
-	private static HashMap<String, Integer> getSkillIndex(){
-		HashMap<String, Integer> index = new HashMap<String, Integer>();
-		return index;
-	}
-	public Skill(String name, int id, int startingRanks, String[] linkedAttributes, SkillTags[] tags){
+	public Skill(String name, int id, int startingRanks, String[] linkedAttributes, SkillTag[] tags){
 		this.name = name;
 		this.id = id;		
 		this.tags = tags;
@@ -31,9 +23,10 @@ public class Skill {
 		this.linkedAttributes = linkedAttributes;
 		this.exp = 0;
 	}
-	public Skill(String name, int id, String[] linkedAttributes, SkillTags[] tags){
+	public Skill(String name, int id, String[] linkedAttributes, SkillTag[] tags){
 		this(name, id, 0, linkedAttributes, tags);
 	}
+	
 	public void saveToFile(PrintWriter writer){
 		writer.println(name);
 		writer.println(id);
@@ -50,7 +43,7 @@ public class Skill {
 		}
 		writer.println("end linked attribute");
 	}
-	public static Skill loadFromFile(Scanner scanner){
+	public static Skill loadSkillAlpha0_1(Scanner scanner) throws GameLoadException {
 		String name = scanner.nextLine();
 		String temp = scanner.nextLine();
 		int id = Integer.parseInt(temp);
@@ -60,14 +53,14 @@ public class Skill {
 		int exp = Integer.parseInt(temp);
 //		scanner.nextLine();
 		
-		ArrayList<SkillTags> tagsList = new ArrayList<SkillTags>();
+		ArrayList<SkillTag> tagsList = new ArrayList<SkillTag>();
 		String currentLine = scanner.nextLine();
 		while (! currentLine.equals("end tags")){
-			SkillTags tag = skillTagStringToEnum(currentLine);
+			SkillTag tag = skillTagStringToEnum(currentLine);
 			tagsList.add(tag);
 			currentLine = scanner.nextLine();
 		}
-		SkillTags[] tags = new SkillTags[tagsList.size()];
+		SkillTag[] tags = new SkillTag[tagsList.size()];
 		for (int i = 0; i < tagsList.size(); i++){
 			tags[i] = tagsList.get(i);
 		}
@@ -87,88 +80,87 @@ public class Skill {
 		skill.exp = exp;
 		return skill;
 	}
-	public static SkillTags skillTagStringToEnum(String tag){
+	public static SkillTag skillTagStringToEnum(String tag) throws GameLoadException {
 		if (tag.equals("visual")){
-			return SkillTags.visual;
+			return SkillTag.visual;
 		} else if (tag.equals("auditory")) {
-			return SkillTags.auditory;
+			return SkillTag.auditory;
 		} else if (tag.equals("mental")) {
-			return SkillTags.mental;
+			return SkillTag.mental;
 		} else if (tag.equals("language")) {
-			return SkillTags.language;
+			return SkillTag.language;
 		} else if (tag.equals("social")) {
-			return SkillTags.social;
+			return SkillTag.social;
 		} else if (tag.equals("combat")) {
-			return SkillTags.combat;
+			return SkillTag.combat;
 		} else if (tag.equals("leftArm")) {
-			return SkillTags.leftArm;
+			return SkillTag.leftArm;
 		} else if (tag.equals("rightArm")) {
-			return SkillTags.PRIMARY_ARM;
+			return SkillTag.PRIMARY_ARM;
 		} else if (tag.equals("leftFoot")) {
-			return SkillTags.leftFoot;
+			return SkillTag.leftFoot;
 		} else if (tag.equals("rightFoot")) {
-			return SkillTags.rightFoot;
+			return SkillTag.rightFoot;
 		} else if (tag.equals("leftHand")) {
-			return SkillTags.leftHand;
+			return SkillTag.leftHand;
 		} else if (tag.equals("rightHand")) {
-			return SkillTags.rightHand;
+			return SkillTag.rightHand;
 		} else if (tag.equals("leftLeg")) {
-			return SkillTags.leftLeg;
+			return SkillTag.leftLeg;
 		} else if (tag.equals("rightLeg")) {
-			return SkillTags.rightLeg;
+			return SkillTag.rightLeg;
 		} else if (tag.equals("hands")) {
-			return SkillTags.hands;
+			return SkillTag.hands;
 		} else if (tag.equals("arms")) {
-			return SkillTags.arms;
+			return SkillTag.arms;
 		} else if (tag.equals("legs")) {
-			return SkillTags.legs;
+			return SkillTag.legs;
 		} else if (tag.equals("feet")) {
-			return SkillTags.feet;
+			return SkillTag.feet;
 		} else if (tag.equals("body")) {
-			return SkillTags.body;
+			return SkillTag.body;
 		} else {
-			return null;
-			// TODO ERROR!!!!!!!
+			throw new GameLoadException("save file corrupted; unrecognized skill tag read in Skill.skillTagStringToEnum");
 		}
 	}
-	public static String skillTagEnumToString(SkillTags tag){
-		if (tag == SkillTags.visual){
+	public static String skillTagEnumToString(SkillTag tag){
+		if (tag == SkillTag.visual){
 			return "visual";
-		} else if (tag == SkillTags.auditory) {
+		} else if (tag == SkillTag.auditory) {
 			return "auditory";
-		} else if (tag == SkillTags.mental) {
+		} else if (tag == SkillTag.mental) {
 			return "mental";
-		} else if (tag == SkillTags.language) {
+		} else if (tag == SkillTag.language) {
 			return "language";
-		} else if (tag == SkillTags.social) {
+		} else if (tag == SkillTag.social) {
 			return "social";
-		} else if (tag == SkillTags.combat) {
+		} else if (tag == SkillTag.combat) {
 			return "combat";
-		} else if (tag == SkillTags.leftArm) {
+		} else if (tag == SkillTag.leftArm) {
 			return "leftArm";
-		} else if (tag == SkillTags.PRIMARY_ARM) {
+		} else if (tag == SkillTag.PRIMARY_ARM) {
 			return "rightArm";
-		} else if (tag == SkillTags.leftFoot) {
+		} else if (tag == SkillTag.leftFoot) {
 			return "leftFoot";
-		} else if (tag == SkillTags.rightFoot) {
+		} else if (tag == SkillTag.rightFoot) {
 			return "rightFoot";
-		} else if (tag == SkillTags.leftHand) {
+		} else if (tag == SkillTag.leftHand) {
 			return "leftHand";
-		} else if (tag == SkillTags.rightHand) {
+		} else if (tag == SkillTag.rightHand) {
 			return "rightHand";
-		} else if (tag == SkillTags.leftLeg) {
+		} else if (tag == SkillTag.leftLeg) {
 			return "leftLeg";
-		} else if (tag == SkillTags.rightLeg) {
+		} else if (tag == SkillTag.rightLeg) {
 			return "rightLeg";
-		} else if (tag == SkillTags.hands) {
+		} else if (tag == SkillTag.hands) {
 			return "hands";
-		} else if (tag == SkillTags.arms){
+		} else if (tag == SkillTag.arms){
 			return "arms";
-		} else if (tag == SkillTags.legs) {
+		} else if (tag == SkillTag.legs) {
 			return "legs";
-		} else if (tag == SkillTags.feet) {
+		} else if (tag == SkillTag.feet) {
 			return "feet";
-		} else if (tag == SkillTags.body) {
+		} else if (tag == SkillTag.body) {
 			return "body";
 		} else {
 			return "ERROR";
@@ -202,10 +194,6 @@ public class Skill {
 					skl.ranks == this.ranks);
 		}
 		return false;
-	}
-	
-	public void setRanks(int newRank){
-		ranks = newRank;
 	}
 	
 	public void gainExperience(int expGained){
@@ -274,7 +262,7 @@ public class Skill {
 	private static int getAttributes(Creature creature, String[] attributes){
 		int accumulator = 0;
 		for (int i = 0; i < attributes.length; i++){
-			accumulator += creature.getStats().get(attributes[i]);
+			accumulator += creature.getStat(attributes[i]);
 		}
 		return accumulator;
 	}

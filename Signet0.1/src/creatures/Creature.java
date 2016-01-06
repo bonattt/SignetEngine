@@ -2,6 +2,7 @@ package creatures;
 
 import health.Body;
 import health.BodyPart;
+import health.HealthException;
 import health.Wound;
 import inventory.Inventory;
 
@@ -14,7 +15,6 @@ import java.util.Scanner;
 import misc.DeathException;
 import misc.DiceRoller;
 import misc.GameLoadException;
-import misc.HealthException;
 import misc.TextTools;
 
 public abstract class Creature {
@@ -26,12 +26,12 @@ public abstract class Creature {
 	public static final String[] ABILITIES = {"str", "agl", "end", "dex", "cha", "anl", "per", "wil", "int", "rec"};
 	
 	
-	public String name;
+	private String name;
 	
 	private Body body;
 	private Inventory inv;
 	
-	private HashMap<String,Integer> stats_base, stats_adjusted;
+	private HashMap<String,Integer> statsBase, statsAdjusted;
 	private HashMap<String,Integer> damageMultipliers;
 	private HashMap<String, Skill> skills;
 	
@@ -39,8 +39,8 @@ public abstract class Creature {
 			HashMap<String, Skill> startingSkills, HashMap<String, BodyPart> bodyparts){
 		this.name = creatureName;
 		this.damageMultipliers = damageMultipliers;
-		stats_base = baseStats;
-		stats_adjusted = stats_base; // TODO make this a deep copy, then make it actually modify stats.
+		statsBase = baseStats;
+		statsAdjusted = statsBase; // TODO make this a deep copy, then make it actually modify stats.
 		skills = startingSkills;
 		inv = new Inventory();
 		body = new Body(this, bodyparts);
@@ -52,11 +52,15 @@ public abstract class Creature {
 	public abstract String handleDeath(DeathException e);
 	public abstract String handleKills(DeathException e);
 	
-	public void loadInvAndBodyAlpha0_1(Scanner scanner) throws GameLoadException {
+	public String name() {
+		return name;
+	}
+	
+	protected void loadInvAndBodyAlpha0_1(Scanner scanner) throws GameLoadException {
 		this.inv = Inventory.loadAlpha1_0(scanner);
 		this.body = Body.loadAlpha1_0fromFile(scanner, this);
 	}
-	public static HashMap<String, Integer> loadAlpha0_1stats(Scanner scanner){
+	protected static HashMap<String, Integer> loadAlpha0_1stats(Scanner scanner){
 		HashMap<String, Integer> stats = new HashMap<String, Integer>();
 		String[] statsInOrder = new String[]{"str", "agl", "end", "dex", "cha", "anl", "per", "wil", "int", "rec"};
 		for (String stat : statsInOrder){
@@ -83,7 +87,7 @@ public abstract class Creature {
 		}
 	}
 	
-	public static HashMap<String, Integer> loadAlpha0_1damageMultipliers(Scanner scanner){
+	protected static HashMap<String, Integer> loadAlpha0_1damageMultipliers(Scanner scanner){
 		HashMap<String, Integer> damageMultipliers = new HashMap<String, Integer>();
 		String currentLine = scanner.nextLine();
 		while(! currentLine.equals("end damage characteristics")){
@@ -94,11 +98,11 @@ public abstract class Creature {
 		}
 		return damageMultipliers;
 	}
-	public static HashMap<String, Skill> loadAlpha0_1skills(Scanner scanner){
+	protected static HashMap<String, Skill> loadAlpha0_1skills(Scanner scanner) throws GameLoadException{
 		HashMap<String, Skill> skills = new HashMap<String, Skill>();
 		String line = scanner.nextLine();
 		while(! line.equals("end skills")) {
-			Skill current = Skill.loadFromFile(scanner);
+			Skill current = Skill.loadSkillAlpha0_1(scanner);
 			skills.put(line, current);
 			line = scanner.nextLine();
 		}
@@ -114,22 +118,20 @@ public abstract class Creature {
 		inv.saveToFile(writer);
 		body.saveToFile(writer);
 	}
-	public void saveStats(PrintWriter writer){
+	protected void saveStats(PrintWriter writer){
 		for (int i = 0; i < ABILITIES.length; i++){
 			String key = ABILITIES[i];
-			writer.println(stats_base.get(key));
+			writer.println(statsBase.get(key));
 		}
 	}
-	public void saveDamageMultipliers(PrintWriter writer){
-//		writer.println("damage characteristics");
+	protected void saveDamageMultipliers(PrintWriter writer){
 		for(String key : damageMultipliers.keySet()){
 			writer.println(key);
 			writer.println(damageMultipliers.get(key));
 		}
 		writer.println("end damage characteristics");
 	}
-	public void saveSkills(PrintWriter writer){
-//		writer.println("skills");
+	protected void saveSkills(PrintWriter writer){
 		for (String key : skills.keySet()){
 			writer.println(key);
 			skills.get(key).saveToFile(writer);
@@ -138,35 +140,12 @@ public abstract class Creature {
 	}
 	
 	public int getStat(String stat) {
-		return stats_adjusted.get(stat);
-	}
-//	
-//	public ArrayList<Wound> listAllWounds(){
-//		HashMap<String, BodyPart> bodyparts = body.getBodyParts();
-//		ArrayList<Wound> injuries = new ArrayList<Wound>();
-//		for (String key : bodyparts.keySet()){
-//			BodyPart current = bodyparts.get(key);
-//			for (int i = 0; i < current.getInjuries().size(); i++){
-//				injuries.add(current.getInjuries().get(i));
-//			}
-//		}
-//		return injuries;
-//	}
-	
-	public HashMap<String, Skill> getSkills(){
-		return skills;
+		return statsAdjusted.get(stat);
 	}
 	
 	public Inventory getInventory(){
 		return inv;
 	}	
-	public int getMight(){
-		int might = inv.getWeapon().getMight();
-		int[] strengthTest = DiceRoller.makeRoll(stats_adjusted.get("str"));
-		// TODO account for glitching.
-		might += strengthTest[0];
-		return might;
-	}
 	
 	public void recieveWound(int damage, int damageType, String bodypart) throws DeathException{
 		body.recieveWound(damage, damageType, bodypart);
@@ -182,21 +161,7 @@ public abstract class Creature {
 			return body.getBodyParts()[0];
 		}
 	}
-	
-	public HashMap<String, Integer> getStats(){
-		return stats_adjusted;
-	}
-	public void setStat(String key, int value){
-		stats_base.put(key, value);
-	}
-//	private void adjustSingleStat(String key, int modifier){
-//		int starting = stats_adjusted.get(key);
-//		stats_adjusted.put(key, starting + modifier);
-//	}
-	public void refreshCombatStats(){
-		// TODO implement
-	}
-	public void wait(int timePassed, double healingFactor, boolean resting) throws DeathException{
+	public void passTime(int timePassed, double healingFactor, boolean resting) throws DeathException{
 		body.wait(timePassed, getHealingFactor());
 	}
 	public void bedRest(int timePassed) throws DeathException{
@@ -206,7 +171,7 @@ public abstract class Creature {
 		body.sleep(timePassed, getHealingFactor());
 	}
 	protected double getHealingFactor(){
-		return (.5 + (stats_adjusted.get("end") * .167));
+		return (.5 + (statsAdjusted.get("end") * .167));
 	}
 	
 	public void travel(int travelTime, double exhaustionFactor) throws DeathException{
@@ -220,7 +185,7 @@ public abstract class Creature {
 	public int[] makeAttributeTest(String[] attributes){
 		int dicePool = 0;
 		for (int i = 0; i < attributes.length; i++){
-			dicePool += this.stats_adjusted.get(attributes[i]);
+			dicePool += this.statsAdjusted.get(attributes[i]);
 		}
 		return DiceRoller.makeRoll(dicePool);
 	}
@@ -238,27 +203,24 @@ public abstract class Creature {
 		if(! (o instanceof Creature)) {
 			return false;
 		}
-		
 		Creature creature = (Creature) o;
-		
 		return (creature.name.equals(this.name)) &&
 				(creature.body.equals(this.body)) &&
 				(creature.inv.equals(this.inv)) &&
 				(statsEqual(creature)) &&
 				(damageMultipliersEqual(creature)) &&
 				(skillsEqual(creature));
-		
 	}
 	
 	private boolean statsEqual(Creature arg) {
-		if (arg.stats_base.size() != this.stats_base.size()) {
+		if (arg.statsBase.size() != this.statsBase.size()) {
 			return false;
 		}
-		for (String key : this.stats_base.keySet()) {
-			if (! arg.stats_base.containsKey(key)) {
+		for (String key : this.statsBase.keySet()) {
+			if (! arg.statsBase.containsKey(key)) {
 				return false;
 			}
-			if (! arg.stats_base.get(key).equals(this.stats_base.get(key))) {
+			if (! arg.statsBase.get(key).equals(this.statsBase.get(key))) {
 				return false;
 			}
 		}

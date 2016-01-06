@@ -1,6 +1,5 @@
 package environment;
 
-import indices.*;
 import inventory.InventoryException;
 
 import java.io.File;
@@ -8,9 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import sampleEvents.LootGenericChest;
+import location.Location;
+import location.LocationIndex;
 import misc.DeathException;
 import misc.GameEvent;
 import misc.GameLoadException;
@@ -26,7 +28,6 @@ public class Environment {
 	
 	public static boolean print_debugs = true;
 	public static final HashMap<String, GameEvent> eventIndex = getEventIndex();	// event name : event
-	public static final LocationIndex locationIndex = new LocationIndex(indexFilePath);							// file path : Location
 	public static Scanner scanner;
 	
 	private GameEvent[] events;
@@ -36,6 +37,7 @@ public class Environment {
 	private Terrain terrain;
 	private GameClock clock;
 	private PlayerCharacter player;
+	private LocationIndex locationIndex;
 
 	private static final int default_start_time = 8000;
 	private static final int default_start_date = 13;
@@ -43,14 +45,19 @@ public class Environment {
 	private static final String gameSaveFilePath = "src/savedFiles/savefile01";
 	private static final String versionName = "SIGNET alpha version 0.1";
 	
-	public Environment(String startLocation){
+	public Environment(String startLocation) throws FileNotFoundException{
 		this(startLocation, default_start_time, default_start_date, default_start_month);
 	}
-	public Environment(String startLocation, int startTime, int startDate, int startMonth){
+	public Environment(String startLocation, int startTime, int startDate, int startMonth) throws FileNotFoundException{
+		locationIndex = initializeLocationIndex();
 		scanner = new Scanner(System.in);
 		location = locationIndex.get(startLocation);
 		clock = new GameClock(startTime, startDate, startMonth);
 	}
+	private static LocationIndex initializeLocationIndex() {
+		return null;
+	}
+	
 	public void setPlayer(PlayerCharacter player){
 		this.player = player;
 	}
@@ -130,11 +137,11 @@ public class Environment {
 		} 
 	}
 	public void travel() throws DeathException{
-		String fileName = location.travel(player);
-		if (locationIndex.containsKey(fileName)){
-			location = locationIndex.get(fileName);
-		} else {
-			location = new Location(fileName);
+		String locationName = location.travelFrom(player);
+		try {
+			location = locationIndex.get(locationName);
+		} catch (FileNotFoundException e) {
+			TextTools.display(String.format("ERROR %s is inaccessable due to a file load error.", locationName));
 		}
 	}
 	public void explore(){
@@ -156,6 +163,11 @@ public class Environment {
 		HashMap<String, GameEvent> events = new HashMap<String, GameEvent>();
 		events.put("Loot Chest", new LootGenericChest());
 		return events;
+	}
+	
+	public static GameEvent loadGameEventAlpha0_1(Scanner scanner) {
+		// TODO
+		return null;
 	}
 	
 	

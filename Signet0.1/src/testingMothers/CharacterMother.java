@@ -12,7 +12,6 @@ import java.util.HashMap;
 import misc.DeathException;
 import misc.TextTools;
 import creatures.PlayerCharacter;
-import creatures.SampleSkills;
 import creatures.Skill;
 /**
  * Jarred the impaler, object mother character.

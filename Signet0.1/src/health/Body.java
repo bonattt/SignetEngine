@@ -9,7 +9,6 @@ import java.util.Set;
 
 import misc.DeathException;
 import misc.DiceRoller;
-import misc.HealthException;
 import creatures.Creature;
 import environment.GameClock;
 
@@ -161,7 +160,7 @@ public class Body {
 		updatePain();
 	}
 	private void checkIfDies() throws DeathException{
-		if ( healthDamage >= (70 + (creature.getStats().get("end")*5)) ){
+		if ( healthDamage >= (70 + (creature.getStat("end") * 5))){
 			creature.die();
 		}
 	}
@@ -303,7 +302,7 @@ public class Body {
 		calculateEffectivePain();
 	}
 	private void calculateEffectivePain(){
-		double painTollerance = (creature.getStats().get("wil")*.15 + creature.getStats().get("end")*.075);
+		double painTollerance = (creature.getStat("wil") * .15 + creature.getStat("end") * .075);
 		painEffective = painActual - painTollerance;
 		if (painEffective < 1){
 			painEffective = 1;
@@ -324,7 +323,7 @@ public class Body {
 	}
 	
 	private void calculateEffectiveFatigue(){
-		double fatigueTollerance = (creature.getStats().get("end")*.15 + creature.getStats().get("str")*.075);
+		double fatigueTollerance = (creature.getStat("end") * .15 + creature.getStat("str") * .075);
 		fatigueEffective = fatigueActual - fatigueTollerance;
 		if (fatigueEffective < 1){
 			fatigueEffective = 1;
