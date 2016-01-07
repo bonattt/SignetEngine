@@ -1,8 +1,9 @@
-package sampleEvents;
+package testingMothers;
 
 import inventory.ItemContainer;
 
 import java.io.PrintWriter;
+import java.util.Scanner;
 
 import creatures.Creature;
 import misc.DeathException;
@@ -27,8 +28,14 @@ public class LootGenericChest implements GameEvent {
 	public void saveToFile(PrintWriter writer) {
 		writer.println("loot generic chest event");
 		chest.saveToFile(writer);
-		
 	}
+	public static LootGenericChest loadAlpha0_1(Scanner scanner) {
+		ItemContainer chest = ItemContainer.loadAlpha0_1(scanner);
+		LootGenericChest event = new LootGenericChest();
+		event.chest = chest;
+		return event;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (! (obj instanceof LootGenericChest)) {

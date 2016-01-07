@@ -43,14 +43,25 @@ public class TravelPath {
 		writer.println(travelTime);
 		writer.println(exhaustionFactor);
 	}
-	public TravelPath loadAlpha0_1(Scanner scanner) {
-		String pathName = scanner.nextLine();
+	public static TravelPath loadAlpha0_1(String pathName, Scanner scanner) {
 		String locationName = scanner.nextLine();
 		int travelTime = scanner.nextInt();
-		int exhaustionFactor = scanner.nextInt();
+		double exhaustionFactor = scanner.nextDouble();
 		scanner.nextLine();
 		TravelPath path = new TravelPath(pathName, locationName, travelTime, exhaustionFactor);
 		return path;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (! (obj instanceof TravelPath)) {
+			return false;
+		}
+		TravelPath path = (TravelPath) obj;
+		return (path.travelTime == this.travelTime) &&
+				(path.exhaustionFactor == this.exhaustionFactor) &&
+				(path.pathName.equals(this.pathName)) &&
+				(path.locationName.equals(this.locationName));
 	}
 	
 	

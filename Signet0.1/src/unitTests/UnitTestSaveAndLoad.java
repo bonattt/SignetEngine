@@ -1,7 +1,6 @@
 package unitTests;
 
 import static org.junit.Assert.*;
-import health.Body;
 import health.BodyPart;
 import health.Injuries;
 import health.Wound;
@@ -28,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 import location.Location;
@@ -38,16 +38,14 @@ import misc.GameLoadException;
 
 import org.junit.Test;
 
-import sampleEvents.LootGenericChest;
 import testingMothers.CharacterMother;
-import testingMothers.SampleArmor;
-import testingMothers.SampleClothing;
+import testingMothers.LootGenericChest;
 import testingMothers.SampleItems;
-import testingMothers.SampleWeapons;
 import creatures.Creature;
 import creatures.PlayerCharacter;
 import creatures.Skill;
 import creatures.SkillTag;
+import environment.Environment;
 
 public class UnitTestSaveAndLoad {
 
@@ -58,15 +56,33 @@ public class UnitTestSaveAndLoad {
 				+ "creatures.PlayerCharacter\n\tnpc.*\n\tenvironment.*\n");
 	}
 	@Test
-	public void locationSaveLoad() {
-		TravelPath path1 = new TravelPath("_street_", "_location_name_", 1, 1);
-		TravelPath path2 = new TravelPath("_name_", "_location_name_", 2, 2);
-		TravelPath[] paths = new TravelPath[]{path1, path2};
-		GameEvent event = new LootGenericChest(); // = TestEvent();
-		GameEvent[] explorable = new GameEvent[]{event};
+	public void sampleEventSaveLoad() throws FileNotFoundException, GameLoadException {
+		GameEvent saved = new LootGenericChest();
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveToFile(writer);
+		writer.close();
+		Scanner scanner = new Scanner(new File(filePath));
+		GameEvent loaded = Environment.loadGameEventAlpha0_1(scanner);
+		scanner.close();
 		
-		Location saved = new Location("test_location", paths, explorable);
+		assertEquals(saved, loaded);
+	}
+	
+	@Test
+	public void locationSaveLoad() throws FileNotFoundException, GameLoadException {
+		List<TravelPath> paths = new ArrayList<TravelPath>();
+		paths.add(new TravelPath("_street_", "_location_name_", 1, 1));
+		paths.add(new TravelPath("_name_", "_location_name_", 2, 2));
+		List<GameEvent> explorable = new ArrayList<GameEvent>();
+		explorable.add(new LootGenericChest()); // = TestEvent();
 		
+		Location saved = new Location("test_location", "_description_", paths, explorable);
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveToFile(writer);
+		writer.close();
+		Location loaded = Location.loadAlpha0_1(filePath);
+		
+		assertEquals(saved, loaded);
 	}
 	
 	
@@ -174,12 +190,15 @@ public class UnitTestSaveAndLoad {
 			InvocationTargetException, NoSuchFieldException, InventoryException {
 		
 		PlayerCharacter saved = CharacterMother.getDickDefenderOfLife();
-		PrintWriter writer = new PrintWriter(filePath);
-// TODO		saved.saveSkills(writer);
+		PrintWriter writer = new PrintWriter(filePath);;
+		Method method = Creature.class.getDeclaredMethod("saveSkills", writer.getClass());
+		method.setAccessible(true);
+		method.invoke(saved, writer);
+//		saved.saveSkills(writer);
 		writer.close();
 		
 		Scanner scanner = new Scanner(new File(filePath));
-		Method method = Creature.class.getDeclaredMethod("loadAlpha0_1skills", scanner.getClass());
+		method = Creature.class.getDeclaredMethod("loadAlpha0_1skills", scanner.getClass());
 		method.setAccessible(true);
 		@SuppressWarnings("unchecked")
 		HashMap<String, Skill> loadedMap = (HashMap<String, Skill>) method.invoke(null, scanner);
@@ -204,11 +223,13 @@ public class UnitTestSaveAndLoad {
 		
 		PlayerCharacter saved = CharacterMother.getDickDefenderOfLife();
 		PrintWriter writer = new PrintWriter(filePath);
-// TODO		saved.saveDamageMultipliers(writer);
+		Method method = Creature.class.getDeclaredMethod("saveDamageMultipliers", writer.getClass());
+		method.setAccessible(true);
+		method.invoke(saved, writer);
 		writer.close();
 		Scanner scanner = new Scanner(new File(filePath));
 		
-		Method method = Creature.class.getDeclaredMethod("loadAlpha0_1damageMultipliers", scanner.getClass());
+		method = Creature.class.getDeclaredMethod("loadAlpha0_1damageMultipliers", scanner.getClass());
 		method.setAccessible(true);
 		Object loadedObj = method.invoke(null, scanner);
 		@SuppressWarnings("unchecked")
@@ -234,11 +255,13 @@ public class UnitTestSaveAndLoad {
 			InvocationTargetException, InventoryException {
 		PlayerCharacter saved = CharacterMother.getDickDefenderOfLife();
 		PrintWriter writer = new PrintWriter(filePath);
-// TODO		saved.saveStats(writer);
+		Method method = Creature.class.getDeclaredMethod("saveStats", writer.getClass());
+		method.setAccessible(true);
+		method.invoke(saved, writer);
 		writer.close();
 		
 		Scanner scanner = new Scanner(new File(filePath));
-		Method method = Creature.class.getDeclaredMethod("loadAlpha0_1stats", scanner.getClass());
+		method = Creature.class.getDeclaredMethod("loadAlpha0_1stats", scanner.getClass());
 		method.setAccessible(true);
 		Object loadedObj = method.invoke(null, scanner);
 		@SuppressWarnings("unchecked")

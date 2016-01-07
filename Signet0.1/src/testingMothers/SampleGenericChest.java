@@ -1,9 +1,5 @@
-package sampleEvents;
+package testingMothers;
 
-import testingMothers.SampleArmor;
-import testingMothers.SampleClothing;
-import testingMothers.SampleItems;
-import testingMothers.SampleWeapons;
 import inventory.ItemContainer;
 
 public class SampleGenericChest extends ItemContainer {

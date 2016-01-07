@@ -2,6 +2,7 @@ package location;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -14,6 +15,17 @@ public class LocationIndex {
 		map = new HashMap<String, Location>();
 		fileNameMap = new HashMap<String, String>();
 		loadFileNameMap(filePath);
+	}
+	
+	public void saveToFile(String filePath) {
+		// TODO
+	}
+	
+	public void saveFileNameMap(PrintWriter writer) {
+		for(String name : fileNameMap.keySet()) {
+			writer.println(name);
+			writer.print(fileNameMap.get(name));
+		}
 	}
 	
 	private void loadFileNameMap(String filePath) throws FileNotFoundException {

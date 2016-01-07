@@ -3,8 +3,8 @@ package test;
 import creatures.Creature;
 import inventory.InventoryException;
 import inventory.ItemContainer;
-import sampleEvents.SampleGenericChest;
 import testingMothers.CharacterMother;
+import testingMothers.SampleGenericChest;
 
 public class ExploritoryTestLootChest {
 	

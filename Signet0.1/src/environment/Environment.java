@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import sampleEvents.LootGenericChest;
+import testingMothers.LootGenericChest;
 import location.Location;
 import location.LocationIndex;
 import misc.DeathException;
@@ -42,8 +42,17 @@ public class Environment {
 	private static final int default_start_time = 8000;
 	private static final int default_start_date = 13;
 	private static final int default_start_month = 5;
-	private static final String gameSaveFilePath = "src/savedFiles/savefile01";
+	
 	private static final String versionName = "SIGNET alpha version 0.1";
+	
+	private static final String SAVEFILE_ROOTPATH = "src/savedFiles/";
+	private static final String SAVE01 = "save01/";
+	private static final String SAVE02 = "save02/";
+	private static final String SAVE03 = "save03/";
+	private static final String AUTOSAVE01 = "autosave01/";
+	private static final String AUTOSAVE02 = "autosave02/";
+	private static final String AUTOSAVE03 = "autosave03/";
+	private static final String MAIN_SAVE_FILE = "main.sigsav";
 	
 	public Environment(String startLocation) throws FileNotFoundException{
 		this(startLocation, default_start_time, default_start_date, default_start_month);
@@ -56,6 +65,13 @@ public class Environment {
 	}
 	private static LocationIndex initializeLocationIndex() {
 		return null;
+	}
+	
+	private static String compileFullSaveFilePath(String saveName) {
+		return SAVEFILE_ROOTPATH + saveName + MAIN_SAVE_FILE;
+	}
+	private static String compileLocationSaveRootFilePath(String saveName) {
+		return SAVEFILE_ROOTPATH + saveName;
 	}
 	
 	public void setPlayer(PlayerCharacter player){
@@ -91,18 +107,18 @@ public class Environment {
 			}
 		}
 	}
-	public static void loadGame(){
-		loadGameFromFile(gameSaveFilePath);
+	public static void loadGame(String saveName){
+		loadGameFromFile(compileFullSaveFilePath(saveName));
 	}	
-	public void saveGame(){
-		saveGameToFile(gameSaveFilePath);
+	public void saveGame(String saveName){
+		saveGameToFile(compileFullSaveFilePath(saveName));
 	}
 	public static void loadGameFromFile(String filePath){
 		try {
 			Scanner scanner = new Scanner(new File(filePath));
 			String versionStr = scanner.nextLine();
 			if(versionStr.equals("SIGNET alpha version 0.1")){
-				loadAlpha0_1fromFile(scanner);
+				loadAlpha0_1(scanner);
 			} else {
 				System.out.println("Unknown game version \nGame load canceled.");
 			}
@@ -114,7 +130,7 @@ public class Environment {
 			TextTools.display("Error in loading save data, save data corrupted.");
 		}
 	}
-	public static void loadAlpha0_1fromFile(Scanner scanner) throws GameLoadException{
+	public static void loadAlpha0_1(Scanner scanner) throws GameLoadException{
 //		weather; 
 //		location;
 //		terrain;
@@ -165,9 +181,16 @@ public class Environment {
 		return events;
 	}
 	
-	public static GameEvent loadGameEventAlpha0_1(Scanner scanner) {
-		// TODO
-		return null;
+	public static GameEvent loadGameEventAlpha0_1(Scanner scanner) throws GameLoadException {
+		String lineHeader = scanner.nextLine();
+		return loadGameEventAlpha0_1(lineHeader, scanner);
+	}
+	
+	public static GameEvent loadGameEventAlpha0_1(String lineHeader, Scanner scanner) throws GameLoadException {
+		if (lineHeader.equals("loot generic chest event")) {
+			return LootGenericChest.loadAlpha0_1(scanner);
+		}
+		throw new GameLoadException("unrecognized game event");
 	}
 	
 	

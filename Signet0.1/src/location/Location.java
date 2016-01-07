@@ -1,24 +1,30 @@
 package location;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import creatures.Creature;
+import environment.Environment;
 import misc.DeathException;
 import misc.GameEvent;
+import misc.GameLoadException;
 import misc.TextTools;
 
 public class Location {
 	
-	public String name;
+	public String name, desc, fileName;
 	private List<TravelPath> travelableLocations; // location name : path to location.
 	private List<GameEvent> explorableFeatures;
 	
-	public Location(String name, List<TravelPath> paths, List<GameEvent> explorable){
+	public Location(String name, String desc, List<TravelPath> paths, List<GameEvent> explorable){
 		this.name = name;
+		this.desc = desc;
 		travelableLocations = paths;
 		explorableFeatures = explorable;
 	}
@@ -29,40 +35,49 @@ public class Location {
 	 * Every subsequent line is passed into a helper that parses them and takes appropriate action
 	 * to load either a new travel path or new explorable object.
 	 * @param fileName
+	 * @throws GameLoadException 
+	 * @throws FileNotFoundException 
 	 */
-	public void loadAlpha0_1(Scanner scanner){
-		String name = scanner.nextLine();
-		List<TravelPath> paths = loadTravelPathsAlpha0_1(scanner);
-		
+	public static Location loadAlpha0_1(String filePath, String fileName)
+			throws GameLoadException, FileNotFoundException {
+		return loadAlpha0_1(filePath + fileName);
 	}
-	private List<TravelPath> loadTravelPathsAlpha0_1(Scanner scanner) {
+		
+	public static Location loadAlpha0_1(String filePath)
+			throws GameLoadException, FileNotFoundException {
+		
+		Scanner scanner = new Scanner(new File(filePath));
+		String name = scanner.nextLine();
+		String desc = scanner.nextLine();
+		List<TravelPath> paths = loadTravelPathsAlpha0_1(scanner);
+		List<GameEvent> explorable = loadExplorableEventsAlpha0_1(scanner);
+		scanner.close();
+		Location local = new Location(name, desc, paths, explorable);
+		return local;
+	}
+	private static List<TravelPath> loadTravelPathsAlpha0_1(Scanner scanner) {
 		List<TravelPath> paths = new ArrayList<TravelPath>();
 		String line = scanner.nextLine();
-		while (! line.equals("end")) {
-			// TODO
+		while (! line.equals("end paths")) {
+			TravelPath current = TravelPath.loadAlpha0_1(line, scanner);
+			paths.add(current);
 			line = scanner.nextLine();
 		}
 		return paths;
 	}
-	private List<GameEvent> loadExplorableEventsAlpha0_1(Scanner scanner) {
+	private static List<GameEvent> loadExplorableEventsAlpha0_1(Scanner scanner) throws GameLoadException {
 		List<GameEvent> explorable = new ArrayList<GameEvent>();
 		String line = scanner.nextLine();
-		while (! line.equals("end")) {
-			// TODO
+		while (! line.equals("end events")) {
+			GameEvent current = Environment.loadGameEventAlpha0_1(line, scanner);
+			explorable.add(current);
 			line = scanner.nextLine();
 		}
 		return explorable;
 	}
-	
-	
-	
-	
-	/**
-	 * this should save the location to a file with the same conventions used by the loadFromFile method in this class.
-	 * @return
-	 */
 	public void saveToFile(PrintWriter writer) {
 		writer.println(name);
+		writer.println(desc);
 		saveTravelPaths(writer);
 		saveExploreEvents(writer);
 	}
@@ -148,4 +163,41 @@ public class Location {
 		answers[answers.length - 1] = "cancel";
 		return answers;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (! (obj instanceof Location)) {
+			return false;
+		}
+		Location local = (Location) obj;
+		return (local.name.equals(this.name)) &&
+				(local.desc.equals(this.desc)) &&
+				(travelPathEqual(local.travelableLocations, this.travelableLocations)) &&
+				(explorableEventsEqual(local.explorableFeatures, this.explorableFeatures));
+	}
+	private static boolean travelPathEqual(List<TravelPath> paths1, List<TravelPath> paths2) {
+		int size = paths1.size();
+		if (size != paths2.size()) {
+			return false;
+		}
+		for (int i = 0; i < size; i++) {
+			if (! paths1.get(i).equals(paths2.get(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	private static boolean explorableEventsEqual(List<GameEvent> events1, List<GameEvent> events2) {
+		int size = events1.size();
+		if (size != events2.size()) {
+			return false;
+		}
+		for (int i = 0; i < size; i++) {
+			if (! events1.get(i).equals(events2.get(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 }

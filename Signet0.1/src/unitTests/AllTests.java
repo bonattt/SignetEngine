@@ -26,7 +26,10 @@ public class AllTests {
 	    UnitTestInventory.class,
 	    UnitTestItem.class,
 	    UnitTestItemContainer.class,
+	    UnitTestLocation.class,
 	    UnitTestSaveAndLoad.class,
+	    UnitTestTravelPath.class,
+	    UnitTestWeapon.class,
 	    UnitTestWound.class,
 	    UnitTestWoundMedication.class
 	})
