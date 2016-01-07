@@ -75,11 +75,16 @@ public class Location {
 		}
 		return explorable;
 	}
-	public void saveToFile(PrintWriter writer) {
+	public void saveToFile(String filePath) throws FileNotFoundException {
+		if (Environment.print_debugs) {
+			System.out.println("saving " + filePath + fileName);
+		}
+		PrintWriter writer = new PrintWriter(filePath + fileName);
 		writer.println(name);
 		writer.println(desc);
 		saveTravelPaths(writer);
 		saveExploreEvents(writer);
+		writer.close();
 	}
 	private void saveTravelPaths(PrintWriter writer) {
 		int size = travelableLocations.size();

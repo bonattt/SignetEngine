@@ -47,11 +47,6 @@ public class Environment {
 	
 	private static final String SAVEFILE_ROOTPATH = "src/savedFiles/";
 	private static final String SAVE01 = "save01/";
-	private static final String SAVE02 = "save02/";
-	private static final String SAVE03 = "save03/";
-	private static final String AUTOSAVE01 = "autosave01/";
-	private static final String AUTOSAVE02 = "autosave02/";
-	private static final String AUTOSAVE03 = "autosave03/";
 	private static final String MAIN_SAVE_FILE = "main.sigsav";
 	
 	public Environment(String startLocation) throws FileNotFoundException{

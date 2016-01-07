@@ -14,11 +14,14 @@ public class LocationIndex {
 	public LocationIndex(String filePath) throws FileNotFoundException {
 		map = new HashMap<String, Location>();
 		fileNameMap = new HashMap<String, String>();
-		loadFileNameMap(filePath);
 	}
 	
-	public void saveToFile(String filePath) {
-		// TODO
+	public void saveLocations(String filePath) throws FileNotFoundException {
+		for (String key : map.keySet()) {
+			Location current = map.get(key);
+			current.saveToFile(filePath);
+		}
+		map.clear();
 	}
 	
 	public void saveFileNameMap(PrintWriter writer) {
@@ -28,11 +31,8 @@ public class LocationIndex {
 		}
 	}
 	
-	private void loadFileNameMap(String filePath) throws FileNotFoundException {
-		Scanner scanner = new Scanner(new File(filePath));
-		
-		
-		scanner.close();
+	private void initializeFileNameMap(Scanner scanner) throws FileNotFoundException {
+		// TODO
 	}
 	
 	

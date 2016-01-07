@@ -49,7 +49,9 @@ import environment.Environment;
 
 public class UnitTestSaveAndLoad {
 
-	private static final String filePath = "src/unitTests/unitTestSaveFile.txt";
+	private static final String filePathRoot = "src/unitTests/";
+	private static final String fileName = "unitTestSaveFile.txt";
+	private static final String filePath = filePathRoot + fileName;
 	
 	static {
 		System.out.println("untested classes:\n\thealth.Infection\n\tcreatures.Trait\n\t"
@@ -69,7 +71,9 @@ public class UnitTestSaveAndLoad {
 	}
 	
 	@Test
-	public void locationSaveLoad() throws FileNotFoundException, GameLoadException {
+	public void locationSaveLoad()
+			throws FileNotFoundException, GameLoadException, IllegalArgumentException,
+				IllegalAccessException, NoSuchFieldException, SecurityException {
 		List<TravelPath> paths = new ArrayList<TravelPath>();
 		paths.add(new TravelPath("_street_", "_location_name_", 1, 1));
 		paths.add(new TravelPath("_name_", "_location_name_", 2, 2));
@@ -77,10 +81,13 @@ public class UnitTestSaveAndLoad {
 		explorable.add(new LootGenericChest()); // = TestEvent();
 		
 		Location saved = new Location("test_location", "_description_", paths, explorable);
-		PrintWriter writer = new PrintWriter(filePath);
-		saved.saveToFile(writer);
-		writer.close();
-		Location loaded = Location.loadAlpha0_1(filePath);
+		saved.saveToFile(filePathRoot);
+		
+		Field f = Location.class.getDeclaredField("fileName");
+		f.setAccessible(true);
+		String fileName = (String) f.get(saved);
+		String fullFilePath = filePathRoot + fileName;
+		Location loaded = Location.loadAlpha0_1(fullFilePath);
 		
 		assertEquals(saved, loaded);
 	}
