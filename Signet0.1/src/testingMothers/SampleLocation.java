@@ -17,7 +17,8 @@ public class SampleLocation {
 		List<GameEvent> events = new ArrayList<GameEvent>();
 		events.add(new LootGenericChest());
 		
-		return new Location("empty plaza", "this plaza is empty except for a chest, sitting suspiciously in the middle.",
+		return new Location("empty plaza", "sampleLocationFile.signet",
+				"this plaza is empty except for a chest, sitting suspiciously in the middle.",
 				paths, events);
 		
 	}

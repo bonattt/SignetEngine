@@ -22,37 +22,24 @@ public class Location {
 	private List<TravelPath> travelableLocations; // location name : path to location.
 	private List<GameEvent> explorableFeatures;
 	
-	public Location(String name, String desc, List<TravelPath> paths, List<GameEvent> explorable){
+	public Location(String name, String fileName, String desc,  List<TravelPath> paths, List<GameEvent> explorable){
 		this.name = name;
 		this.desc = desc;
+		this.fileName = fileName;
 		travelableLocations = paths;
 		explorableFeatures = explorable;
 	}
 	
-	/**
-	 * This is a helper called in the constructor that reads the file given in the constructor.
-	 * the first line in the file is set as the location's name and not handled by the helper.
-	 * Every subsequent line is passed into a helper that parses them and takes appropriate action
-	 * to load either a new travel path or new explorable object.
-	 * @param fileName
-	 * @throws GameLoadException 
-	 * @throws FileNotFoundException 
-	 */
 	public static Location loadAlpha0_1(String filePath, String fileName)
 			throws GameLoadException, FileNotFoundException {
-		return loadAlpha0_1(filePath + fileName);
-	}
 		
-	public static Location loadAlpha0_1(String filePath)
-			throws GameLoadException, FileNotFoundException {
-		
-		Scanner scanner = new Scanner(new File(filePath));
+		Scanner scanner = new Scanner(new File(filePath + fileName));
 		String name = scanner.nextLine();
 		String desc = scanner.nextLine();
 		List<TravelPath> paths = loadTravelPathsAlpha0_1(scanner);
 		List<GameEvent> explorable = loadExplorableEventsAlpha0_1(scanner);
 		scanner.close();
-		Location local = new Location(name, desc, paths, explorable);
+		Location local = new Location(name, fileName, desc, paths, explorable);
 		return local;
 	}
 	private static List<TravelPath> loadTravelPathsAlpha0_1(Scanner scanner) {

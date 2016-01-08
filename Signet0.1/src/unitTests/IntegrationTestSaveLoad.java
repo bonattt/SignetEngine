@@ -37,7 +37,7 @@ import testingMothers.SampleWeapons;
 
 public class IntegrationTestSaveLoad {
 
-	private static final String filePath = "src/unitTests/unitTestSaveFile.txt";
+	private static final String filePath = "src/unitTests/testingData/unitTestSaveFile.txt";
 	
 	@Test
 	public void creatureSaveLoad()
