@@ -43,7 +43,9 @@ public class Environment {
 	private static final int default_start_date = 13;
 	private static final int default_start_month = 5;
 	
-	private static final String versionName = "SIGNET alpha version 0.1";
+	public static final String currentVersionName = "SIGNET alpha version 0.1";
+	
+	public static final String ALPHA0_1 = "SIGNET alpha version 0.1";
 	
 	private static final String SAVEFILE_ROOTPATH = "src/savedFiles/";
 	private static final String SAVE01 = "save01/";
@@ -112,7 +114,7 @@ public class Environment {
 		try {
 			Scanner scanner = new Scanner(new File(filePath));
 			String versionStr = scanner.nextLine();
-			if(versionStr.equals("SIGNET alpha version 0.1")){
+			if(versionStr.equals(ALPHA0_1)){
 				loadAlpha0_1(scanner);
 			} else {
 				System.out.println("Unknown game version \nGame load canceled.");
@@ -136,7 +138,7 @@ public class Environment {
 	public void saveGameToFile(String filePath){
 		try {
 			PrintWriter writer = new PrintWriter(filePath, "UTF-8");
-			writer.println(versionName);
+			writer.println(currentVersionName);
 			player.saveToFile(writer);
 			writer.close();
 		} catch (FileNotFoundException e) {

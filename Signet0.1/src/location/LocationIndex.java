@@ -8,18 +8,12 @@ import java.util.Scanner;
 
 public class LocationIndex {
 
-	private String filePath;
 	private HashMap<String, Location> map;
 	private HashMap<String, String> fileNameMap;
 	
-	public LocationIndex(String filePath) throws FileNotFoundException {
-		this.filePath = filePath;
+	public LocationIndex() throws FileNotFoundException {
 		map = new HashMap<String, Location>();
 		fileNameMap = new HashMap<String, String>();
-	}
-	
-	public void save() throws FileNotFoundException {
-		saveLocations(filePath);
 	}
 	public void saveLocations(String filePath) throws FileNotFoundException {
 		for (String key : map.keySet()) {

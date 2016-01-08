@@ -30,10 +30,25 @@ public class Location {
 		explorableFeatures = explorable;
 	}
 	
-	public static Location loadAlpha0_1(String filePath, String fileName)
-			throws GameLoadException, FileNotFoundException {
-		
+	public static Location loadLocation(String filePath, String fileName)
+			throws FileNotFoundException, GameLoadException {
 		Scanner scanner = new Scanner(new File(filePath + fileName));
+		String version = scanner.nextLine();
+		Location location;
+		if (version.equals(Environment.ALPHA0_1)) {
+			location = loadAlpha0_1(scanner, fileName);
+		} else {
+			scanner.close();
+			throw new GameLoadException("unrecognized game version in class 'Location'");
+		}
+		scanner.close();
+		return location;
+	}
+	
+	private static Location loadAlpha0_1(Scanner scanner, String fileName)
+			throws GameLoadException {
+		
+//		Scanner scanner = new Scanner(new File(filePath + fileName));
 		String name = scanner.nextLine();
 		String desc = scanner.nextLine();
 		List<TravelPath> paths = loadTravelPathsAlpha0_1(scanner);
@@ -67,6 +82,7 @@ public class Location {
 			System.out.println("saving " + filePath + fileName);
 		}
 		PrintWriter writer = new PrintWriter(filePath + fileName);
+		writer.println(Environment.currentVersionName);
 		writer.println(name);
 		writer.println(desc);
 		saveTravelPaths(writer);

@@ -87,7 +87,7 @@ public class UnitTestSaveAndLoad {
 		Field f = Location.class.getDeclaredField("fileName");
 		f.setAccessible(true);
 		String fileName = (String) f.get(saved);
-		Location loaded = Location.loadAlpha0_1(filePathRoot, fileName);
+		Location loaded = Location.loadLocation(filePathRoot, fileName);
 		
 		assertEquals(saved, loaded);
 		System.out.println("loading from: " + filePathRoot + fileName);
