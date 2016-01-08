@@ -1,0 +1,5 @@
+location1
+location1.signet
+location2
+location2.signet
+end

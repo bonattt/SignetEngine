@@ -51,10 +51,12 @@ public class Environment {
 	private static final String SAVE01 = "save01/";
 	private static final String MAIN_SAVE_FILE = "main.sigsav";
 	
-	public Environment(String startLocation) throws FileNotFoundException{
+	public Environment(String startLocation)
+			throws FileNotFoundException, GameLoadException{
 		this(startLocation, default_start_time, default_start_date, default_start_month);
 	}
-	public Environment(String startLocation, int startTime, int startDate, int startMonth) throws FileNotFoundException{
+	public Environment(String startLocation, int startTime, int startDate, int startMonth)
+			throws FileNotFoundException, GameLoadException{
 		locationIndex = initializeLocationIndex();
 		scanner = new Scanner(System.in);
 		location = locationIndex.get(startLocation);
@@ -155,6 +157,8 @@ public class Environment {
 			location = locationIndex.get(locationName);
 		} catch (FileNotFoundException e) {
 			TextTools.display(String.format("ERROR %s is inaccessable due to a file load error.", locationName));
+		} catch (GameLoadException e) {
+			TextTools.display("failed to load new location.");
 		}
 	}
 	public void explore(){
