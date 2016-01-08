@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import environment.Environment;
+import misc.GameLoadException;
 import misc.TextTools;
 
 public class RunQuestionAsker {
 	
-	public static void main(String[] args) throws FileNotFoundException{
+	public static void main(String[] args) throws FileNotFoundException, GameLoadException{
 		Environment ev = new Environment("src/testLocations/sampleStartLocation");
 		System.out.println("\n");
 		String input;

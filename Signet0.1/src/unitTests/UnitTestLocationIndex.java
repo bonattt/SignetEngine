@@ -17,7 +17,6 @@ import org.junit.Test;
 public class UnitTestLocationIndex {
 
 	private static final String filePath = "src/unitTests/testingData/";
-	private static final String indexFile= filePath + "testIndexFile.txt";
 	private static final String LOCAL1 = "location1";
 	private static final String LOCAL2 = "location2";
 	private static final String LOCAL1_FILE = "location1.signet";
@@ -29,13 +28,13 @@ public class UnitTestLocationIndex {
 	
 	@Before
 	public void setup() throws FileNotFoundException {
-		local1 = new Location(LOCAL1, "location1.signet", "this is a test location",
+		local1 = new Location(LOCAL1, LOCAL1_FILE, "this is a test location",
 				new ArrayList<TravelPath>(), new ArrayList<GameEvent>());
-		local2 = new Location(LOCAL2, "location2.signet", "this is a test location",
+		local2 = new Location(LOCAL2, LOCAL2_FILE, "this is a test location",
 				new ArrayList<TravelPath>(), new ArrayList<GameEvent>());
 		local1.saveToFile(filePath);
 		local2.saveToFile(filePath);
-		index = new LocationIndex(indexFile);
+		index = new LocationIndex(filePath);
 	}
 	
 	@Test
@@ -51,7 +50,7 @@ public class UnitTestLocationIndex {
 		Location local = index.get(LOCAL1);
 		local.desc = "anpdniakw";
 		index.saveLocations(filePath);
-		LocationIndex newIndex = new LocationIndex(indexFile);
+		LocationIndex newIndex = new LocationIndex(filePath);
 		assertEquals(local, newIndex.get(LOCAL1));
 	}
 	

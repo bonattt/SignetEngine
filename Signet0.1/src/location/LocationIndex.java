@@ -10,6 +10,8 @@ import misc.GameLoadException;
 
 public class LocationIndex {
 
+	private static final String INDEX_FILE = "index.signet";
+	
 	private String filePath;
 	private HashMap<String, Location> map;
 	private HashMap<String, String> fileNameMap;
@@ -37,7 +39,7 @@ public class LocationIndex {
 	}
 	
 	private void initializeFileNameMap() throws FileNotFoundException {
-		Scanner scanner = new Scanner(new File(filePath));
+		Scanner scanner = new Scanner(new File(filePath + INDEX_FILE));
 		String name = scanner.nextLine();
 		while(! name.equals("end")) {
 			String fileName = scanner.nextLine();
@@ -59,16 +61,4 @@ public class LocationIndex {
 		map.put(name, newLocation);
 		return newLocation;
 	}
-	
-	private Location loadLocationAlpha0_1(String filepath) throws FileNotFoundException {
-		Scanner scanner = new Scanner(new File(filepath));
-		String versionString;
-		
-		
-		scanner.close();
-		return null;
-	}
-	
-	
-	
 }
