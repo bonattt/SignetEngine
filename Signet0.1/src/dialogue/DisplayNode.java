@@ -1,5 +1,6 @@
 package dialogue;
 
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 import misc.DeathException;
@@ -33,4 +34,10 @@ public class DisplayNode implements DialogueNode {
 		TextTools.input.nextLine();
 		return defaultNextNode;
 	}
+
+	public void saveToFile(PrintWriter writer) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

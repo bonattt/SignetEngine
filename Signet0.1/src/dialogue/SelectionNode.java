@@ -1,5 +1,7 @@
 package dialogue;
 
+import java.io.PrintWriter;
+
 import misc.DeathException;
 import misc.TextTools;
 import creatures.PlayerCharacter;
@@ -30,4 +32,10 @@ public class SelectionNode implements DialogueNode {
 	public void setNextNode(DialogueNode node) {
 		throw new UnsupportedOperationException();
 	}
+	
+	public void saveToFile(PrintWriter writer) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

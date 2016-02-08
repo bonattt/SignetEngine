@@ -1,5 +1,6 @@
 package dialogue;
 
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 import creatures.PlayerCharacter;
@@ -29,6 +30,11 @@ public class EventNode implements DialogueNode {
 		TextTools.input.nextLine();
 		event.triggerEvent(player);
 		return nextNode;
+	}
+
+	public void saveToFile(PrintWriter writer) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

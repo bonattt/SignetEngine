@@ -1,5 +1,7 @@
 package dialogue;
 
+import java.io.PrintWriter;
+
 import misc.DeathException;
 import creatures.PlayerCharacter;
 /**
@@ -24,6 +26,11 @@ public class PointerNode implements DialogueNode {
 
 	public void setNextNode(DialogueNode node) {
 		this.node = node;
+	}
+
+	public void saveToFile(PrintWriter writer) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

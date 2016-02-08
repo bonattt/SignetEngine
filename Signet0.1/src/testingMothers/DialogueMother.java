@@ -18,7 +18,7 @@ public class DialogueMother {
 		DialogueNode intro = new DisplayNode("this is the intor scene. Welcome.", scene1);
 		try {
 			PlayerCharacter player = CharacterMother.getDickDefenderOfLife();
-			Dialogue diologue = new Dialogue(intro, player);
+			Dialogue diologue = new Dialogue("sample dialogue", intro, player);
 			return diologue;
 		} catch (InventoryException e) {
 			e.printStackTrace();
@@ -39,7 +39,7 @@ public class DialogueMother {
 		DialogueNode intro = new DisplayNode("Welcome to Deus Ex Machina, Humanoid Revolt!", selector);
 		try {
 			PlayerCharacter player = CharacterMother.getDickDefenderOfLife();
-			Dialogue diologue = new Dialogue(intro, player);
+			Dialogue diologue = new Dialogue("have a simple chat", intro, player);
 			return diologue;
 		} catch (InventoryException e) {
 			e.printStackTrace();
@@ -69,7 +69,7 @@ public class DialogueMother {
 		PlayerCharacter player;
 		try {
 			player = CharacterMother.getDickDefenderOfLife();
-			return new Dialogue(welcome, player);
+			return new Dialogue("play undertail", welcome, player);
 		} catch (InventoryException e) {
 			e.printStackTrace();
 			System.out.println("dick seems to have had a wardrobe malfuction");
