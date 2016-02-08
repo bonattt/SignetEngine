@@ -1,6 +1,9 @@
 package dialogue;
 
+import items.Item;
+
 import java.io.PrintWriter;
+import java.util.Set;
 
 import misc.DeathException;
 import misc.TextTools;
@@ -12,7 +15,7 @@ import creatures.PlayerCharacter;
  * @author bonattt
  *
  */
-public class SelectionNode implements DialogueNode {
+public class SelectionNode extends DialogueNode {
 
 	private DialogueNode[] nodes;
 	private String[] answers;
@@ -29,13 +32,34 @@ public class SelectionNode implements DialogueNode {
 		return nodes[reply - 1];
 	}
 
-	public void setNextNode(DialogueNode node) {
-		throw new UnsupportedOperationException();
+	public void setEdges(DialogueNode[] edges) {
+		nodes = edges;
+	}
+
+	public DialogueNode[] getEdges() {
+		return nodes;
 	}
 	
-	public void saveToFile(PrintWriter writer) {
-		// TODO Auto-generated method stub
+	public void saveNodeToFile(PrintWriter writer, Set<DialogueNode> nodesVisited) {
+		if (nodesVisited.contains(this)) {
+			return;
+		}
+		nodesVisited.add(this);
 		
+		writer.println("SelectionNode");
+		writer.println(id);
+		for (String answer : answers) {
+			writer.printf("%s ", answer);
+		}
+		Item.saveLongStringToFile(writer, text);
+		for (DialogueNode node : nodes) {
+			saveNextNode(writer, nodesVisited, node);
+		}
+	}
+
+	public void saveEdgesToFile(PrintWriter writer) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
 	}
 
 }

@@ -1,6 +1,10 @@
 package dialogue;
 
+import java.io.PrintWriter;
+
 
 public interface NPC {
-	// TODO
+
+	public void saveToFile(PrintWriter writer);
+	
 }

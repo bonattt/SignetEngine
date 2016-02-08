@@ -1,6 +1,8 @@
 package unitTests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import health.BodyPart;
 import health.Injuries;
 import health.Wound;
@@ -12,8 +14,8 @@ import items.Armor;
 import items.Bandage;
 import items.Item;
 import items.LightSource;
-import items.Ointment;
 import items.MeleeWeapon;
+import items.Ointment;
 import items.RangedWeapon;
 import items.StoryItem;
 import items.Weapon;
@@ -32,19 +34,20 @@ import java.util.Scanner;
 
 import location.Location;
 import location.TravelPath;
-import misc.DeathException;
 import misc.GameEvent;
 import misc.GameLoadException;
 
 import org.junit.Test;
 
 import testingMothers.CharacterMother;
+import testingMothers.DialogueMother;
 import testingMothers.LootGenericChest;
 import testingMothers.SampleItems;
 import creatures.Creature;
 import creatures.PlayerCharacter;
 import creatures.Skill;
 import creatures.SkillTag;
+import dialogue.Dialogue;
 import environment.Environment;
 
 public class UnitTestSaveAndLoad {
@@ -58,6 +61,32 @@ public class UnitTestSaveAndLoad {
 				+ "creatures.PlayerCharacter\n\tnpc.*\n\tenvironment.*\n");
 	}
 	@Test
+	public void dialogueVerySimpleSaveLoad() throws FileNotFoundException {
+		Dialogue saved = DialogueMother.seriesOfScenes();
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveToFile(writer);
+		writer.close();
+		Scanner scanner = new Scanner(new File(filePath));
+		Dialogue loaded = Dialogue.loadFromFileAlpha0_1(scanner);
+		scanner.close();
+		
+		assertEquals(saved, loaded);
+	}
+	
+	@Test
+	public void dialogueSimpleGraphSaveLoad() throws FileNotFoundException {
+		Dialogue saved = DialogueMother.undertail();
+		PrintWriter writer = new PrintWriter(filePath);
+		saved.saveToFile(writer);
+		writer.close();
+		Scanner scanner = new Scanner(new File(filePath));
+		Dialogue loaded = Dialogue.loadFromFileAlpha0_1(scanner);
+		scanner.close();
+		
+		assertEquals(saved, loaded);
+	}
+	
+	@Test
 	public void sampleEventSaveLoad() throws FileNotFoundException, GameLoadException {
 		GameEvent saved = new LootGenericChest();
 		PrintWriter writer = new PrintWriter(filePath);
@@ -68,7 +97,7 @@ public class UnitTestSaveAndLoad {
 		scanner.close();
 		
 		assertEquals(saved, loaded);;
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	
 	@Test
@@ -90,7 +119,7 @@ public class UnitTestSaveAndLoad {
 		Location loaded = Location.loadLocation(filePathRoot, fileName);
 		
 		assertEquals(saved, loaded);
-		System.out.println("loading from: " + filePathRoot + fileName);
+//		System.out.println("loading from: " + filePathRoot + fileName);
 	}
 	
 	
@@ -107,7 +136,7 @@ public class UnitTestSaveAndLoad {
 		scanner.close();
 		
 		assertEquals(saved, loaded);
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	@Test
 	public void twoLongStringsSaveLoad() throws FileNotFoundException {
@@ -125,7 +154,7 @@ public class UnitTestSaveAndLoad {
 		
 		assertEquals(saved1, loaded1);
 		assertEquals(saved2, loaded2);
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	@Test
 	public void emptyLongStringSaveLoad() throws FileNotFoundException {
@@ -143,7 +172,7 @@ public class UnitTestSaveAndLoad {
 		
 		assertEquals(saved1, loaded1);
 		assertEquals(saved2, loaded2);
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	@Test
 	public void LongStringWithWhiteSpaceSaveLoad() throws FileNotFoundException {
@@ -158,7 +187,7 @@ public class UnitTestSaveAndLoad {
 		scanner.close();
 		
 		assertEquals(saved1, loaded1);
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	
 	@Test
@@ -227,7 +256,7 @@ public class UnitTestSaveAndLoad {
 			assertEquals(savedMap.get(key), loadedMap.get(key));
 		}
 		assertEquals(savedMap.size(), loadedMap.size());
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	
 	@Test
@@ -260,7 +289,7 @@ public class UnitTestSaveAndLoad {
 			assertEquals(savedMap.get(key), loadedMap.get(key));
 		}
 		assertEquals(savedMap.size(), loadedMap.size());
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	
 	
@@ -288,7 +317,7 @@ public class UnitTestSaveAndLoad {
 			assertEquals(saved.getStat(key), (int) loadedMap.get(key));
 		}
 		assertEquals(Creature.ABILITIES.length, loadedMap.size());
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 
 	
@@ -304,7 +333,7 @@ public class UnitTestSaveAndLoad {
 		scanner.close();
 		
 		assertEquals(saved, loaded);
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}	
 
 	@Test
@@ -320,7 +349,7 @@ public class UnitTestSaveAndLoad {
 		scanner.close();
 		
 		assertEquals(saved, loaded);
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	@Test
 	public void testItem_WornItemSaveLoad() throws FileNotFoundException {
@@ -337,7 +366,7 @@ public class UnitTestSaveAndLoad {
 			
 		assertTrue(saved.equals(loaded));
 		assertTrue(loaded.equals(saved));
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 
 	@Test
@@ -361,7 +390,7 @@ public class UnitTestSaveAndLoad {
 		
 		assertTrue(saved.equals(loaded));
 		assertTrue(loaded.equals(saved));
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 
 	@Test
@@ -445,7 +474,7 @@ public class UnitTestSaveAndLoad {
 		} catch (FileNotFoundException e) {
 			fail("an exception was thrown.");
 		}
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	@Test
 	public void testItem_OintmentSaveLoad() {
@@ -465,7 +494,7 @@ public class UnitTestSaveAndLoad {
 		} catch (FileNotFoundException e) {
 			fail("an exception was thrown.");
 		}
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	@Test
 	public void testItem_RangedWeaponSaveLoad() throws FileNotFoundException {
@@ -481,7 +510,7 @@ public class UnitTestSaveAndLoad {
 
 		assertTrue(loaded.equals(saved));
 		assertTrue(saved.equals(loaded));
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	@Test
 	public void testItem_WeaponSaveLoad() {
@@ -499,7 +528,7 @@ public class UnitTestSaveAndLoad {
 		} catch (FileNotFoundException e) {
 			fail("exception thrown");
 		}
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	@Test
 	public void testWeaponDescriptionSaveLoad() {
@@ -516,7 +545,7 @@ public class UnitTestSaveAndLoad {
 		} catch (FileNotFoundException e) {
 			fail("exception thrown");
 		}
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	
 	@Test
@@ -535,7 +564,7 @@ public class UnitTestSaveAndLoad {
 		} catch (FileNotFoundException e) {
 			fail("exception thrown");
 		}
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 	
 	
@@ -561,7 +590,7 @@ public class UnitTestSaveAndLoad {
 		scanner.close();
 		
 		assertEquals(saved, loaded);
-		System.out.println("loading from: " + filePath);
+//		System.out.println("loading from: " + filePath);
 	}
 }
 

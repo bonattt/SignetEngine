@@ -1,10 +1,12 @@
 package dialogue;
 
 import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
 
 import misc.DeathException;
 import misc.GameEvent;
-import misc.TextTools;
 import creatures.Creature;
 import creatures.PlayerCharacter;
 import creatures.Skill;
@@ -50,14 +52,41 @@ public class Dialogue implements GameEvent {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	public String getName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void saveToFile(PrintWriter writer) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		writer.println(name);
+		if (npc == null) {
+			writer.println("null");
+		} else {
+			npc.saveToFile(writer);
+		}
+		
+		Set<DialogueNode> nodesVisited = new HashSet<DialogueNode>();
+		start.saveNodeToFile(writer, nodesVisited);
+		for (DialogueNode node : nodesVisited) {
+			writer.println(node.getID());
+			for (DialogueNode edge : node.getEdges()) {
+				writer.printf("%d ", edge.getID());
+			}
+			writer.println();
+		}
 	}
+	
+	public static Dialogue loadFromFileAlpha0_1(Scanner scanner) {
+		String name = scanner.nextLine();
+		
+		
+		return null;
+	}
+	
+	public static void loadNodeAlpha0_1(Scanner scanner, Set<DialogueNode> nodesLoaded) {
+		String nodeType = scanner.nextLine();
+		
+	}
+	
 }

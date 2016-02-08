@@ -64,7 +64,7 @@ public class DialogueMother {
 		DialogueNode battle = new SelectionNode("a vicious monster attacks you!\nWhat will you do?", answers, nodes);
 		
 		DialogueNode welcome = new DisplayNode("welcome to undertail.", battle);
-		beginningPointer.setNextNode(welcome);
+		beginningPointer.setEdges(new DialogueNode[]{welcome});
 		
 		PlayerCharacter player;
 		try {

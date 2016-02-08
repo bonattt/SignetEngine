@@ -1,7 +1,10 @@
 package dialogue;
 
+import items.Item;
+
 import java.io.PrintWriter;
 import java.util.Scanner;
+import java.util.Set;
 
 import misc.DeathException;
 import misc.TextTools;
@@ -14,30 +17,46 @@ import creatures.PlayerCharacter;
  * @author bonattt
  *
  */
-public class DisplayNode implements DialogueNode {
+public class DisplayNode extends DialogueNode {
 
-	private DialogueNode defaultNextNode;
+	private DialogueNode nextNode;
 	private String text;
 	
 	public DisplayNode(String text, DialogueNode nextNode ){
 		this.text = text;
-		this.defaultNextNode = nextNode;
+		this.nextNode = nextNode;
 	}
 	
-	public void setNextNode(DialogueNode node) {
-		defaultNextNode = node;
+	public void setEdges(DialogueNode[] edges) {
+		nextNode = edges[0];
 	}
 
 	public DialogueNode openNode(PlayerCharacter player, NPC npc) throws DeathException{
 		TextTools.display(text);
 		TextTools.display("press enter to continue");
 		TextTools.input.nextLine();
-		return defaultNextNode;
+		return nextNode;
+	}
+	
+	public DialogueNode[] getEdges() {
+		return new DialogueNode[]{nextNode};
 	}
 
-	public void saveToFile(PrintWriter writer) {
-		// TODO Auto-generated method stub
+	public void saveNodeToFile(PrintWriter writer, Set<DialogueNode> nodesVisited) {
+		if (nodesVisited.contains(this)) {
+			return;
+		} 
+		nodesVisited.add(this);
 		
+		writer.println("DisplayNode");
+		writer.println(id);
+		Item.saveLongStringToFile(writer, text);
+
+		saveNextNode(writer, nodesVisited, nextNode);
 	}
 
+	public void saveEdgesToFile(PrintWriter writer) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
 }
