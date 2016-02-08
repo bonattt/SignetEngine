@@ -2,11 +2,13 @@ package dialogue;
 
 import java.io.PrintWriter;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 import misc.DeathException;
 import creatures.PlayerCharacter;
 
-public abstract class DialogueNode {
+public abstract class DialogueNode implements Iterable<DialogueNode> {
 	
 	protected int id;
 	
@@ -29,7 +31,20 @@ public abstract class DialogueNode {
 		if (! (obj instanceof DialogueNode)) {
 			return false;
 		}
-		return obj.hashCode() == this.hashCode();
+		DialogueNode arg = (DialogueNode) obj;
+		
+		if (obj.hashCode() != this.hashCode()) {
+			return false;
+		}
+		if (arg.getEdges().length != this.getEdges().length) {
+			return false;
+		}
+		for (int i = 0; i < this.getEdges().length; i++) {
+			if(arg.getEdges()[i].getID() != this.getEdges()[i].getID()) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	@Override
@@ -43,5 +58,15 @@ public abstract class DialogueNode {
 		} else {
 			writer.println("NULL");
 		}
+	}
+	// Iterable
+	@SuppressWarnings("rawtypes")
+	public void forEach(Consumer arg0) {
+		throw new UnsupportedOperationException();
+	}
+	// Iterable
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Spliterator spliterator() {
+		throw new UnsupportedOperationException();
 	}
 }

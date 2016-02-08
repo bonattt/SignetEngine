@@ -1,23 +1,8 @@
-electronics
-electronics
-7
-3
+sample dialogue
+null
+DisplayNode
 0
-hands
-mental
-end tags
-dex
-anl
-end linked attribute
-knives
-knives
-8
-2
+this is the intor scene. Welcome.
+end~*~*~string
 0
-combat
-rightHand
-end tags
-agl
-dex
-end linked attribute
-end skills
+0 

@@ -3,8 +3,11 @@ package dialogue;
 import items.Item;
 
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 import creatures.PlayerCharacter;
 import misc.DeathException;
@@ -17,10 +20,11 @@ public class EventNode extends DialogueNode {
 	private DialogueNode nextNode;
 	private String text;
 	
-	public EventNode(String text, GameEvent event, DialogueNode nextNode) {
+	public EventNode(int id,String text, GameEvent event, DialogueNode nextNode) {
 		this.text = text;
 		this.event = event;
 		this.nextNode = nextNode;
+		this.id = id;
 	}
 
 	public void setEdges(DialogueNode[] edges) {
@@ -57,5 +61,10 @@ public class EventNode extends DialogueNode {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
+
+	public Iterator iterator() {
+		return new LeafNodeIterator(this);
+	}
+
 
 }

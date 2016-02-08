@@ -1,6 +1,7 @@
 package dialogue;
 
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -18,8 +19,9 @@ public class PointerNode extends DialogueNode {
 
 	private DialogueNode nextNode;
 	
-	public PointerNode() {
+	public PointerNode(int id) {
 		nextNode = null;
+		this.id = id;
 	}
 	
 	public DialogueNode openNode(PlayerCharacter player, NPC npc) throws DeathException {
@@ -55,6 +57,10 @@ public class PointerNode extends DialogueNode {
 	public static PointerNode loadPointerNodeAlpha0_1(Scanner scanner) {
 		// TODO
 		throw new UnsupportedOperationException();
+	}
+
+	public Iterator iterator() {
+		return new LeafNodeIterator(this);
 	}
 
 }

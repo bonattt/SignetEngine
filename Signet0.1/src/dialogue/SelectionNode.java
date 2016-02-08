@@ -3,6 +3,7 @@ package dialogue;
 import items.Item;
 
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.Set;
 
 import misc.DeathException;
@@ -21,8 +22,9 @@ public class SelectionNode extends DialogueNode {
 	private String[] answers;
 	private String text;
 	
-	public SelectionNode(String text, String[] answers, DialogueNode[] nodes){
+	public SelectionNode(int id, String text, String[] answers, DialogueNode[] nodes){
 		this.text = text;
+		this.id = id;
 		this.nodes = nodes;
 		this.answers = answers;
 	}
@@ -60,6 +62,10 @@ public class SelectionNode extends DialogueNode {
 	public void saveEdgesToFile(PrintWriter writer) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
+	}
+
+	public Iterator iterator() {
+		return new CompositeNodeIterator(this);
 	}
 
 }

@@ -2,8 +2,11 @@ package dialogue;
 
 import java.io.PrintWriter;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 import misc.DeathException;
 import misc.GameEvent;
@@ -11,7 +14,7 @@ import creatures.Creature;
 import creatures.PlayerCharacter;
 import creatures.Skill;
 
-public class Dialogue implements GameEvent {
+public class Dialogue implements GameEvent, Iterable {
 	
 	private String name;
 	private PlayerCharacter player;
@@ -36,16 +39,16 @@ public class Dialogue implements GameEvent {
 		}
 	}
 	
-	public static DialogueNode getSkillTestNode(Skill skill, String text, DialogueNode nextNode) {
+	public static DialogueNode getSkillTestNode(int id, Skill skill, String text, DialogueNode nextNode) {
 		GameEvent event = null;
-		new EventNode(text, event, nextNode);
+		new EventNode(id, text, event, nextNode);
 		throw new UnsupportedOperationException();
 	}
 	
-	public static DialogueNode yesNoNode(String text, DialogueNode yesNode, DialogueNode noNode) {
+	public static DialogueNode yesNoNode(int id, String text, DialogueNode yesNode, DialogueNode noNode) {
 		String[] answers = new String[]{"yes", "no"};
 		DialogueNode[] nodes = new DialogueNode[]{yesNode, noNode};
-		return new SelectionNode(text, answers, nodes);
+		return new SelectionNode(id, text, answers, nodes);
 	}
 
 	public Object triggerEvent(Creature player) throws DeathException {
@@ -89,4 +92,31 @@ public class Dialogue implements GameEvent {
 		
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (! (obj instanceof Dialogue)) {
+			return false;
+		}
+		Dialogue arg = (Dialogue) obj;
+		
+		
+		return true;
+	}
+	
+	// Iterable
+	@SuppressWarnings("rawtypes")
+	public void forEach(Consumer arg0) {
+		throw new UnsupportedOperationException();
+	}
+
+	// Iterable
+	public Iterator<DialogueNode> iterator() {
+		return start.iterator();
+	}
+
+	// Iterable
+	@SuppressWarnings("rawtypes")
+	public Spliterator spliterator() {
+		throw new UnsupportedOperationException();
+	}
 }

@@ -3,8 +3,11 @@ package dialogue;
 import items.Item;
 
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 import misc.DeathException;
 import misc.TextTools;
@@ -22,9 +25,10 @@ public class DisplayNode extends DialogueNode {
 	private DialogueNode nextNode;
 	private String text;
 	
-	public DisplayNode(String text, DialogueNode nextNode ){
+	public DisplayNode(int id, String text, DialogueNode nextNode){
 		this.text = text;
 		this.nextNode = nextNode;
+		this.id = id;
 	}
 	
 	public void setEdges(DialogueNode[] edges) {
@@ -58,5 +62,9 @@ public class DisplayNode extends DialogueNode {
 	public void saveEdgesToFile(PrintWriter writer) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
+	}
+
+	public Iterator<DialogueNode> iterator() {
+		return new LeafNodeIterator(this);
 	}
 }

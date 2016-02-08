@@ -70,6 +70,8 @@ public class UnitTestSaveAndLoad {
 		Dialogue loaded = Dialogue.loadFromFileAlpha0_1(scanner);
 		scanner.close();
 		
+		System.out.println("WARNING - dialogue.equal performs a shallow equivalency check in the ID's of contained nodes,\n"
+				+ "it does not currently check the details of each node.");
 		assertEquals(saved, loaded);
 	}
 	
@@ -83,6 +85,8 @@ public class UnitTestSaveAndLoad {
 		Dialogue loaded = Dialogue.loadFromFileAlpha0_1(scanner);
 		scanner.close();
 		
+		System.out.println("WARNING - dialogue.equal performs a shallow equivalency check in the ID's of contained nodes,\n"
+				+ "it does not currently check the details of each node.");
 		assertEquals(saved, loaded);
 	}
 	
