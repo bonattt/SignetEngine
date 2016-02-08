@@ -1,8 +1,9 @@
-package npc;
+package dialogue;
 
 import java.util.Scanner;
 
 import misc.DeathException;
+import misc.TextTools;
 import creatures.PlayerCharacter;
 
 /**
@@ -12,22 +13,24 @@ import creatures.PlayerCharacter;
  * @author bonattt
  *
  */
-public class DisplayNode extends DialogueNode {
+public class DisplayNode implements DialogueNode {
 
 	private DialogueNode defaultNextNode;
+	private String text;
 	
-	public DisplayNode(Scanner input, String text, DialogueNode nextNode ){
-		super(input, text);
-		defaultNextNode = nextNode;
+	public DisplayNode(String text, DialogueNode nextNode ){
+		this.text = text;
+		this.defaultNextNode = nextNode;
+	}
+	
+	public void setNextNode(DialogueNode node) {
+		defaultNextNode = node;
 	}
 
-	@Override
 	public DialogueNode openNode(PlayerCharacter player, NPC npc) throws DeathException{
-		System.out.println(nodeText);
-		System.out.print("press enter to continue");
-		Scanner scan = new Scanner(System.in);
-		scan.nextLine();
+		TextTools.display(text);
+		TextTools.display("press enter to continue");
+		TextTools.input.nextLine();
 		return defaultNextNode;
 	}
-	
 }

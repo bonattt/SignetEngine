@@ -190,12 +190,18 @@ public abstract class Creature {
 		return DiceRoller.makeRoll(dicePool);
 	}
 	public int[] makeTest(String testName, int threshold){
+		return makeTest(testName, threshold, 0, Integer.MAX_VALUE);
+	}
+		
+	public int[] makeTest(String testName, int threshold, int adjustment, int limit) {
 		if(testName.equals("")){
 			//TODO add special tests.
+		} else if (skills.containsKey(testName)) {
+			return skills.get(testName).makeSkillTest(this, threshold, 0);
 		} else {
 			TextTools.display("ERROR non-existant special test");
 		}
-		return skills.get(testName).makeSkillTest(this, threshold);
+		return new int[]{};
 	}
 	
 	@Override

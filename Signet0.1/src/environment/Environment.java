@@ -28,7 +28,6 @@ public class Environment {
 	
 	public static boolean print_debugs = true;
 	public static final HashMap<String, GameEvent> eventIndex = getEventIndex();	// event name : event
-	public static Scanner scanner;
 	
 	private GameEvent[] events;
 	
@@ -51,19 +50,18 @@ public class Environment {
 	private static final String SAVE01 = "save01/";
 	private static final String MAIN_SAVE_FILE = "main.sigsav";
 	
-	public Environment(String startLocation)
+	public Environment(String filePath)
 			throws FileNotFoundException, GameLoadException{
-		this(startLocation, default_start_time, default_start_date, default_start_month);
+		this(filePath, default_start_time, default_start_date, default_start_month);
 	}
-	public Environment(String startLocation, int startTime, int startDate, int startMonth)
+	public Environment(String filePath, int startTime, int startDate, int startMonth)
 			throws FileNotFoundException, GameLoadException{
-		locationIndex = initializeLocationIndex();
-		scanner = new Scanner(System.in);
-		location = locationIndex.get(startLocation);
+		locationIndex = initializeLocationIndex(filePath);
 		clock = new GameClock(startTime, startDate, startMonth);
 	}
-	private static LocationIndex initializeLocationIndex() {
-		return null;
+	private static LocationIndex initializeLocationIndex(String filePath) throws FileNotFoundException {
+		LocationIndex index = new LocationIndex(filePath);
+		return index;
 	}
 	
 	private static String compileFullSaveFilePath(String saveName) {
@@ -71,6 +69,14 @@ public class Environment {
 	}
 	private static String compileLocationSaveRootFilePath(String saveName) {
 		return SAVEFILE_ROOTPATH + saveName;
+	}
+	
+	public void startGame(PlayerCharacter player, String startLocation)
+			throws FileNotFoundException, GameLoadException, DeathException, InventoryException {
+		this.player = player;
+		location = locationIndex.get(startLocation);
+		choseAction();
+	
 	}
 	
 	public void setPlayer(PlayerCharacter player){
@@ -89,10 +95,8 @@ public class Environment {
 			int choice = TextTools.questionAsker(question, answers, TextTools.BACK_ENABLED);
 			if (choice == 1){
 				travel();
-				
 			} else if (choice == 2){
-				GameEvent event = location.selectExploreDestination();
-				event.triggerEvent(player);
+				explore();
 			} else if (choice == 3) {
 				player.getInventory().accessInventoryDuringExplore(player);
 			} else if (choice == 0){
@@ -153,12 +157,14 @@ public class Environment {
 	}
 	public void travel() throws DeathException{
 		String locationName = location.travelFrom(player);
-		try {
-			location = locationIndex.get(locationName);
-		} catch (FileNotFoundException e) {
-			TextTools.display(String.format("ERROR %s is inaccessable due to a file load error.", locationName));
-		} catch (GameLoadException e) {
-			TextTools.display("failed to load new location.");
+		if (locationName != null) {
+			try {
+				location = locationIndex.get(locationName);
+			} catch (FileNotFoundException e) {
+				TextTools.display(String.format("ERROR %s is inaccessable due to a file load error.", locationName));
+			} catch (GameLoadException e) {
+				TextTools.display("failed to load new location.");
+			}
 		}
 	}
 	public void explore(){

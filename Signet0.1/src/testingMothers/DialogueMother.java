@@ -1,88 +1,79 @@
 package testingMothers;
 
-import java.util.HashMap;
-import java.util.Scanner;
-
-import npc.*;
+import inventory.InventoryException;
+import creatures.PlayerCharacter;
+import dialogue.Dialogue;
+import dialogue.DialogueNode;
+import dialogue.DisplayNode;
+import dialogue.PointerNode;
+import dialogue.SelectionNode;
 
 public class DialogueMother {
 	
-	public static DialogueNode ViewingPannorama(){
-		Scanner inputScanner = new Scanner (System.in);
-		DialogueNode node3 = new DisplayNode(inputScanner, "You depart, taking nothing but memories.", null);
-		DialogueNode node2 = new DisplayNode(inputScanner, "Soon it grows dark, so you begin to pack up your things.", node3);
-		DialogueNode head = new DisplayNode(inputScanner, "You gaze out over the canyon, and take in it's beauty.", node2);
-		return head;
+	public static Dialogue seriesOfScenes() {
+		DialogueNode end = new DisplayNode("this is the last scene. Goodbye!", null);
+		DialogueNode scene3 = new DisplayNode("this is scene 3", end);
+		DialogueNode scene2 = new DisplayNode("this is scene 2", scene3);
+		DialogueNode scene1 = new DisplayNode("this is scene 1", scene2);
+		DialogueNode intro = new DisplayNode("this is the intor scene. Welcome.", scene1);
+		try {
+			PlayerCharacter player = CharacterMother.getDickDefenderOfLife();
+			Dialogue diologue = new Dialogue(intro, player);
+			return diologue;
+		} catch (InventoryException e) {
+			e.printStackTrace();
+			System.out.println("dick seems to have had a wardrobe malfunction...");
+		}
+		return null;
 	}
 	
-	public static DialogueNode MagicBoxes(){
-		Scanner inputScanner = new Scanner (System.in);
+	public static Dialogue simpleChat() {
+		DialogueNode end1 = new DisplayNode("you picked ending 1", null);
+		DialogueNode end2 = new DisplayNode("you picked ending 2", null);
+		DialogueNode end3 = new DisplayNode("you picked ending 3", null);
+	
+		String[] choices = new String[]{"ending 1", "ending 2", "ending 3"};
+		DialogueNode[] nodes = new DialogueNode[]{end1, end2, end3};
+		DialogueNode selector = new SelectionNode("which ending would you like?", choices, nodes);
 		
-		DialogueNode tail = new DisplayNode(inputScanner, "it's been fun playing! until next time, suckers!", null);
-		DialogueNode node3 = new DisplayNode(inputScanner, "You opened box 3, you get my tax bill, which you are now contractually obligated to pay.\nCongradulations!", tail);
-		DialogueNode node2 = new DisplayNode(inputScanner, "You opened box 2, you got a can of whoop-ass! Don't use it all in one place.", tail);
-		DialogueNode node1 = new DisplayNode(inputScanner, "You opened box 1, you got nothing. You idiot!", tail);
-		
-		String[] answers = new String[]{
-				"Box number 1", "Box number 2", "Box number 3"
-		};
-		DialogueNode[] nodes = new DialogueNode[]{
-				node1, node2, node3
-		};
-		DialogueNode head = new SelectionNode(inputScanner, "You are at a game show where you are given 3 boxes.\nYou must chose which box to open to find out your prize!.\nWhich box will you open?", answers, nodes);
-		return head;
+		DialogueNode intro = new DisplayNode("Welcome to Deus Ex Machina, Humanoid Revolt!", selector);
+		try {
+			PlayerCharacter player = CharacterMother.getDickDefenderOfLife();
+			Dialogue diologue = new Dialogue(intro, player);
+			return diologue;
+		} catch (InventoryException e) {
+			e.printStackTrace();
+			System.out.println("dick seems to have had a wardrobe malfunction...");
+		}
+		return null;
 	}
 	
-	public static DialogueNode LargeDialogue01(){
-		Scanner inputScanner = new Scanner(System.in);
+	public static Dialogue undertail() {
+		DialogueNode beginningPointer = new PointerNode();
+		DialogueNode resetEvil = new DisplayNode("the game has randomly reset to the beginning. (but your evilness hasn't reset)", beginningPointer);
+		DialogueNode everyoneHatesYou = new DisplayNode("Everyone hates you because you are evil and killed everyone.", resetEvil);
 		
-		DialogueNode buySomeDrugs = new DisplayNode(inputScanner, "You haggle over prices with the shifty bum for a while. Eventually you \n"
-				+ "agree on a price, erxchange money for goods, and you move on into the night...", null);
-		DialogueNode badAttitude = new DisplayNode(inputScanner, "\"Sorry chummer, you got a bad attitude. Better luck next time.\"\n"
-				+ "You look at the man expectingly for a while, but he says nothing more.\n"
-				+ "You realize you've rubbed him the wrong way somehow, and there's nothing you can do\n"
-				+ "so you walk away, feeling disappointed.", null);
-		DialogueNode goodsNotGood = new DisplayNode(inputScanner, "If you ain't here for the goods, than kindly fuck off, chummer.\n"
-				+ "You decide enough is enough and move along, not wanting to start trouble with\n"
-				+ "whoever this chummer's boss is.", null);
+		DialogueNode neutral = new DisplayNode("You thought about defending yourself from a monster, so you're pretty bad (not quite evil)\neveryone hates you thought, b/c you suck.", resetEvil);
+		DialogueNode sureEvil = Dialogue.yesNoNode("You are evil if you do that. Are you sure you wish to?", everyoneHatesYou, neutral);
 		
-		int mood = -1;
-//		DialogueNode nodes = buysSomeDrugs;
-//		DialogueNode lowMood = badAttitude;
-		DialogueNode moodSelect01 = new MoodSelectNode(inputScanner, badAttitude, mood, buySomeDrugs);
+		DialogueNode resetGood = new DisplayNode("The game randomly resets so you can replay it again, but SLIGHTLY DIFFERENLY, (mostly the same though)", beginningPointer);
+		DialogueNode good = new DisplayNode("You let the monster kick you arround for a bit until it got bored.\nYou have proven your moral fiber is that of Ghandi!", resetGood);
 		
-		String[] answers = new String[]{"\"I'm interested\"", "\"I heard you have bad goods\""};
-		DialogueNode[] nextNodes = new DialogueNode[]{moodSelect01, goodsNotGood};
-		String text = "Well I'm selling baking supplies if you need any.";
-		DialogueNode iAmSelling = new SelectionNode(inputScanner, text, answers, nextNodes);
+		String[] answers = new String[]{"fight back and defend yourself!", "try to be it's fwend", "quit"};
+		DialogueNode[] nodes = new DialogueNode[]{sureEvil, good, null};
+		DialogueNode battle = new SelectionNode("a vicious monster attacks you!\nWhat will you do?", answers, nodes);
 		
-		DialogueNode rudeRequestToBuy = new MoodSetNode(inputScanner, iAmSelling, -1);
+		DialogueNode welcome = new DisplayNode("welcome to undertail.", battle);
+		beginningPointer.setNextNode(welcome);
 		
-		DialogueNode basicLeave = new DisplayNode(inputScanner, "You just walk away", null);
-		
-		PointerNode tooPolitePointer = new PointerNode(); // allows tooPolite to point to a node declared later 
-		DialogueNode tooPoliteText = new DisplayNode(inputScanner, "Yeah whatever. You buyin'?", tooPolitePointer);
-		DialogueNode tooPolite = new MoodSetNode(inputScanner, tooPoliteText, -1); //TODO fix this so it can point to a selection node from earlier.
-		
-		answers = new String[]{"\"sorry, just trying to be friendly.", "just leave"};
-		nextNodes = new DialogueNode[]{tooPolite, basicLeave};
-		DialogueNode tryToBeNice = new SelectionNode(inputScanner, "Huh? What do you think this is? Get lost!", answers, nextNodes);
-		
-		DialogueNode rudeCustomer = new MoodSetNode(inputScanner, iAmSelling, -1);
-		
-		answers = new String[]{"\"I bake on occasion\"", "\"so what if I do?\"", "\"what?\"", "\"good evening\"", "\"get lost, creep!\"",
-		                     "\"I don't want any trouble.\"", "just leave."};
-		nextNodes = new DialogueNode[]{iAmSelling, rudeCustomer, tryToBeNice, tryToBeNice, basicLeave, tryToBeNice, basicLeave};
-		text = "You walk down the alley and see a shady figure standing there.\n" +
-				"You like to bake cookies sometimes?";
-
-		DialogueNode firstSelection = new SelectionNode(inputScanner, "", answers, nextNodes);
-		tooPolitePointer.setNode(firstSelection);
-		
-		DialogueNode firstDisplay = new DisplayNode(inputScanner, text, firstSelection);
-		
-		return firstDisplay;
+		PlayerCharacter player;
+		try {
+			player = CharacterMother.getDickDefenderOfLife();
+			return new Dialogue(welcome, player);
+		} catch (InventoryException e) {
+			e.printStackTrace();
+			System.out.println("dick seems to have had a wardrobe malfuction");
+		}
+		return null;
 	}
-	
-	
 }

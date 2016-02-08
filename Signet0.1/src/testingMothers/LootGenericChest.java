@@ -17,8 +17,9 @@ public class LootGenericChest implements GameEvent {
 		chest = new SampleGenericChest();
 	}
 	
-	public void triggerEvent(Creature player) throws DeathException {
+	public Object triggerEvent(Creature player) throws DeathException {
 		chest.lootDuringExplore(player);
+		return null;
 	}
 
 	public String getName() {

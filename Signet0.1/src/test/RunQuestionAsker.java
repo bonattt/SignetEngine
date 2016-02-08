@@ -11,17 +11,17 @@ import misc.TextTools;
 public class RunQuestionAsker {
 	
 	public static void main(String[] args) throws FileNotFoundException, GameLoadException{
-		Environment ev = new Environment("src/testLocations/sampleStartLocation");
+//		Environment ev = new Environment("WHATEVER", "src/testLocations/sampleStartLocation");
 		System.out.println("\n");
 		String input;
 		while(true){
 			System.out.println("would you like a back option? [y/n] or q to quit.");
-			input = Environment.scanner.nextLine();
-			if (input.equals("y")){
+			input = TextTools.input.nextLine();
+			if (input.startsWith("y")){
 				yesBackOption();
-			} else if (input.equals("n")) {
+			} else if (input.startsWith("n")) {
 				noBackOption();
-			} else if (input.equals("q")){
+			} else if (input.startsWith("q")){
 				System.out.println("exiting test runner! Goodbye!");
 				break;
 			} else {
@@ -38,7 +38,7 @@ public class RunQuestionAsker {
 		int backEnabled = 0;
 		int choice = TextTools.questionAsker(question, answers, backEnabled);
 		System.out.println();
-		System.out.println("You selected option " + choice);
+		System.out.println("You selected " + answers[choice-1]);
 	}
 	
 	private static void yesBackOption(){
@@ -47,6 +47,12 @@ public class RunQuestionAsker {
 		int backEnabled = 1;
 		int choice = TextTools.questionAsker(question, answers, backEnabled);
 		System.out.println();
-		System.out.println("You selected option " + choice);
+		String selection;
+		if(choice == 0) {
+			selection = answers[answers.length-1];
+		} else {
+			selection = answers[choice-1];
+		}
+		System.out.println("You selected " + selection);
 	}
 }

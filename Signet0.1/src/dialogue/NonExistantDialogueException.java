@@ -1,4 +1,4 @@
-package npc;
+package dialogue;
 
 public class NonExistantDialogueException extends Exception {
 

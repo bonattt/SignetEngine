@@ -1,6 +1,4 @@
-package npc;
-
-import java.util.Scanner;
+package dialogue;
 
 import misc.DeathException;
 import creatures.PlayerCharacter;
@@ -12,21 +10,20 @@ import creatures.PlayerCharacter;
  * this node early, you can pass it into another node as a next node, then asign the actual node that will be used later on.
  *
  */
-public class PointerNode extends DialogueNode {
+public class PointerNode implements DialogueNode {
 
 	private DialogueNode node;
+	
 	public PointerNode() {
-		super(null, null);
+		node = null;
 	}
 	
-	public void setNode(DialogueNode node){
-		this.node = node;
+	public DialogueNode openNode(PlayerCharacter player, NPC npc) throws DeathException {
+		return node.openNode(player, npc);
 	}
 
-	@Override
-	public DialogueNode openNode(PlayerCharacter player, NPC npc) throws DeathException {
-
-		return node.openNode(player, npc);
+	public void setNextNode(DialogueNode node) {
+		this.node = node;
 	}
 
 }

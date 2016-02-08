@@ -1,8 +1,4 @@
-package npc;
-
-import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Set;
+package dialogue;
 
 import misc.DeathException;
 import misc.TextTools;
@@ -14,20 +10,24 @@ import creatures.PlayerCharacter;
  * @author bonattt
  *
  */
-public class SelectionNode extends DialogueNode {
+public class SelectionNode implements DialogueNode {
 
 	private DialogueNode[] nodes;
 	private String[] answers;
+	private String text;
 	
-	public SelectionNode(Scanner input, String text, String[] answers, DialogueNode[] nodes){
-		super(input, text);
+	public SelectionNode(String text, String[] answers, DialogueNode[] nodes){
+		this.text = text;
 		this.nodes = nodes;
 		this.answers = answers;
 	}
 	
-	@Override
 	public DialogueNode openNode(PlayerCharacter player, NPC npc) throws DeathException{
-		int reply = TextTools.questionAsker(this.nodeText, answers, TextTools.BACK_DISABLED);
+		int reply = TextTools.questionAsker(this.text, answers, TextTools.BACK_DISABLED);
 		return nodes[reply - 1];
+	}
+
+	public void setNextNode(DialogueNode node) {
+		throw new UnsupportedOperationException();
 	}
 }

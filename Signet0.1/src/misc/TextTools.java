@@ -8,6 +8,8 @@ public class TextTools {
 	public static final int BACK_DISABLED = 0;
 	public static final int BACK_ENABLED = 1;
 	
+	public static Scanner input = new Scanner(System.in);
+	
 //	public static int questionAsker(String question, String[] answers){
 //		return questionAsker(question, answers, BACK_DISABLED);
 //	}
@@ -35,10 +37,8 @@ public class TextTools {
 	private static int verified_input(String[] answers, int backEnabled){
 		int choice;
 		try {
-			Scanner scan = new Scanner(System.in);
-			String next = scan.nextLine();
+			String next = input.nextLine();
 			choice = Integer.parseInt(next);
-			scan.close();
 		} catch (InputMismatchException e){
 			// if input is not translatable into an int, than set it to minvalue int to flag invalid input.
 			choice = Integer.MIN_VALUE;

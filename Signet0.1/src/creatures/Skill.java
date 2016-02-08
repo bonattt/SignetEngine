@@ -23,6 +23,7 @@ public class Skill {
 		this.linkedAttributes = linkedAttributes;
 		this.exp = 0;
 	}
+	
 	public Skill(String name, int id, String[] linkedAttributes, SkillTag[] tags){
 		this(name, id, 0, linkedAttributes, tags);
 	}
@@ -205,29 +206,18 @@ public class Skill {
 			ranks++;
 		}
 	}
-	public int[] makeSkillTest(Creature creature, int threshold){
-		return makeLimitedSkillTest(creature, threshold, 0, linkedAttributes, Integer.MAX_VALUE);
-	}
+
 	public int[] makeSkillTest(Creature creature, int threshold, int adjustment){
-		return makeLimitedSkillTest(creature, threshold, adjustment, linkedAttributes, Integer.MAX_VALUE);
-	}
-	public int[] makeSkillTest(Creature creature, int threshold, int adjustment, String attribute){
-		return makeLimitedSkillTest(creature, threshold, 0, new String[]{attribute}, Integer.MAX_VALUE);
+		return makeLimitedSkillTest(creature, threshold, adjustment, Integer.MAX_VALUE, linkedAttributes);
 	}
 	public int[] makeSkillTest(Creature creature, int threshold, int adjustment, String[] attributes){
-		return makeLimitedSkillTest(creature, threshold, adjustment, attributes, Integer.MAX_VALUE);
+		return makeLimitedSkillTest(creature, threshold, adjustment, Integer.MAX_VALUE, attributes);
 	}
 	/////
-	public int[] makeLimitedSkillTest(Creature creature, int threshold, int limit){
-		return makeLimitedSkillTest(creature, threshold, 0, linkedAttributes, limit);
-	}
 	public int[] makeLimitedSkillTest(Creature creature, int threshold, int adjustment, int limit){
-		return makeLimitedSkillTest(creature, threshold, adjustment, linkedAttributes, limit);
+		return makeLimitedSkillTest(creature, threshold, adjustment, limit, linkedAttributes);
 	}
-	public int[] makeLimitedSkillTest(Creature creature, int threshold, int adjustment, String attribute, int limit){
-		return makeLimitedSkillTest(creature, threshold, 0, new String[]{attribute}, limit);
-	}
-	public int[] makeLimitedSkillTest(Creature creature, int threshold, int adjustment, String[] attributes, int limit){
+	public int[] makeLimitedSkillTest(Creature creature, int threshold, int adjustment, int limit, String[] attributes){
 
 		int dicePool;
 		if(ranks == 0){

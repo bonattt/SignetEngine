@@ -116,8 +116,10 @@ public class Location {
 		if (destination != null) {
 			player.travel(destination.travelTime, destination.exhaustionFactor);
 			destination.displayTravelText();
+			return destination.locationName();
+		} else {
+			return null;
 		}
-		return destination.locationName();
 	}
 	
 	

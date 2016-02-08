@@ -30,13 +30,13 @@ public class LocationIndex {
 		map.clear();
 	}
 	
-	public void saveFileNameMap(PrintWriter writer) {
-		for(String name : fileNameMap.keySet()) {
-			writer.println(name);
-			writer.println(fileNameMap.get(name));
-		}
-		writer.println("end");
-	}
+//	public void saveFileNameMap(PrintWriter writer) {
+//		for(String name : fileNameMap.keySet()) {
+//			writer.println(name);
+//			writer.println(fileNameMap.get(name));
+//		}
+//		writer.println("end");
+//	}
 	
 	private void initializeFileNameMap() throws FileNotFoundException {
 		Scanner scanner = new Scanner(new File(filePath + INDEX_FILE));
@@ -55,7 +55,7 @@ public class LocationIndex {
 		return addNewLocation(name);
 	}
 	
-	public Location addNewLocation(String name) throws FileNotFoundException, GameLoadException {
+	private Location addNewLocation(String name) throws FileNotFoundException, GameLoadException {
 		String fileName = fileNameMap.get(name);
 		Location newLocation = Location.loadLocation(filePath, fileName);
 		map.put(name, newLocation);
