@@ -14,7 +14,7 @@ import creatures.Creature;
 import creatures.PlayerCharacter;
 import creatures.Skill;
 
-public class Dialogue implements GameEvent, Iterable {
+public class Dialogue implements GameEvent, Iterable<DialogueNode> {
 	
 	private String name;
 	private PlayerCharacter player;
@@ -98,25 +98,10 @@ public class Dialogue implements GameEvent, Iterable {
 			return false;
 		}
 		Dialogue arg = (Dialogue) obj;
-		
-		
 		return true;
 	}
-	
-	// Iterable
-	@SuppressWarnings("rawtypes")
-	public void forEach(Consumer arg0) {
-		throw new UnsupportedOperationException();
-	}
 
-	// Iterable
 	public Iterator<DialogueNode> iterator() {
-		return start.iterator();
-	}
-
-	// Iterable
-	@SuppressWarnings("rawtypes")
-	public Spliterator spliterator() {
-		throw new UnsupportedOperationException();
+		return new CompositeNodeIterator(start);
 	}
 }

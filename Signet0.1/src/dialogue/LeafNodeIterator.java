@@ -1,10 +1,9 @@
 package dialogue;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Consumer;
+import java.util.Set;
 
-public class LeafNodeIterator implements Iterator<DialogueNode> {
+public class LeafNodeIterator implements DialogueIterator {
 	
 	private DialogueNode node;
 	private boolean visited;
@@ -14,23 +13,28 @@ public class LeafNodeIterator implements Iterator<DialogueNode> {
 		visited = false;
 	}
 
-	public void forEachRemaining(Consumer<? super DialogueNode> arg0) {
-		throw new UnsupportedOperationException();
-	}
-
 	public boolean hasNext() {
 		return !visited;
 	}
 
 	public DialogueNode next() {
-		if(visited)
+		System.out.printf("next (leaf): %s, ID: %d\n", node.toString(), node.getID());
+		if(! hasNext())
 			throw new NoSuchElementException();
 		else
+			visited = true;
 			return node;
 	}
 
-	public void remove() {
-		throw new UnsupportedOperationException();
+	public void setNodesVisited(Set<DialogueNode> nodesVisited) {
+		if (nodesVisited.contains(node)) {
+			visited = true;
+		}
+	}
+
+	public DialogueIterator getNextIterator() {
+		DialogueNode next = node.getEdges()[0];
+		return (DialogueIterator) next.iterator();
 	}
 
 }

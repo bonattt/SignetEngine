@@ -59,14 +59,4 @@ public abstract class DialogueNode implements Iterable<DialogueNode> {
 			writer.println("NULL");
 		}
 	}
-	// Iterable
-	@SuppressWarnings("rawtypes")
-	public void forEach(Consumer arg0) {
-		throw new UnsupportedOperationException();
-	}
-	// Iterable
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Spliterator spliterator() {
-		throw new UnsupportedOperationException();
-	}
 }

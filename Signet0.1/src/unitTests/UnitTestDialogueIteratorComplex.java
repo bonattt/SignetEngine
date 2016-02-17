@@ -21,11 +21,12 @@ import dialogue.DisplayNode;
 import dialogue.PointerNode;
 import dialogue.SelectionNode;
 
-public class UnitTestDialogueIterator {
+public class UnitTestDialogueIteratorComplex {
 
 	private static final int NUMB_NODES = 13;
 	
 	private Dialogue dialogue;
+	private Iterator<DialogueNode> iter;
 	
 	@Before
 	public void setup() throws InventoryException {
@@ -55,12 +56,11 @@ public class UnitTestDialogueIterator {
 		
 		PlayerCharacter player = CharacterMother.getDickDefenderOfLife();
 		dialogue = new Dialogue("_name_", intro, player);
+		iter = dialogue.iterator();
 	}
 	
 	@Test(expected=NoSuchElementException.class)
 	public void iteratorRunsoutAndThrowsException() {
-		@SuppressWarnings("rawtypes")
-		Iterator iter = dialogue.iterator();
 		for(int i = 0; i < NUMB_NODES+1; i++) {
 			iter.next();
 		}
@@ -68,7 +68,6 @@ public class UnitTestDialogueIterator {
 	@Test
 	public void iteratorHasCorrectSize() {
 		@SuppressWarnings("rawtypes")
-		Iterator iter = dialogue.iterator();
 		int i = 0;
 		while(iter.hasNext()) {
 			iter.next();
@@ -80,7 +79,6 @@ public class UnitTestDialogueIterator {
 	public void hasNoDuplicateNodes() {
 		Set<DialogueNode> set = new HashSet<DialogueNode>();
 		List<DialogueNode> list = new ArrayList<DialogueNode>();		
-		Iterator<DialogueNode> iter = dialogue.iterator();
 		while(iter.hasNext()) {
 			DialogueNode node = iter.next();
 			set.add(node);

@@ -8,10 +8,10 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.function.Consumer;
 
-public class CompositeNodeIterator implements Iterator<DialogueNode>{
+public class CompositeNodeIterator implements DialogueIterator {
 
 	private Set<DialogueNode> nodesVisited;
-	private Stack<Iterator<DialogueNode>> iterators;
+	private Stack<DialogueIterator> iterators;
 	
 	public CompositeNodeIterator(DialogueNode startPoint) {
 		this(startPoint, new HashSet<DialogueNode>());
@@ -19,11 +19,12 @@ public class CompositeNodeIterator implements Iterator<DialogueNode>{
 	
 	public CompositeNodeIterator(DialogueNode startPoint, Set<DialogueNode> nodesVisited) {
 		this.nodesVisited = nodesVisited;
-		iterators = new Stack<Iterator<DialogueNode>>();
+		iterators = new Stack<DialogueIterator>();
 		for (DialogueNode node : startPoint.getEdges()) {
 			if (node != null) {
-				iterators.push(node.iterator());
+				iterators.push((DialogueIterator) node.iterator());
 				try {
+					// All composite iterators iterating on the smae dialogue will share the same NodesVisited set
 					((CompositeNodeIterator) iterators.peek()).nodesVisited = this.nodesVisited;
 				} catch (ClassCastException e) {
 					// do nothing, it's a Leaf-iterator
@@ -33,10 +34,6 @@ public class CompositeNodeIterator implements Iterator<DialogueNode>{
 		iterators.push(new LeafNodeIterator(startPoint));
 	}
 	
-	public void forEachRemaining(Consumer<? super DialogueNode> arg0) {
-		throw new UnsupportedOperationException();
-	}
-
 	public boolean hasNext() {
 		try {
 			seekNext();
@@ -52,18 +49,26 @@ public class CompositeNodeIterator implements Iterator<DialogueNode>{
 		} catch (EmptyStackException e) {
 			throw new NoSuchElementException();
 		}
-		
-		return iterators.peek().next();
+		DialogueNode nextNode = iterators.peek().next();
+		System.out.printf("next (composite): %s, ID: %d\n", nextNode.toString(), nextNode.getID());
+		return nextNode;
 	}
 
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
-	
 	private void seekNext() throws EmptyStackException {
 		while(! iterators.peek().hasNext()) {
-			iterators.pop();
+			DialogueIterator nextIterator = iterators.pop().getNextIterator();
+			if (nextIterator != null) {
+				iterators.push(nextIterator);
+			}
 		}
+	}
+
+	public void setNodesVisited(Set<DialogueNode> nodesVisited) {
+		this.nodesVisited = nodesVisited;
+	}
+	
+	public DialogueIterator getNextIterator() {
+		return null;
 	}
 
 }
