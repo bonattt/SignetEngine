@@ -60,35 +60,6 @@ public class UnitTestSaveAndLoad {
 		System.out.println("untested classes:\n\thealth.Infection\n\tcreatures.Trait\n\t"
 				+ "creatures.PlayerCharacter\n\tnpc.*\n\tenvironment.*\n");
 	}
-	@Test
-	public void dialogueVerySimpleSaveLoad() throws FileNotFoundException {
-		Dialogue saved = DialogueMother.seriesOfScenes();
-		PrintWriter writer = new PrintWriter(filePath);
-		saved.saveToFile(writer);
-		writer.close();
-		Scanner scanner = new Scanner(new File(filePath));
-		Dialogue loaded = Dialogue.loadFromFileAlpha0_1(scanner);
-		scanner.close();
-		
-		System.out.println("WARNING - dialogue.equal performs a shallow equivalency check in the ID's of contained nodes,\n"
-				+ "it does not currently check the details of each node.");
-		assertEquals(saved, loaded);
-	}
-	
-	@Test
-	public void dialogueSimpleGraphSaveLoad() throws FileNotFoundException {
-		Dialogue saved = DialogueMother.undertail();
-		PrintWriter writer = new PrintWriter(filePath);
-		saved.saveToFile(writer);
-		writer.close();
-		Scanner scanner = new Scanner(new File(filePath));
-		Dialogue loaded = Dialogue.loadFromFileAlpha0_1(scanner);
-		scanner.close();
-		
-		System.out.println("WARNING - dialogue.equal performs a shallow equivalency check in the ID's of contained nodes,\n"
-				+ "it does not currently check the details of each node.");
-		assertEquals(saved, loaded);
-	}
 	
 	@Test
 	public void sampleEventSaveLoad() throws FileNotFoundException, GameLoadException {
@@ -100,7 +71,7 @@ public class UnitTestSaveAndLoad {
 		GameEvent loaded = Environment.loadGameEventAlpha0_1(scanner);
 		scanner.close();
 		
-		assertEquals(saved, loaded);;
+		assertEquals(saved, loaded);
 //		System.out.println("loading from: " + filePath);
 	}
 	

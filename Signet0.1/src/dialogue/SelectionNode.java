@@ -4,6 +4,8 @@ import items.Item;
 
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 import misc.DeathException;
@@ -41,27 +43,36 @@ public class SelectionNode extends DialogueNode {
 	public DialogueNode[] getEdges() {
 		return nodes;
 	}
+
+	public static DialogueNode loadSelectionNodeAlpha0_1(Scanner scanner) {
+		int id = scanner.nextInt();
+		scanner.nextLine();
+		String[] answers = scanner.nextLine().split(" ");
+		String text = Item.loadLongStringAlpha0_1(scanner);
+		return new SelectionNode(id, text, answers, new DialogueNode[]{});
+	}
+	
+	@Override
+	public void loadEdgesAlpha0_1(List<DialogueNode> nodesLoaded, Scanner scanner) {
+		nodes = loadMultiEdgesAlpha0_1(nodesLoaded, scanner);
+	}
 	
 	public void saveNodeToFile(PrintWriter writer, Set<DialogueNode> nodesVisited) {
+		writer.println("selection");
 		if (nodesVisited.contains(this)) {
 			return;
 		}
 		nodesVisited.add(this);
-		
-		writer.println("SelectionNode");
 		writer.println(id);
 		for (String answer : answers) {
 			writer.printf("%s ", answer);
 		}
+		writer.println();
 		Item.saveLongStringToFile(writer, text);
-		for (DialogueNode node : nodes) {
-			saveNextNode(writer, nodesVisited, node);
-		}
 	}
 
 	public void saveEdgesToFile(PrintWriter writer) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		saveMultiEdge(nodes, writer);
 	}
 
 	public Iterator iterator() {

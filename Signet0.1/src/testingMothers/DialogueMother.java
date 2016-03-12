@@ -1,6 +1,10 @@
 package testingMothers;
 
 import inventory.InventoryException;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import creatures.PlayerCharacter;
 import dialogue.Dialogue;
 import dialogue.DialogueNode;
@@ -19,6 +23,13 @@ public class DialogueMother {
 		try {
 			PlayerCharacter player = CharacterMother.getDickDefenderOfLife();
 			Dialogue diologue = new Dialogue("sample dialogue", intro, player);
+			List<DialogueNode> iterableList = new ArrayList<DialogueNode>();
+			iterableList.add(end);
+			iterableList.add(scene3);
+			iterableList.add(scene2);
+			iterableList.add(scene1);
+			iterableList.add(intro);
+			diologue.setIterableList(iterableList);
 			return diologue;
 		} catch (InventoryException e) {
 			e.printStackTrace();
@@ -39,8 +50,15 @@ public class DialogueMother {
 		DialogueNode intro = new DisplayNode(1, "Welcome to Deus Ex Machina, Humanoid Revolt!", selector);
 		try {
 			PlayerCharacter player = CharacterMother.getDickDefenderOfLife();
-			Dialogue diologue = new Dialogue("have a simple chat", intro, player);
-			return diologue;
+			Dialogue dialogue = new Dialogue("have a simple chat", intro, player);
+			List<DialogueNode> iterableList = new ArrayList<DialogueNode>();
+			iterableList.add(end1);
+			iterableList.add(end2);
+			iterableList.add(end3);
+			iterableList.add(selector);
+			iterableList.add(intro);
+			dialogue.setIterableList(iterableList);
+			return dialogue;
 		} catch (InventoryException e) {
 			e.printStackTrace();
 			System.out.println("dick seems to have had a wardrobe malfunction...");
@@ -69,7 +87,19 @@ public class DialogueMother {
 		PlayerCharacter player;
 		try {
 			player = CharacterMother.getDickDefenderOfLife();
-			return new Dialogue("play undertail", welcome, player);
+			Dialogue dialog = new Dialogue("play undertail", welcome, player);
+			List<DialogueNode> iterableList = new ArrayList<DialogueNode>();
+			iterableList.add(beginningPointer);
+			iterableList.add(resetEvil);
+			iterableList.add(everyoneHatesYou);
+			iterableList.add(neutral);
+			iterableList.add(sureEvil);
+			iterableList.add(resetGood);
+			iterableList.add(good);
+			iterableList.add(battle);
+			iterableList.add(welcome);
+			dialog.setIterableList(iterableList);
+			return dialog;
 		} catch (InventoryException e) {
 			e.printStackTrace();
 			System.out.println("dick seems to have had a wardrobe malfuction");

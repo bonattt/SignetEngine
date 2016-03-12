@@ -52,21 +52,28 @@ public class UnitTestDialogueIteratorSimple {
 	@Test
 	public void iteratorHasCorrectSize() {
 		int i = 0;
-		while(iter.hasNext()) {
-			iter.next();
-			i++;
+		try {
+//			int i = 0;
+			while(iter.hasNext()) {
+				iter.next();
+				i++;
+			}
+			assertEquals(NUMB_NODES, i);
+		} catch (NoSuchElementException e) {
+			System.out.printf("failed at i = %d\n", i);
+			throw e;
 		}
-		assertEquals(NUMB_NODES, i);
 	}
 	@Test
 	public void hasNoDuplicateNodes() {
-		Set<DialogueNode> set = new HashSet<DialogueNode>();
-		List<DialogueNode> list = new ArrayList<DialogueNode>();		
-		while(iter.hasNext()) {
-			DialogueNode node = iter.next();
-			set.add(node);
-			list.add(node);
-		}
-		assertEquals(set.size(), list.size());
+			Set<DialogueNode> set = new HashSet<DialogueNode>();
+			List<DialogueNode> list = new ArrayList<DialogueNode>();	
+			while(iter.hasNext()) {
+				DialogueNode node = iter.next();
+				System.out.println(node.getID());
+				set.add(node);
+				list.add(node);
+			}
+			assertEquals(set.size(), list.size());
 	}
 }

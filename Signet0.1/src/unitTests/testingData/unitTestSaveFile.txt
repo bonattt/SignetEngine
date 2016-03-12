@@ -1,8 +1,29 @@
 sample dialogue
 null
-DisplayNode
-0
+1
+display
+5
+this is the last scene. Goodbye!
+end~*~*~string
+display
+4
+this is scene 3
+end~*~*~string
+display
+3
+this is scene 2
+end~*~*~string
+display
+2
+this is scene 1
+end~*~*~string
+display
+1
 this is the intor scene. Welcome.
 end~*~*~string
-0
-0 
+edges
+null
+5
+4
+3
+2

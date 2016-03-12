@@ -15,5 +15,4 @@ public class ExploritoryTestDialogue {
 			System.out.println("dick seems to have died...");
 		}
 	}
-	
 }

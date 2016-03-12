@@ -196,6 +196,8 @@ public class Environment {
 	public static GameEvent loadGameEventAlpha0_1(String lineHeader, Scanner scanner) throws GameLoadException {
 		if (lineHeader.equals("loot generic chest event")) {
 			return LootGenericChest.loadAlpha0_1(scanner);
+		} else if (lineHeader.equals("dialogue")) {
+			throw new UnsupportedOperationException("loading an event unsupported for type 'Dialouge'");
 		}
 		throw new GameLoadException("unrecognized game event");
 	}

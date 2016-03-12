@@ -2,6 +2,7 @@ package dialogue;
 
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -23,42 +24,47 @@ public class PointerNode extends DialogueNode {
 		nextNode = null;
 		this.id = id;
 	}
-	
+
+	@Override
 	public DialogueNode openNode(PlayerCharacter player, NPC npc) throws DeathException {
 		return nextNode.openNode(player, npc);
 	}
 
+	@Override
 	public void setEdges(DialogueNode[] edges) {
 		nextNode = edges[0];
 	}
 
+	@Override
 	public DialogueNode[] getEdges() {
 		return new DialogueNode[]{nextNode};
 	}
-	
 
+	@Override
 	public void saveNodeToFile(PrintWriter writer, Set<DialogueNode> nodesVisited) {
+		writer.println("pointer");
 		if (nodesVisited.contains(this)) {
 			return;
 		}
 		nodesVisited.add(this);
-		
-		writer.println("PointerNode");
 		writer.println(id);
-		
-		saveNextNode(writer, nodesVisited, nextNode);
 	}
 
+	@Override
 	public void saveEdgesToFile(PrintWriter writer) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		saveSingleNext(nextNode, writer);
 	}
 	
 	public static PointerNode loadPointerNodeAlpha0_1(Scanner scanner) {
-		// TODO
-		throw new UnsupportedOperationException();
+		int id = scanner.nextInt();
+		scanner.nextLine();
+		return new PointerNode(id);
 	}
-
+	
+	public void loadEdgesAlpha0_1(List<DialogueNode> nodesLoaded, Scanner scanner) {
+		nextNode = getSingleEdgeAlpha0_1(nodesLoaded, scanner);
+	}
+	
 	public Iterator iterator() {
 		return new LeafNodeIterator(this);
 	}

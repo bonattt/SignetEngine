@@ -1,5 +1,6 @@
 package dialogue;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ public class LeafNodeIterator implements DialogueIterator {
 	}
 
 	public DialogueNode next() {
-		System.out.printf("next (leaf): %s, ID: %d\n", node.toString(), node.getID());
+//		System.out.printf("next (leaf): %s, ID: %d\n", node.toString(), node.getID());
 		if(! hasNext())
 			throw new NoSuchElementException();
 		else
@@ -34,7 +35,11 @@ public class LeafNodeIterator implements DialogueIterator {
 
 	public DialogueIterator getNextIterator() {
 		DialogueNode next = node.getEdges()[0];
-		return (DialogueIterator) next.iterator();
+		if (next == null) {
+			return null;
+		}
+		Iterator<DialogueNode> iter = next.iterator();
+		return (DialogueIterator) iter;
 	}
 
 }

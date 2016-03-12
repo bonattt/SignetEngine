@@ -6,7 +6,7 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
-public class AllTests {
+public class AllDialogue {
 	public static void main(String[] args){
 		Result result = JUnitCore.runClasses(AllTestSuite.class);
 		for (Failure failure : result.getFailures()) {
@@ -17,21 +17,12 @@ public class AllTests {
 }
 @RunWith(Suite.class)
 	@Suite.SuiteClasses({
-		IntegrationTestSaveLoad.class,
-	    UnitTestBody.class,
-	    UnitTestBodyPart.class,
-	    UnitTestCreature.class,
-	    UnitTestFirstAid.class,
-	    UnitTestGear.class,
-	    UnitTestInventory.class,
-	    UnitTestItem.class,
-	    UnitTestItemContainer.class,
-	    UnitTestLocation.class,
-	    UnitTestSaveAndLoad.class,
-	    UnitTestTravelPath.class,
-	    UnitTestWeapon.class,
-	    UnitTestWound.class,
-	    UnitTestWoundMedication.class
+		DialogueDisplayNodeSaveLoad.class,
+		DialogueEventNodeSaveLoad.class,
+		DialogueSelectionNodeSaveLoad.class,
+		DialoguePointerNodeSaveLoad.class,
+		DialogueNodeSaveLoadIntegrationTest.class
 	})
-class AllTestSuite {
+class DialogueTestSuite {
+	
 }

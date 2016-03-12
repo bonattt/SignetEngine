@@ -4,10 +4,9 @@ import items.Item;
 
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
 import misc.DeathException;
 import misc.TextTools;
@@ -30,38 +29,51 @@ public class DisplayNode extends DialogueNode {
 		this.nextNode = nextNode;
 		this.id = id;
 	}
-	
+
+	@Override
 	public void setEdges(DialogueNode[] edges) {
 		nextNode = edges[0];
 	}
 
+	@Override
 	public DialogueNode openNode(PlayerCharacter player, NPC npc) throws DeathException{
 		TextTools.display(text);
 		TextTools.display("press enter to continue");
 		TextTools.input.nextLine();
 		return nextNode;
 	}
-	
+
+	@Override
 	public DialogueNode[] getEdges() {
 		return new DialogueNode[]{nextNode};
 	}
 
+	@Override
 	public void saveNodeToFile(PrintWriter writer, Set<DialogueNode> nodesVisited) {
 		if (nodesVisited.contains(this)) {
 			return;
-		} 
+		}
+		writer.println("display");
 		nodesVisited.add(this);
-		
-		writer.println("DisplayNode");
 		writer.println(id);
 		Item.saveLongStringToFile(writer, text);
-
-		saveNextNode(writer, nodesVisited, nextNode);
+	}
+	
+	public static DialogueNode loadDisplayNodeFromFileAlpha0_1(Scanner scanner) {
+		int id = scanner.nextInt();
+		scanner.nextLine();
+		String text = Item.loadLongStringAlpha0_1(scanner);
+		return new DisplayNode(id, text, null);
 	}
 
+	@Override
+	public void loadEdgesAlpha0_1(List<DialogueNode> nodesLoaded, Scanner scanner) {
+		nextNode = getSingleEdgeAlpha0_1(nodesLoaded, scanner);
+	}
+
+	@Override
 	public void saveEdgesToFile(PrintWriter writer) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		saveSingleNext(nextNode, writer);
 	}
 
 	public Iterator<DialogueNode> iterator() {
