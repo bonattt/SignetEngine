@@ -1,4 +1,4 @@
-package unitTests;
+package unitTests.dialogue;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -22,7 +22,7 @@ public class DialogueDisplayNodeSaveLoad {
 
 	private static final int ID1 = 12345;
 	private static final int ID2 = 54321;
-	private static final String filePath = "src/unitTests/testingData/unitTestSaveFile.txt";
+	private static final String filePath = "test/unitTests/testingData/unitTestSaveFile.txt";
 	
 	private DialogueNode saved, loaded, next;
 	

@@ -52,7 +52,7 @@ import environment.Environment;
 
 public class UnitTestSaveAndLoad {
 
-	private static final String filePathRoot = "src/unitTests/testingData/";
+	private static final String filePathRoot = "test/unitTests/testingData/";
 	private static final String fileName = "unitTestSaveFile.txt";
 	private static final String filePath = filePathRoot + fileName;
 	
@@ -208,7 +208,7 @@ public class UnitTestSaveAndLoad {
 			InvocationTargetException, NoSuchFieldException, InventoryException {
 		
 		PlayerCharacter saved = CharacterMother.getDickDefenderOfLife();
-		PrintWriter writer = new PrintWriter(filePath);;
+		PrintWriter writer = new PrintWriter(filePath);
 		Method method = Creature.class.getDeclaredMethod("saveSkills", writer.getClass());
 		method.setAccessible(true);
 		method.invoke(saved, writer);

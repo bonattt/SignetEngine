@@ -1,4 +1,4 @@
-package unitTests;
+package unitTests.dialogue;
 
 import static org.junit.Assert.assertEquals;
 import inventory.InventoryException;

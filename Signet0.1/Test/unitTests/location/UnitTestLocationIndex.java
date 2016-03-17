@@ -1,4 +1,4 @@
-package unitTests;
+package unitTests.location;
 
 import static org.junit.Assert.*;
 

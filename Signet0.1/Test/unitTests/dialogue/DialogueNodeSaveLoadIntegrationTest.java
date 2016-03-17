@@ -1,4 +1,4 @@
-package unitTests;
+package unitTests.dialogue;
 
 import static org.junit.Assert.*;
 
@@ -39,7 +39,7 @@ public class DialogueNodeSaveLoadIntegrationTest {
 		return ids;
 	}
 
-	private static final String filePath = "src/unitTests/testingData/unitTestSaveFile.txt";
+	private static final String filePath = "test/unitTests/testingData/unitTestSaveFile.txt";
 	
 	private DialogueNode displayNode, eventNode, pointerNode, selectionNode,
 		loadedDisplay, loadedEvent, loadedPointer, loadedSelection;

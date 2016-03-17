@@ -136,6 +136,37 @@ public abstract class DialogueNode implements Iterable<DialogueNode> {
 		return nodeArray;
 	}
 	
+	public boolean deepEquals(DialogueNode arg, Set<Integer> nodeIDsVisited) {
+		if (arg.id != this.id) {
+			return false;
+		}
+		if (nodeIDsVisited.contains(this.id)) {
+			return true;
+		}
+		nodeIDsVisited.add(this.id);
+		
+		DialogueNode[] thisNext = this.getEdges();
+		DialogueNode[] argNext = arg.getEdges();
+		if (thisNext.length != argNext.length) {
+			return false;
+		}
+		for (int i = 0; i < thisNext.length; i++) {
+			DialogueNode thisCurrent = thisNext[i];
+			DialogueNode argCurrent = argNext[i];
+			if (thisCurrent == null) {
+				if(argCurrent != null) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+			if (! thisCurrent.deepEquals(argCurrent, nodeIDsVisited)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	@Override
 	public int hashCode() {
 		return id;

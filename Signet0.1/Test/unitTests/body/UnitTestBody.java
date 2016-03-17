@@ -1,4 +1,4 @@
-package unitTests;
+package unitTests.body;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

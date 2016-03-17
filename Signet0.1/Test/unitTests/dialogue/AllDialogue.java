@@ -1,4 +1,4 @@
-package unitTests;
+package unitTests.dialogue;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -8,7 +8,7 @@ import org.junit.runner.notification.Failure;
 
 public class AllDialogue {
 	public static void main(String[] args){
-		Result result = JUnitCore.runClasses(AllTestSuite.class);
+		Result result = JUnitCore.runClasses(DialogueTestSuite.class);
 		for (Failure failure : result.getFailures()) {
 			System.out.println(failure.toString());
 		}
@@ -21,7 +21,8 @@ public class AllDialogue {
 		DialogueEventNodeSaveLoad.class,
 		DialogueSelectionNodeSaveLoad.class,
 		DialoguePointerNodeSaveLoad.class,
-		DialogueNodeSaveLoadIntegrationTest.class
+		DialogueNodeSaveLoadIntegrationTest.class,
+		DialogueNodeDeepEquals.class
 	})
 class DialogueTestSuite {
 	

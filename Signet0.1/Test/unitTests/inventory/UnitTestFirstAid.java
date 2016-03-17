@@ -1,4 +1,4 @@
-package unitTests;
+package unitTests.inventory;
 
 import static org.junit.Assert.*;
 import items.Bandage;

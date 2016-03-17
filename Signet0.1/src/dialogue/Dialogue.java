@@ -2,6 +2,7 @@ package dialogue;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,6 +10,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import misc.DeathException;
 import misc.GameEvent;
@@ -63,13 +68,12 @@ public class Dialogue implements GameEvent, Iterable<DialogueNode> {
 	}
 
 	public Object triggerEvent(Creature player) throws DeathException {
-		// TODO Auto-generated method stub
+		startDialogue();
 		return null;
 	}
 	
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 
 	public void saveToFile(PrintWriter writer) {
@@ -143,11 +147,40 @@ public class Dialogue implements GameEvent, Iterable<DialogueNode> {
 			return false;
 		}
 		Dialogue arg = (Dialogue) obj;
+		
+		
+		
 		return false;
 	}
 
 	public Iterator<DialogueNode> iterator() {
 		return iterableList.iterator(); // FIXME
 //		return new CompositeNodeIterator(start);
+	}
+
+//	public void forEach(Consumer<? super DialogueNode> arg0) {
+//		throw new UnsupportedOperationException();
+//	}
+
+	public boolean contains(Object arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * this method returns the "size" of the dialogue, the number of nodes.
+	 * @return
+	 */
+	public int size() {
+		return 0;
+	}
+	
+	/**
+	 * this method returns the "length" of the dialogue, the number of edges.
+	 * @return
+	 */
+	public int length() {
+		// TODO implement this
+		throw new UnsupportedOperationException();
 	}
 }
