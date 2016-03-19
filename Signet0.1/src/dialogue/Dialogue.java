@@ -2,7 +2,6 @@ package dialogue;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -10,10 +9,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.Spliterator;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import misc.DeathException;
 import misc.GameEvent;
@@ -147,10 +142,7 @@ public class Dialogue implements GameEvent, Iterable<DialogueNode> {
 			return false;
 		}
 		Dialogue arg = (Dialogue) obj;
-		
-		
-		
-		return false;
+		return start.deepEquals(arg.start);
 	}
 
 	public Iterator<DialogueNode> iterator() {

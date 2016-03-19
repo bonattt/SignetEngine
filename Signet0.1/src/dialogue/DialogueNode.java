@@ -3,6 +3,7 @@ package dialogue;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -134,6 +135,10 @@ public abstract class DialogueNode implements Iterable<DialogueNode> {
 			nodeArray[i] = nodeList.get(i);
 		}
 		return nodeArray;
+	}
+	
+	public boolean deepEquals(DialogueNode arg) {
+		return deepEquals(arg, new HashSet<Integer>());
 	}
 	
 	public boolean deepEquals(DialogueNode arg, Set<Integer> nodeIDsVisited) {

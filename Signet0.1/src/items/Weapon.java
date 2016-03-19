@@ -13,19 +13,30 @@ import creatures.Creature;
 
 public abstract class Weapon extends Item {
 	
-	private int might, accuracy, weaponType, damageType;
+	private int weaponType;
+	private String weaponSkill;
+	private WeaponDamage wpnDmg;
 	
 	public Weapon(int size, int wt, int dur, int hard, int dam,
 			String name, String description,
 			int might, int accuracy, int weaponType, int damageType) {
 		super(size, wt, dur, hard, dam, name, description);
-		this.might = might;
-		this.accuracy = accuracy;
-		this.weaponType = weaponType;
-		this.damageType = damageType;
+		wpnDmg = new WeaponDamage(might, accuracy, damageType, description);
+//		this.might = might;
+//		this.accuracy = accuracy;
+//		this.weaponType = weaponType;
+//		this.damageType = damageType;
+		this.weaponSkill = "";
 	}
+	
+	public Weapon(int[] itemStats, String name, String description, int weaponType, WeaponDamage wpnDmg) {
+		super(itemStats[0], itemStats[1], itemStats[2], itemStats[3], itemStats[4], name, description);
+		this.wpnDmg = wpnDmg;
+		this.weaponSkill = "";
+	}
+	
 	public int getDamageType(int damageDealt) {
-		return damageType;
+		return wpnDmg.damageType;
 	}
 	
 	@Override
@@ -45,31 +56,27 @@ public abstract class Weapon extends Item {
 		return true;
 	}
 	
+	public void dealDamage(Creature attacker, Creature target, int netHits) throws DeathException {
+		wpnDmg.dealDamage(attacker, target, netHits);
+	}
+	
+	
 	public void makeAttack(Creature attacker, Creature target) throws DeathException {
 		int netHits = checkIfAttackHits(attacker, target);
 		dealDamage(attacker, target, netHits);
 	}
 	
-	public void dealDamage(Creature attacker, Creature target, int netHits)
-			throws DeathException {
-		if (netHits <= 0) {
-			return;
-		}
-		int damage = DiceRoller.makeRoll(netHits)[0];
-		target.recieveWound(damage, damageType, netHits);
-	}
 	public int checkIfAttackHits(Creature attacker, Creature target) {
-		
-		
-		
-		return -1;
+		int[] defenseTest = target.makeAttributeTest(new String[]{"agl", "rec"});
+		int[] netHitsAttacker = attacker.makeTest(weaponSkill, defenseTest[0]);
+		return netHitsAttacker[0];
 	}
 	
 	public void saveBaseWeaponStats(PrintWriter writer) {
-		writer.println(might);
-		writer.println(accuracy);
+		writer.println(wpnDmg.might);
+		writer.println(wpnDmg.accuracy);
 		writer.println(weaponType);
-		writer.println(damageType);
+		writer.println(wpnDmg.damageType);
 	}
 	
 	public int getWeaponType() {
@@ -77,11 +84,11 @@ public abstract class Weapon extends Item {
 	}
 	
 	public int getMight() {
-		return might;
+		return wpnDmg.might;
 	}
 	
 	public int getAccuracy() {
-		return accuracy;
+		return wpnDmg.accuracy;
 	}
 
 	@Override
@@ -104,7 +111,7 @@ public abstract class Weapon extends Item {
 		}
 	}
 	public boolean damageTypesEqual(Weapon wep) {
-		return wep.damageType == this.damageType;
+		return wep.wpnDmg.damageType == this.wpnDmg.damageType;
 	}
 	
 	private void tryToCarry(Inventory inv, Creature player) throws InventoryException  {

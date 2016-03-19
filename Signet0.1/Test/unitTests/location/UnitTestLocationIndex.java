@@ -16,7 +16,7 @@ import org.junit.Test;
 
 public class UnitTestLocationIndex {
 
-	private static final String filePath = "src/unitTests/testingData/";
+	private static final String filePath = "test/unitTests/testingData/";
 	private static final String LOCAL1 = "location1";
 	private static final String LOCAL2 = "location2";
 	private static final String LOCAL1_FILE = "location1.signet";

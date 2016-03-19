@@ -1,12 +1,9 @@
 package items;
 
-import inventory.Inventory;
-
 import java.io.PrintWriter;
 import java.util.Scanner;
 
 import misc.TextTools;
-import creatures.Creature;
 
 public class RangedWeapon extends Weapon {
 
@@ -31,6 +28,7 @@ public class RangedWeapon extends Weapon {
 		ammoCapacity = ammoCap;
 		ammoRemaining = ammoRem;
 	}
+	
 	public int getRange() {
 		return range;
 	}

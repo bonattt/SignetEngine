@@ -18,7 +18,7 @@ import dialogue.Dialogue;
 
 public class DialogueIntegrationSaveLoad {
 
-	private static final String filePath = "src/unitTests/testingData/unitTestSaveFile.txt";
+	private static final String filePath = "test/unitTests/testingData/unitTestSaveFile.txt";
 	
 	private Dialogue saved, loaded;
 
@@ -50,6 +50,26 @@ public class DialogueIntegrationSaveLoad {
 		saved = DialogueMother.seriesOfScenes();
 		saveAndLoad();
 		assertEquals(saved, loaded);
+	}
+	 //// not equal tests
+	@Test
+	public void testUndertailNotEqualChat() throws Exception {
+		saved = DialogueMother.undertail();
+		saveAndLoad();
+		assertNotEquals(DialogueMother.simpleChat(), loaded);
+	}
+	
+	@Test
+	public void testUndertailNotEqualScenes() throws Exception {
+		saved = DialogueMother.undertail();
+		saveAndLoad();
+		assertNotEquals(DialogueMother.seriesOfScenes(), loaded);
+	}
 
+	@Test
+	public void testSimpleChatNotEqualScenes() throws Exception {
+		saved = DialogueMother.simpleChat();
+		saveAndLoad();
+		assertNotEquals(DialogueMother.seriesOfScenes(), loaded);
 	}
 }

@@ -54,24 +54,17 @@ public class UnitTestWeapon {
 	public void eachHitWounds()
 			throws DeathException, NoSuchFieldException, SecurityException,
 				IllegalArgumentException, IllegalAccessException {
+		Field f = Creature.class.getDeclaredField("body");
+		f.setAccessible(true);
+		Body bod = (Body) f.get(dicksEvilTwin);
+		int intialWounds = bod.countWounds();
 		Weapon veryVERYaccurateSword = new MeleeWeapon(100, 100, 100, 10, 0, "_name_", "_desc_", 1, 1,
 				100, 1, DamageType.SLASHING);
 		veryVERYaccurateSword.makeAttack(dick, dicksEvilTwin);
 		veryVERYaccurateSword.makeAttack(dick, dicksEvilTwin);
 		veryVERYaccurateSword.makeAttack(dick, dicksEvilTwin);
-		
-		Field f = Creature.class.getDeclaredField("body");
-		f.setAccessible(true);
-		Body bod = (Body) f.get(dicksEvilTwin);
-		assertEquals(3, bod.countWounds());
+		assertEquals(intialWounds+3, bod.countWounds());
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 	@Test
 	public void printsIdetical()
@@ -92,8 +85,8 @@ public class UnitTestWeapon {
 		for (int i = 0; i < 10; i++) {
 			printLine(rand);
 		}
-		
 	}
+	
 	private static void printLine(Random rand) {
 		for (int i = 0; i < 4; i++) {
 			printChunk(rand);

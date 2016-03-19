@@ -25,6 +25,16 @@ public abstract class Creature {
 	 */
 	public static final String[] ABILITIES = {"str", "agl", "end", "dex", "cha", "anl", "per", "wil", "int", "rec"};
 	
+	public static final String STRENGTH = "str";
+	public static final String AGILITY = "agl";
+	public static final String ENDURANCE = "end";
+	public static final String DEXTERITY = "dex";
+	public static final String CHARISMA = "cha";
+	public static final String ANALYSIS = "anl";
+	public static final String PERCEPTION = "per";
+	public static final String WILLPOWER = "wil";
+	public static final String INTUITION = "int";
+	public static final String REACTION = "rec";
 	
 	private String name;
 	
@@ -190,10 +200,12 @@ public abstract class Creature {
 		return DiceRoller.makeRoll(dicePool);
 	}
 	public int[] makeTest(String testName, int threshold){
+		// returns int[]{hits, zeroes}
 		return makeTest(testName, threshold, 0, Integer.MAX_VALUE);
 	}
 		
 	public int[] makeTest(String testName, int threshold, int adjustment, int limit) {
+		// returns int[]{hits, zeroes}
 		if(testName.equals("")){
 			//TODO add special tests.
 		} else if (skills.containsKey(testName)) {

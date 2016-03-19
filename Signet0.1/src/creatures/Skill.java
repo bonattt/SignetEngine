@@ -208,17 +208,19 @@ public class Skill {
 	}
 
 	public int[] makeSkillTest(Creature creature, int threshold, int adjustment){
+		// returns int[]{hits, zeroes}
 		return makeLimitedSkillTest(creature, threshold, adjustment, Integer.MAX_VALUE, linkedAttributes);
 	}
 	public int[] makeSkillTest(Creature creature, int threshold, int adjustment, String[] attributes){
+		// returns int[]{hits, zeroes}
 		return makeLimitedSkillTest(creature, threshold, adjustment, Integer.MAX_VALUE, attributes);
 	}
 	/////
 	public int[] makeLimitedSkillTest(Creature creature, int threshold, int adjustment, int limit){
+		// returns int[]{hits, zeroes}
 		return makeLimitedSkillTest(creature, threshold, adjustment, limit, linkedAttributes);
 	}
 	public int[] makeLimitedSkillTest(Creature creature, int threshold, int adjustment, int limit, String[] attributes){
-
 		int dicePool;
 		if(ranks == 0){
 			dicePool = getAttributes(creature, attributes) - 1;
@@ -228,7 +230,7 @@ public class Skill {
 		
 		int[] result = DiceRoller.makeRoll(dicePool);
 		result[0] -= threshold;
-		
+		// returns int[]{hits, zeroes}
 		return result;
 	}
 	
