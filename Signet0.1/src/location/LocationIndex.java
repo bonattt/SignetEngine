@@ -10,7 +10,7 @@ import misc.GameLoadException;
 
 public class LocationIndex {
 
-	private static final String INDEX_FILE = "index.signet";
+	private static final String INDEX_FILE = "/lindex.signet";
 	
 	private String filePath;
 	private HashMap<String, Location> map;

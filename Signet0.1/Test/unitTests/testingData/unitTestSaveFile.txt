@@ -41,7 +41,7 @@ end~*~*~string
 0
 6
 3
-5
+0
 2
 0
 32
@@ -57,7 +57,7 @@ end~*~*~string
 0
 3
 3
-5
+0
 2
 0
 armor
@@ -96,7 +96,7 @@ end~*~*~string
 0
 3
 3
-2
+0
 0
 0
 ranged weapon
@@ -110,7 +110,7 @@ end~*~*~string
 0
 4
 1
-4
+0
 2
 0
 18

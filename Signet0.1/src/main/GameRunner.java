@@ -1,8 +1,15 @@
 package main;
 
+import inventory.InventoryException;
+
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import misc.TextTools;
+import misc.DeathException;
+import misc.GameLoadException;
+import testingMothers.CharacterMother;
+import creatures.PlayerCharacter;
+import environment.Environment;
 
 public class GameRunner {
 	
@@ -10,9 +17,17 @@ public class GameRunner {
 	public static int BACK_DISABLED = 0;
 	public static int BACK_ENABLED = 1;
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws InventoryException, DeathException {
 		inputScanner =  new Scanner(System.in);
-		TextTools.display("class not implemented yet");
+		try {
+			Environment env = new Environment("src/saveFiles");
+			PlayerCharacter player = CharacterMother.getDickDefenderOfLife();
+			env.startGame(player, "location1");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (GameLoadException e) {
+			e.printStackTrace();
+		}
 		inputScanner.close();
 	}
 }
