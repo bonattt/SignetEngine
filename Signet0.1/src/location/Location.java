@@ -4,17 +4,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
-import creatures.Creature;
-import environment.Environment;
 import misc.DeathException;
 import misc.GameEvent;
 import misc.GameLoadException;
 import misc.TextTools;
+import creatures.Creature;
+import environment.Environment;
 
 public class Location {
 	
@@ -77,6 +76,24 @@ public class Location {
 		}
 		return explorable;
 	}
+	
+	public static void saveAll(Collection<Location> locations, String filepath) throws FileNotFoundException {
+		saveLIndexFile(locations, filepath);
+		for (Location loc : locations) {
+			loc.saveToFile(filepath);
+		}
+	}
+	
+	public static void saveLIndexFile(Collection<Location> locations, String filepath) throws FileNotFoundException {
+		PrintWriter writer = new PrintWriter(filepath + "/lindex.signet");
+		for (Location loc : locations) {
+			writer.println(loc.name);
+			writer.println(loc.fileName);
+		}
+		writer.print("end");
+		writer.close();
+	}
+	
 	public void saveToFile(String filePath) throws FileNotFoundException {
 		if (Environment.print_debugs) {
 			System.out.println("saving " + filePath + fileName);

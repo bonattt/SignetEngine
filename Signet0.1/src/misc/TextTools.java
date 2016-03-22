@@ -1,6 +1,7 @@
 package misc;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class TextTools {
@@ -13,7 +14,17 @@ public class TextTools {
 //	public static int questionAsker(String question, String[] answers){
 //		return questionAsker(question, answers, BACK_DISABLED);
 //	}
-	public static int questionAsker(String question, String[] answers, int backEnabled){
+
+	public static int questionAsker(String question, List<String> answers, int backEnabled) {
+		Object[] obj = answers.toArray();
+		String[] str = new String[obj.length];
+		for (int i = 0; i < obj.length; i++) {
+			str[i] = (String) obj[i];
+		}
+		return questionAsker(question, str, backEnabled);
+	}
+	
+	public static int questionAsker(String question, String[] answers, int backEnabled) {
 		display(question);
 		display("");
 		while (true) {

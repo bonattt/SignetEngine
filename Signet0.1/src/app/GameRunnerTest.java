@@ -11,12 +11,16 @@ import misc.GameLoadException;
 import environment.Environment;
 
 public class GameRunnerTest {
-	
-	public static void main(String[] args)
-			throws FileNotFoundException, GameLoadException, DeathException, InventoryException {
-		Environment envir = new Environment("src/unitTests/testingData/");
-		PlayerCharacter player = CharacterMother.getDickDefenderOfLife();
-		envir.startGame(player, "location1");
+
+	public static void main(String[] args) throws InventoryException, DeathException {
+		try {
+			Environment env = new Environment("src/saveFiles");
+			PlayerCharacter player = CharacterMother.getDickDefenderOfLife();
+			env.startGame(player, "location1");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (GameLoadException e) {
+			e.printStackTrace();
+		}
 	}
-	
 }

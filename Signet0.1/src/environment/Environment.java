@@ -47,7 +47,6 @@ public class Environment {
 	public static final String ALPHA0_1 = "SIGNET alpha version 0.1";
 	
 	private static final String SAVEFILE_ROOTPATH = "src/savedFiles/";
-	private static final String SAVE01 = "save01/";
 	private static final String MAIN_SAVE_FILE = "main.sigsav";
 	
 	public Environment(String filePath)
